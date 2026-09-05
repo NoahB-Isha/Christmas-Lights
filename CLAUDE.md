@@ -87,9 +87,17 @@ out/                    generated, gitignored
 
 **High value:**
 
-- **DMX in/out start trigger.** If a start command can be sent, it removes
-  hand-timing error *and* largely dissolves the drift problem. Highest-value
-  remaining reverse-engineering target.
+- **DMX in start trigger.** The DMX in port was previously driven by an
+  audio-interpretation box sending scene changes, so the unit *already*
+  accepts external control — this is likely standard DMX512 with an unknown
+  channel mapping, not a proprietary protocol. Selecting a scene is also a
+  start trigger. `tools/dmx_diff.py` finds the scene channel from a capture;
+  brute-force sweeping works too.
+- **Is the DMX chain control or pixel data?** If control, every unit plays
+  its own card and the 24-channel `.rgb` is a project artefact the vendor
+  software splits on export. If pixel data, one master feeds slaves. The two
+  need different deployment manifests. `tools/bus_probe.py` distinguishes
+  them.
 
 Details and the rest in `docs/06-OPEN-QUESTIONS.md`.
 

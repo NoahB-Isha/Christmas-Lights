@@ -45,18 +45,56 @@ every unit needs its own copy.
 mapping is only stable if we know which of these is true. Under positional
 addressing the manifest must record cable order as a first-class fact.
 
-### Start trigger over the DMX in/out port — NOT YET INVESTIGATED
-The controllers have DMX in/out ports. If a start command can be sent over
-them, it replaces the manual "start the music on the 4th blink" step and
-removes hand-timing error from the whole show — which also largely dissolves
-the multi-controller drift problem above, since all units could be started
-from one signal.
+### Start trigger over DMX in — PARTLY KNOWN, HIGHEST VALUE
+**The DMX in port was previously driven by an audio-interpretation box that
+sent scene-change information.** So the unit already accepts external control
+over DMX in. That changes the problem: this is very likely *standard DMX512*
+with an undocumented channel mapping, not a proprietary protocol. Only the
+mapping has to be discovered, and that is routine.
 
-Worth capturing when the hardware is to hand: what the ports are physically
-(XLR? RJ45?), whether the unit responds to standard DMX, and whether there is
-any documented remote/trigger protocol. A logic analyser or a DMX interface
-plus a capture of the vendor software talking to the unit would settle it.
-This is the highest-value remaining reverse-engineering target.
+If a scene can be selected externally, **selecting a scene is also a start
+trigger** — which removes hand-timing from the show and largely dissolves the
+multi-controller drift problem, since every unit could be started from one
+signal.
+
+**Open sub-question: is DMX out a passthrough of DMX in, or regenerated /
+modified by the unit?** This matters because it decides whether one signal
+source can drive a whole chain.
+
+Three ways to find out, cheapest first:
+
+1. **Free, no equipment.** If the audio box still exists: box → unit A DMX in,
+   unit A DMX out → unit B DMX in. Change scenes. If B follows A, the control
+   information survives the hop (whether passed through or regenerated) and a
+   single source can drive a chain. If B ignores it, DMX out is carrying
+   something else.
+2. **Capture DMX in.** What the audio box sends is the command format itself,
+   and it can be correlated against scene changes you can see. This is the
+   single most valuable capture. Feed it to `tools/dmx_diff.py`.
+3. **Capture in and out simultaneously** (two channels on the logic
+   analyser). Identical bytes with a small delay means a buffered repeater;
+   anything else means the unit regenerates.
+
+**Brute-force mapping** also works and needs no capture at all: with a DMX
+sender, hold all channels at 0, sweep channel 1 through 0–255 watching for a
+response, then channel 2, and so on. Undocumented fixtures are mapped this
+way routinely. A scene selector is usually a stepped channel with a handful
+of discrete values.
+
+### Does the DMX chain carry control or pixel data? — UNKNOWN
+The audio-box detail raises a possibility worth taking seriously: the daisy
+chain may be a **control** bus (scene select, sync) rather than a pixel-data
+bus, with **every unit playing its own card**. In that model the 24-channel
+`.rgb` is a project-level artefact and the vendor software splits it into
+per-unit files on export — which is exactly what the empty `WriteToSDList`
+element in the `.xml` projects would record.
+
+The alternative remains that one master streams frames downstream to slaves.
+
+`tools/bus_probe.py` distinguishes them: if the counting-ramp phase appears
+on the wire, it is pixel data; if the wire only ever carries short bursts, it
+is control. This is worth settling before the deployment layer is designed,
+because the two models need different manifests.
 
 ## Non-blocking
 
