@@ -114,3 +114,85 @@ These were expensive to establish. All verified.
 | `dots[i]` ordering | Pixel *i* in wire order | Uniform consecutive distances, zero large jumps |
 | **Frame rate** | **60 fps** | `FpsTest.rgb`: 1800 frames in 30.0 s = 60.0; 24-blink cross-check gave 1.00 blink/s. Hand timing is ±1.7% on a 30 s interval, so 60 ± 1, and 60 is a menu option |
 | Coordinate scale | 20 units per inch | `lampRad: 5` = half-inch bulb; makes props 3–4 ft and every pitch a clean value |
+
+---
+
+# Capturing the DMX / expansion port
+
+Practical notes for the highest-value remaining target. Nothing here is
+verified against your hardware yet — identify the port before spending money.
+
+## It is probably not Ethernet
+
+"DMX out" on an RJ45 almost always means **DMX512 over RS-485** — differential
+serial on a cat5 cable, borrowing the connector only. A network card cannot
+decode it and Wireshark will show nothing.
+
+**Do not plug the controller's DMX out into a computer's Ethernet port.**
+RS-485 idle levels and fault conditions are outside what an Ethernet PHY
+expects.
+
+Three things it could be:
+
+| Possibility | Tell | How to capture |
+|---|---|---|
+| DMX512 / RS-485 | an RS-485 transceiver near the jack: MAX485, SP485, ADM485, SN75176 | logic analyser + transceiver, or a DMX interface |
+| Real Ethernet (Art-Net / sACN) | magnetics block + a PHY chip, link LEDs that behave like a network port | switch with port mirroring + Wireshark |
+| Proprietary pixel bus for daisy-chaining | often also RS-485, sometimes plain TTL or LVDS; no DMX branding on the PCB | logic analyser, decode by hand |
+
+Given the 24-channel file spanning six chained 4-port units, a proprietary
+pixel bus is a strong candidate — the "DMX out" may simply be carrying frame
+data to the next unit.
+
+**Identify it first:** open the case and read the chip markings by the jack,
+and check with a multimeter whether any pins are transformer-coupled. That
+one look decides everything downstream.
+
+## Capture options, cheapest first
+
+1. **USB logic analyser (~$10–15) + RS-485 breakout (~$3).** The right tool.
+   Convert differential to single-ended, sample at ≥2 MHz, decode in
+   PulseView — sigrok has a DMX512 decoder, and failing that decode as UART
+   250 kbaud 8N2 and look for the break.
+2. **Oscilloscope**, if you have one, purely to characterise first: voltage
+   levels, differential or not, bit rate. Answers "what is this" faster than
+   anything else.
+3. **USB-RS485 dongle (~$10).** Fine for sending, fiddly for receiving —
+   DMX's break condition confuses ordinary UARTs.
+4. **Enttec DMX USB Pro (~$150).** Reliable receive with good software.
+   Overkill unless you end up doing a lot of DMX work.
+
+Pinout is not safe to assume. The ESTA convention for DMX over RJ45 is
+pin 1 Data+, pin 2 Data−, pins 7/8 common, but Chinese controllers frequently
+use their own. Probe rather than trust.
+
+## Anchoring the capture: `tools/bus_probe.py`
+
+A wall of bits is hard to interpret. `BusProbe.rgb` makes the controller
+send bytes that cannot be mistaken for anything else:
+
+| Phase | Pattern | What it gives you |
+|---|---|---|
+| 1–2 | all `0x00`, then all `0xFF` | value range; anything non-zero in phase 1 is framing |
+| 3 | `0xAA`/`0x55` by pixel | visible on a scope before you decode anything; shows bit order |
+| 4 | **counting ramp**, byte k = k & 0xFF | **the anchor** — search the capture for `00 01 02 03 04` |
+| 5 | channel k = `0xC0 + k` | which channels appear on the wire, in what order |
+| 6 | one `0xFF` pixel stepping | a single moving byte, easy to track |
+
+Each phase holds ~6 s so any capture window lands inside one. The tool prints
+the exact byte offsets to expect per channel.
+
+## What each outcome would mean
+
+- **Pixel data for every channel, including the master's own** → the master
+  streams whole frames downstream and chained units are slaves. Sync within
+  a chain becomes automatic and only one card per chain matters. This would
+  dissolve most of the drift problem and is the best case.
+- **Only the downstream units' channels** → each unit eats its slice and
+  forwards the rest. Chain position is the address, and cable order becomes
+  show-critical.
+- **No pixel data, just short bursts** → it is control/sync, and the start
+  command is in there.
+
+Capture at the moment you press play, not just during steady playback — a
+start or sync command would appear at the transition and nowhere else.
