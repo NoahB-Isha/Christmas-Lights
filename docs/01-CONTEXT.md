@@ -45,7 +45,29 @@ bulbs. It reads as a constellation of discrete points, not a line of light.
 Effects with narrow spatial features light almost nothing on it and have to
 be widened considerably compared with a dense strip.
 
-`reference/Bench47.rgb` is an 11-effect test show built for exactly this rig.
+A second prop is also on hand: `18号.mod`, a **6-armed** snowflake, 157 px,
+24 x 27.5 in on a 1.5-inch pitch. `tools/two_prop_show.py` builds a show for
+both together on one controller (18号 on port 3, 47号 on port 4), with the
+props placed side by side in one world coordinate space so effects can cross
+between them.
+
+Two geometry lessons from writing it, both worth carrying to the other 64
+props:
+
+**Detect symmetry, don't assume it.** Sector-evenness scoring fails twice
+over: a 6-armed snowflake is perfectly even under 3 sectors, and 47号's arms
+are double rows so 8 sectors split them cleanly and score exactly as well as
+4. Counting angular *clusters* of the outermost pixels measures arms
+directly -- at the outer 15% there is a clean cliff (18号: six ~59 deg gaps
+then 2.3 deg; 47号: four ~85 deg gaps then 4.3 deg). Cut at the largest ratio
+step. Verified 6 and 4.
+
+**The centre is the mean of the pixels.** Measuring outer pixels per sector
+from the mean gives exactly [14,14,14,14,14,14] on 18号 and [10,10,10,10] on
+47号. A "densest hub" heuristic landed on an arm instead.
+
+`reference/Bench47.rgb` is an 11-effect test show built for the snowflake
+alone.
 
 ## Physical scale — and why it drives effect design
 
