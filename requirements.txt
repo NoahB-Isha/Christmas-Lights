@@ -1,0 +1,7 @@
+numpy>=1.24
+scipy>=1.10
+pillow>=10.0
+pytest>=7.4
+# ffmpeg is also required for audio decoding (not a pip package):
+#   macOS   brew install ffmpeg
+#   Ubuntu  apt install ffmpeg

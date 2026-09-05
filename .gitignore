@@ -1,0 +1,22 @@
+# generated shows and previews -- all reproducible from tools/
+out/
+*.rgb
+!assets/factory/*.rgb
+*.html
+*.npy
+
+# audio: keep your own music files out of version control
+*.mp3
+*.wav
+*.flac
+*.m4a
+
+__pycache__/
+*.py[cod]
+.pytest_cache/
+*.egg-info/
+build/
+dist/
+.venv/
+venv/
+.DS_Store
