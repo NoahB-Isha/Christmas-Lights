@@ -58,6 +58,11 @@ its offset slider is how you tune sync before committing it to the file.
 
 ## Hardware diagnostics
 
-`tools/fps_test.py`, `tools/chain_map.py`, `tools/bench_effects.py` build
-`.rgb` files for testing on a real controller. See `docs/06-OPEN-QUESTIONS.md`
-for what each one answers.
+`tools/fps_test.py`, `tools/chain_map.py`, `tools/bench_effects.py` and
+`tools/bus_probe.py` build `.rgb` files for testing on a real controller.
+
+`tools/dmx_listen.py` receives DMX on a USB-RS485 adapter;
+`tools/dmx_diff.py` finds which channel carries scene changes. Both have a
+`--selftest` / `--demo` mode that runs without hardware.
+
+See `docs/06-OPEN-QUESTIONS.md` for what each one answers.

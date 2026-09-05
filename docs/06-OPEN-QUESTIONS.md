@@ -186,8 +186,48 @@ data to the next unit.
 and check with a multimeter whether any pins are transformer-coupled. That
 one look decides everything downstream.
 
+## First: identify the dongle you already have
+
+A USB-C dongle with an RJ45 jack is almost always a **USB-to-Ethernet
+adapter**, which cannot read DMX no matter what software you run — it is a
+network card, and DMX is not network traffic. But a minority of RJ45 dongles
+are USB-to-serial (RS-485), and those *can*. One check settles it:
+
+```bash
+ls /dev/tty.*                              # before plugging in
+# plug it in, then again:
+ls /dev/tty.*
+networksetup -listallhardwareports         # macOS
+```
+
+| What appears | What it is | Can it read DMX |
+|---|---|---|
+| new `/dev/tty.usbserial*` or `/dev/ttyUSB*` | USB-to-serial | yes, if it is RS-485 — use `tools/dmx_listen.py` |
+| new network interface (`en5`, `eth1`) | USB-to-Ethernet | no |
+| nothing at all | unpowered or dead | no |
+
+`python tools/dmx_listen.py --list` prints serial adapters with their
+vid:pid. FTDI / CH340 / CP210x / PL2303 in the description means serial.
+
+**An Ethernet adapter is still useful for one test.** Plug it into the
+controller's port and see whether a link comes up. A link light plus a
+network interface that reports connected means the port really is Ethernet
+(and Art-Net or sACN is likely, so Wireshark works). No link means it is
+RS-485 and you need a serial path. That is a decisive, free identification
+test — just do not expect to capture anything with it.
+
+Plugging RS-485 into an Ethernet adapter is very unlikely to damage
+anything, since Ethernet inputs are transformer-coupled, but it will not
+work.
+
 ## Capture options, cheapest first
 
+0. **A USB-to-RS485 adapter you may already own (~$10 if not).** If the
+   dongle turns out to be serial, `tools/dmx_listen.py` receives DMX at
+   250000 8N2, frames packets on the idle gap between them, and writes CSV
+   straight into `tools/dmx_diff.py`. Caveat: a generic UART cannot see the
+   DMX break directly, so framing relies on the inter-packet gap. Reliable
+   in practice, not bulletproof.
 1. **USB logic analyser (~$10–15) + RS-485 breakout (~$3).** The right tool.
    Convert differential to single-ended, sample at ≥2 MHz, decode in
    PulseView — sigrok has a DMX512 decoder, and failing that decode as UART

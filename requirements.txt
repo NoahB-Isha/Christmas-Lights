@@ -5,3 +5,4 @@ pytest>=7.4
 # ffmpeg is also required for audio decoding (not a pip package):
 #   macOS   brew install ffmpeg
 #   Ubuntu  apt install ffmpeg
+pyserial>=3.5   # optional: only for tools/dmx_listen.py
