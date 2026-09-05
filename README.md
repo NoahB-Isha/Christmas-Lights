@@ -11,16 +11,20 @@ with AI-written effects.
 ## Install
 
 ```bash
-pip install -e ".[dev]"
+pip install -r requirements.txt
 brew install ffmpeg          # audio decoding
 make test                    # 43 tests, ~0.4s
 ```
+
+The `make` targets set `PYTHONPATH=src`, so no install is needed. If you
+prefer `import lightshow` to work from anywhere, also run
+`pip install -e ".[dev]"`.
 
 ## Try it
 
 ```bash
 make props                                   # contact sheet of all 15 props
-python -m lightshow.preview assets/props/47号.mod out/prop.html
+make preview PROP=assets/props/47号.mod
 make show   SONG=~/Music/song.mp3            # build the show
 make player SONG=~/Music/song.mp3            # audio-synced HTML preview
 ```
