@@ -3,7 +3,7 @@
 # `python -m lightshow.preview ...` from anywhere.
 PY := PYTHONPATH=src python3
 
-.PHONY: test props show player fps chain preview twoprop clean
+.PHONY: test props show player fps chain preview twoprop showcase clean
 
 test:            ## run the test suite
 	$(PY) -m pytest tests/ -q
@@ -22,6 +22,10 @@ fps:             ## build the frame-rate measurement file
 
 chain:           ## build the chain-addressing diagnostic
 	$(PY) tools/chain_map.py out
+
+showcase:        ## build the 5-minute technique showcase and its viewer
+	$(PY) tools/showcase.py out
+	SHOW_MODULE=showcase $(PY) tools/make_viewer.py out/showcase.html out/Showcase.rgb
 
 twoprop:         ## build the two-prop show and its HTML viewer
 	$(PY) tools/two_prop_show.py out

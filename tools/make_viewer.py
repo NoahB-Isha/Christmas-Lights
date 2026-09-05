@@ -32,7 +32,11 @@ from PIL import Image
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "src"))
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from lightshow.formats.rgbfile import Show                      # noqa: E402
-from two_prop_show import build_rig, SECTIONS, FPS, GAP_IN      # noqa: E402
+import importlib                                                # noqa: E402
+
+SHOW_MODULE = os.environ.get("SHOW_MODULE", "two_prop_show")
+_m = importlib.import_module(SHOW_MODULE)
+build_rig, SECTIONS, FPS, GAP_IN = _m.build_rig, _m.SECTIONS, _m.FPS, _m.GAP_IN
 
 
 def build(rgb_path, out_path):
@@ -76,7 +80,7 @@ def build(rgb_path, out_path):
         col += p.n
 
     data = {"fps": FPS, "nframes": len(show.frames), "nPx": n_px,
-            "props": pj, "sections": marks, "gap": GAP_IN,
+            "props": pj, "sections": marks, "gap": GAP_IN, "title": SHOW_MODULE,
             "duration": round(len(show.frames) / FPS, 2)}
 
     html = (TEMPLATE.replace("__DATA__", json.dumps(data))
@@ -90,7 +94,7 @@ def build(rgb_path, out_path):
 TEMPLATE = r"""<!DOCTYPE html>
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Two-prop show preview</title>
+<title>Show preview</title>
 <style>
   :root{--void:#070B14;--panel:#0E1524;--line:#1E2A42;
         --text:#C6D6EA;--dim:#63758F;--ice:#7FD8F0;}
@@ -132,7 +136,7 @@ TEMPLATE = r"""<!DOCTYPE html>
     color:var(--dim);font-size:13px}
 </style></head><body>
 <div id="app">
-  <header><h1>Two-prop show</h1><span class="m" id="hmeta"></span></header>
+  <header><h1 id="ttl">Show preview</h1><span class="m" id="hmeta"></span></header>
   <main>
     <div id="stage"><canvas id="cv"></canvas><div id="boot">decoding frames…</div></div>
     <aside>
@@ -181,6 +185,7 @@ img.src="data:image/png;base64,__PNG__";
 const xs=[],ys=[];
 D.props.forEach(p=>p.xy.forEach(([x,y])=>{xs.push(x);ys.push(y);}));
 const x0=Math.min(...xs),x1=Math.max(...xs),y0=Math.min(...ys),y1=Math.max(...ys);
+document.getElementById('ttl').textContent = D.title.replace(/_/g,' ');
 document.getElementById('hmeta').textContent =
   `${D.props.length} props · ${D.nPx} bulbs · ${(x1-x0).toFixed(0)}×${(y1-y0).toFixed(0)} in `
   +`· ${D.gap} in gap · ${D.duration.toFixed(0)}s @ ${D.fps}fps`;
@@ -300,6 +305,7 @@ resize();
 if __name__ == "__main__":
     out = sys.argv[1] if len(sys.argv) > 1 else "out/two_props.html"
     rgb = sys.argv[2] if len(sys.argv) > 2 else "out/TwoProps.rgb"
+    # SHOW_MODULE=showcase python tools/make_viewer.py ...
     p, nf, n, png = build(rgb, out)
     raw = nf * n * 3
     print(f"wrote {p}  ({os.path.getsize(p)/1e6:.2f} MB)")
