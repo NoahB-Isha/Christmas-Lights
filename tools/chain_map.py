@@ -52,7 +52,7 @@ seconds. It is a device setting -- if the unit is switched to 25 or 45 the
 whole file simply runs slower.
 """
 
-import sys, os
+import sys, os, os
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "src"))
 from lightshow.formats.rgbfile import Show, FrameBuf
 
@@ -128,6 +128,8 @@ def build():
 
 
 if __name__ == "__main__":
+    os.makedirs(os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                             "..", "out"), exist_ok=True)
     out = sys.argv[1] if len(sys.argv) > 1 else "."
     s, log = build()
     s.save(f"{out}/ChainMap.rgb")

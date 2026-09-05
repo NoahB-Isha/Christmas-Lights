@@ -21,7 +21,7 @@ FRAME RATE measured at 60 fps (FpsTest.rgb: 1800 frames in 30.0 s, and the
 stored in the file, so the controller must stay on 60.
 """
 
-import sys, os, math, random
+import sys, os, os, math, random
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "src"))
 from lightshow.formats.rgbfile import Show, FrameBuf
 from lightshow.formats.props import load_mod
@@ -264,6 +264,8 @@ def build():
 
 
 if __name__ == "__main__":
+    os.makedirs(os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                             "..", "out"), exist_ok=True)
     out = sys.argv[1] if len(sys.argv) > 1 else "."
     s, log = build()
     s.save(os.path.join(out, "Bench47.rgb"))

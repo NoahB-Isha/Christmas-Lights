@@ -1,5 +1,6 @@
 # generated shows and previews -- all reproducible from tools/
 out/
+!out/.gitkeep
 *.rgb
 !assets/factory/*.rgb
 *.html

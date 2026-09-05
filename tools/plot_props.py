@@ -20,6 +20,8 @@ for k,f in enumerate(files):
         r=1.6
         dr.ellipse([X-r,Y-r,X+r,Y+r],fill=hsv(i/n*0.85))
     dr.text((cx+6,cy+4),f"{f}  n={n}",fill=(230,230,230))
-out=os.path.join(os.path.dirname(os.path.abspath(__file__)),'..','out','prop_shapes.png')
+outdir=os.path.join(os.path.dirname(os.path.abspath(__file__)),'..','out')
+os.makedirs(outdir, exist_ok=True)
+out=os.path.join(outdir,'prop_shapes.png')
 img.save(out)
 print(out,len(files),'props; colour runs blue->red along wire order')

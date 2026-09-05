@@ -37,7 +37,7 @@ EXPECTED DURATIONS
   easiest possible thing to confirm against a phone clock.
 """
 
-import sys, os
+import sys, os, os
 from rgbfile import Show, FrameBuf
 
 CH = [32, 32, 32, 325]        # stub/stub/stub/prop -- irrelevant here, all fills
@@ -104,6 +104,8 @@ def build():
 
 
 if __name__ == "__main__":
+    os.makedirs(os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                             "..", "out"), exist_ok=True)
     out = sys.argv[1] if len(sys.argv) > 1 else "."
     s, log = build()
     s.save(f"{out}/FpsTest.rgb")

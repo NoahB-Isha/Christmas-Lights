@@ -14,7 +14,7 @@ hardware, and hand-starting lands within ~150 ms at best. Scrub the offset
 until the hits land, read the number off, and bake it into show47.py.
 """
 
-import sys, os, base64, json
+import sys, os, os, base64, json
 import numpy as np
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "src"))
@@ -315,6 +315,8 @@ resize(); draw();
 
 
 if __name__ == "__main__":
+    os.makedirs(os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                             "..", "out"), exist_ok=True)
     out = sys.argv[1] if len(sys.argv) > 1 else "player.html"
     rgb = sys.argv[2] if len(sys.argv) > 2 else "Show47Music.rgb"
     song = sys.argv[3]

@@ -137,6 +137,8 @@ def preview(s, props, path, ncols=8):
 
 
 if __name__ == "__main__":
+    os.makedirs(os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                             "..", "out"), exist_ok=True)
     moc = sys.argv[1]
     out = sys.argv[2] if len(sys.argv) > 2 else "."
     space = sys.argv[3] if len(sys.argv) > 3 else "global"

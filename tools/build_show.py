@@ -101,7 +101,7 @@ POWER. 72 half-inch bulbs at full white is real current. Sustained full
 white is capped, and the cap is per-frame across the whole prop.
 """
 
-import sys, os, math, colorsys
+import sys, os, os, math, colorsys
 import numpy as np
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -335,6 +335,8 @@ def write(buf, path, bpm, lead=True):
 
 
 if __name__ == "__main__":
+    os.makedirs(os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                             "..", "out"), exist_ok=True)
     out = sys.argv[1] if len(sys.argv) > 1 else "."
     song = sys.argv[2] if len(sys.argv) > 2 else None
     # Carol of the Bells is in 3/4; the tracker locks to the fast ostinato
