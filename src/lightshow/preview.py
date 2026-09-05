@@ -235,6 +235,8 @@ def build(path, out=None, gap=120.0):
     html = (HTML.replace("__RIG__", json.dumps(r.to_json()))
                 .replace("__NAME__", r.name))
     out = out or f"{r.name}_preview.html"
+    d = os.path.dirname(os.path.abspath(out))
+    os.makedirs(d, exist_ok=True)      # don't fail on a fresh clone
     with open(out, "w", encoding="utf-8") as f:
         f.write(html)
     return r, out
