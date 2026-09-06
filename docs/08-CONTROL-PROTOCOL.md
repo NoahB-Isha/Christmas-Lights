@@ -7,11 +7,60 @@ Sourced from GIGACOLOR's own datasheets, not from reverse engineering:
 - **GC-102C** — the audio box that was previously wired to the DMX in port.
   Documents what it sends and why.
 
-> **Caveat worth keeping in front of you:** our controller is the
-> **GC-6004**, not the GC-6612Pro. Same vendor, same `.rgb` files, same "GC
-> series" language in the GC-102C doc, so the protocol is very likely
-> shared — but the channel map below is **documented for the 6612 and
-> assumed for the 6004 until tested**. Testing is cheap (see below).
+> **Caveat:** the channel map is published for the **GC-6612Pro**. Our units
+> are **GC-6004**. The 6004's own product page confirms it "accepts console
+> commands to call programs, adjust speed and brightness" — the same three
+> functions — but does not publish the channel numbers. Treat the map as
+> very likely shared, and **test before relying on it**.
+
+## GC-6004 — confirmed specs from the vendor page
+
+| | |
+|---|---|
+| Type | 4-port standalone SD offline controller |
+| Output | 4 × 3-pin, DMX512 / TTL / SPI, each port can drive a different IC |
+| Capacity | **1024 pixels per port, 4096 per unit** |
+| Scenes | **Max 62 program files** (the 6612 supports 64) |
+| Grey scale | up to 65536 levels, **gamma correction supported** |
+| Trigger input | RJ45 (DMX512); the unit has both **DMX IN and DMX OUT** |
+| Interface | **LCD display + three buttons** (功能 / ▲ / ▼) |
+| Power | DC 5–24 V, 2 W |
+| Size | 176 × 93 × 25 mm |
+| Software | works with FAST LED — the tool you already use |
+
+The front panel photo labels the RJ45 pins `1:D+ 2:D- 7:GND`, identical to
+the 6612. There is also an 音频 (audio) label on the top right.
+
+### Two corrections to earlier notes in this repo
+
+**`0x0480` = 1152 is *not* the per-port pixel limit.** The 6004 is documented
+at 1024 pixels per port. That constant in every channel record means
+something else and remains unexplained.
+
+**`Sync master` / `Sync slave` is a GC-6612Pro feature.** The 6004's feature
+list does not mention it. Multi-controller drift is therefore **still an open
+question for our hardware** — what the 6004 does give us is that a single DMX
+scene-select command reaches every unit at once, which synchronises *starts*.
+Whether they stay aligned over a 3-minute song is unmeasured.
+
+**The 6004 has an LCD and buttons.** If yours appears not to, look again with
+the unit powered — the DMX address and mode are set there, and that is the
+fastest route to confirming everything on this page.
+
+### What DMX OUT implies about the daisy chain
+
+The 6004 has DMX **IN and OUT** with the same pinout, which is the signature
+of a control pass-through, not a pixel bus. Combined with a 4096-pixel
+per-unit ceiling, that points at:
+
+> Each unit plays **its own SD card**, and the DMX chain carries only scene
+> select / brightness / speed. The 24-channel `.rgb` we decoded is then a
+> project-level render that FastLED splits per controller on export — which
+> is exactly what the empty `WriteToSDList` element in the `.xml` projects
+> would record.
+
+This is the leading hypothesis, not a measurement. `tools/bus_probe.py` and
+`tools/chain_map.py` still settle it.
 
 ## The DMX in port is a program selector
 

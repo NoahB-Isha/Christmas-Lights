@@ -84,11 +84,11 @@ out/                    generated, gitignored
   `Add+6` selects the scene, four DMX values per scene, 64 scenes max. The
   audio box on the DMX in port was only ever a scene selector.
   **Selecting a scene is a synchronised start trigger.** `tools/dmx_scene.py`.
-- **`Sync master` / `Sync slave` modes.** Built-in multi-controller
-  synchronisation. Removes the need to start units by hand.
+- **`Sync master` / `Sync slave` modes** exist on the GC-6612Pro but are
+  **not listed for the GC-6004**. Do not assume we have hardware sync.
 - **RJ45 DMX pinout:** pin1 D+, pin2 D−, pin7 GND. RS-485, not Ethernet.
 - **Filename rule:** `XXXXXXXX-NN.rgb`, trailing digits are the scene number
-  played in order in auto mode. Max 64 scenes per card.
+  played in order in auto mode. **Max 62 scenes** on the GC-6004.
 - **The 512-byte LUT is the user-definable gamma curve** the datasheet
   describes. Ours are identity, which is why gamma is applied in software.
 
@@ -139,6 +139,21 @@ Two conventions that are not obvious:
   several coloured layers drives every channel to 1.0 and the prop turns
   white, destroying the colour distinction that makes layering readable.
   `tests/` asserts this.
+
+## GC-6004 hardware facts (vendor page)
+
+4 ports, **1024 px/port and 4096 px/unit**, DMX512/TTL/SPI out, DMX IN *and*
+OUT, an LCD with three buttons, 62 scene files max, gamma correction, DC
+5–24 V. It accepts console commands to call programs and adjust speed and
+brightness — the same three functions the 6612 map exposes.
+
+Note `0x0480` = 1152 is **not** the per-port limit (that is 1024); the
+constant remains unexplained.
+
+DMX IN+OUT with a 4096 px ceiling implies each unit plays **its own card**
+and the chain carries control only — so the 24-channel `.rgb` is likely a
+project render that FastLED splits per controller on export. Leading
+hypothesis, not measured.
 
 ## The current bench rig
 

@@ -10,19 +10,19 @@ adding to the pre-flight checklist.
 
 ## Blocking
 
-### Multi-controller sync — MECHANISM FOUND, UNTESTED ON GC-6004
-The GC-6612Pro datasheet documents four controller modes, two of which are
-**`Sync master`** and **`Sync slave`**: one unit issues synchronisation
-instructions and the others follow. So sync is a built-in hardware feature,
-not something that has to be achieved by starting units simultaneously.
+### Multi-controller drift — STILL OPEN on the GC-6004
+`Sync master` / `Sync slave` are **GC-6612Pro** features. The GC-6004's
+published feature list does not include them, so do not count on hardware
+sync until the unit's own menu is checked.
 
-This was previously logged as blocking on the assumption that no such
-mechanism existed. It downgrades to: confirm the GC-6004 has the same modes
-(check its menu), and confirm which wiring carries the sync signal — most
-likely the same DMX in/out chain.
+What the 6004 does give us: one DMX scene-select command reaches every unit
+simultaneously, which synchronises **starts**. Whether the units stay aligned
+across a 3-minute song is unmeasured, and that is the part that matters for a
+music show.
 
-Still worth measuring drift between two units once wired, since "documented"
-and "works over a 4-minute song" are different claims.
+**How to close:** check the 6004's LCD menu for a mode setting. If sync modes
+exist, wire master/slave. If not, measure drift directly — identical long
+file on two cards, start both via DMX, check alignment several minutes in.
 
 ### Start trigger over DMX in — PROTOCOL DOCUMENTED, UNTESTED ON GC-6004
 **Solved on paper.** The vendor's own GC-6612Pro datasheet gives the complete
