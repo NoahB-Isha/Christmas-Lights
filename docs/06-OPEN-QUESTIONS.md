@@ -10,52 +10,32 @@ adding to the pre-flight checklist.
 
 ## Blocking
 
-### Multi-controller start drift — UNTESTED
-Sync depends entirely on controllers starting together and holding the same
-rate. Nobody has measured drift between two units over a full song.
+### Multi-controller sync — MECHANISM FOUND, UNTESTED ON GC-6004
+The GC-6612Pro datasheet documents four controller modes, two of which are
+**`Sync master`** and **`Sync slave`**: one unit issues synchronisation
+instructions and the others follow. So sync is a built-in hardware feature,
+not something that has to be achieved by starting units simultaneously.
 
-**How to close:** put an identical long file on two cards, start both, and
-check whether they are still aligned several minutes in. If they drift, the
-show design has to account for it (shorter files, re-sync points, or
-accepting per-prop independence).
+This was previously logged as blocking on the assumption that no such
+mechanism existed. It downgrades to: confirm the GC-6004 has the same modes
+(check its menu), and confirm which wiring carries the sync signal — most
+likely the same DMX in/out chain.
 
-### Chain addressing — how a controller knows which unit it is — UNKNOWN
-Confirmed absent from the file: the 24-channel `.rgb` has flat sequential
-channel ids `0..23`, a byte-identical 9-byte tail on all 24 records, and no
-grouping, unit id, or per-unit block of any kind. Addressing therefore comes
-from outside the file.
+Still worth measuring drift between two units once wired, since "documented"
+and "works over a 4-minute song" are different claims.
 
-Two candidate mechanisms, with very different consequences:
+### Start trigger over DMX in — PROTOCOL DOCUMENTED, UNTESTED ON GC-6004
+**Solved on paper.** The vendor's own GC-6612Pro datasheet gives the complete
+13-channel DMX512 trigger map, including scene selection on `Add+6` at four
+DMX values per scene, up to 64 scenes. The GC-102C audio box that was wired
+to the DMX in port is simply a scene selector driven by drum-beat detection.
 
-- **Positional** — each unit consumes its channels and passes the rest
-  downstream. Chain order *is* the address, nothing is configured on the
-  unit, and **re-cabling silently remaps every prop.** Cable order becomes
-  show-critical and must be documented and labelled.
-- **Configured on the hardware** — DIP switch, rotary, jumper, or stored
-  config. Units can be re-cabled freely but must be individually labelled.
+Full details in `08-CONTROL-PROTOCOL.md`. Tooling: `tools/dmx_scene.py`.
 
-**How to close:** run `reference/ChainMap.rgb`, record the channel-to-prop
-map, then physically swap two units and run it again. If the map follows the
-position it is positional; if it follows the unit it is hardware-configured.
-Also pull the SD card from a downstream unit and re-run — if it still lights,
-only the master card matters and data passes down the chain; if it goes dark,
-every unit needs its own copy.
-
-**Why it matters for the software:** the deployment layer's port-to-prop
-mapping is only stable if we know which of these is true. Under positional
-addressing the manifest must record cable order as a first-class fact.
-
-### Start trigger over DMX in — PARTLY KNOWN, HIGHEST VALUE
-**The DMX in port was previously driven by an audio-interpretation box that
-sent scene-change information.** So the unit already accepts external control
-over DMX in. That changes the problem: this is very likely *standard DMX512*
-with an undocumented channel mapping, not a proprietary protocol. Only the
-mapping has to be discovered, and that is routine.
-
-If a scene can be selected externally, **selecting a scene is also a start
-trigger** — which removes hand-timing from the show and largely dissolves the
-multi-controller drift problem, since every unit could be started from one
-signal.
+Remaining work is confirmation, not discovery: the map is documented for the
+**GC-6612Pro** and our units are **GC-6004**. Same vendor, same `.rgb`
+format, same "GC series" language, so it is very likely shared — but test
+before relying on it.
 
 **Open sub-question: is DMX out a passthrough of DMX in, or regenerated /
 modified by the unit?** This matters because it decides whether one signal

@@ -77,27 +77,31 @@ out/                    generated, gitignored
 
 ## Unknowns — do not assume these
 
-**Blocking:**
+**Documented by the vendor, untested on our GC-6004** (see
+`docs/08-CONTROL-PROTOCOL.md`):
 
-- **Multi-controller start drift.** Nobody has measured whether two units
-  stay aligned over a full song. Sync depends entirely on it.
+- **DMX512 trigger protocol.** 13 channels from a settable base address.
+  `Add+6` selects the scene, four DMX values per scene, 64 scenes max. The
+  audio box on the DMX in port was only ever a scene selector.
+  **Selecting a scene is a synchronised start trigger.** `tools/dmx_scene.py`.
+- **`Sync master` / `Sync slave` modes.** Built-in multi-controller
+  synchronisation. Removes the need to start units by hand.
+- **RJ45 DMX pinout:** pin1 D+, pin2 D−, pin7 GND. RS-485, not Ethernet.
+- **Filename rule:** `XXXXXXXX-NN.rgb`, trailing digits are the scene number
+  played in order in auto mode. Max 64 scenes per card.
+- **The 512-byte LUT is the user-definable gamma curve** the datasheet
+  describes. Ours are identity, which is why gamma is applied in software.
+
+Confirm all of the above on a GC-6004 before building on it — the datasheet
+is for the 12-port GC-6612Pro.
+
+**Still genuinely unknown:**
+
 - **Chain addressing.** Nothing in the file says which unit is which in a
-  daisy chain. Run `tools/chain_map.py`, swap two units, run again. If the
-  map follows position, cable order is show-critical.
-
-**High value:**
-
-- **DMX in start trigger.** The DMX in port was previously driven by an
-  audio-interpretation box sending scene changes, so the unit *already*
-  accepts external control — this is likely standard DMX512 with an unknown
-  channel mapping, not a proprietary protocol. Selecting a scene is also a
-  start trigger. `tools/dmx_diff.py` finds the scene channel from a capture;
-  brute-force sweeping works too.
-- **Is the DMX chain control or pixel data?** If control, every unit plays
-  its own card and the 24-channel `.rgb` is a project artefact the vendor
-  software splits on export. If pixel data, one master feeds slaves. The two
-  need different deployment manifests. `tools/bus_probe.py` distinguishes
-  them.
+  daisy chain. Run `tools/chain_map.py`, swap two units, run again.
+- **Is the daisy chain control or pixel data?** `tools/bus_probe.py`
+  distinguishes them. The two need different deployment manifests.
+- **Real-world drift** over a full song, even with sync modes engaged.
 
 Details and the rest in `docs/06-OPEN-QUESTIONS.md`.
 
