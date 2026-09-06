@@ -10,19 +10,44 @@ adding to the pre-flight checklist.
 
 ## Blocking
 
-### Multi-controller drift — STILL OPEN on the GC-6004
-`Sync master` / `Sync slave` are **GC-6612Pro** features. The GC-6004's
-published feature list does not include them, so do not count on hardware
-sync until the unit's own menu is checked.
+### Multi-controller drift — OPEN, and now the top risk
+**Confirmed on the unit's panel: the GC-6004 has no sync option.**
+`Sync master` / `Sync slave` are GC-6612Pro features only. There is no
+hardware synchronisation available to us.
 
 What the 6004 does give us: one DMX scene-select command reaches every unit
 simultaneously, which synchronises **starts**. Whether the units stay aligned
 across a 3-minute song is unmeasured, and that is the part that matters for a
 music show.
 
-**How to close:** check the 6004's LCD menu for a mode setting. If sync modes
-exist, wire master/slave. If not, measure drift directly — identical long
-file on two cards, start both via DMX, check alignment several minutes in.
+So synchronisation comes solely from every controller receiving the same DMX
+scene-select at the same instant. That aligns **starts**. Whether they stay
+aligned across a song is unmeasured.
+
+**Expected magnitudes** (component physics, not measurement):
+
+| Source | Behaviour | 3-minute show |
+|---|---|---|
+| Clock drift, ±50 ppm crystal | accumulates | ~9 ms |
+| Clock drift, ±500 ppm resonator | accumulates | ~90 ms |
+| Start jitter (1 frame + 1 DMX packet) | bounded | 0–40 ms fixed offset |
+
+Perceptual tolerance for light against sound is ~50–80 ms. If these use
+ordinary crystals, drift should be invisible and a small fixed offset should
+dominate. That is a prediction, not a result.
+
+**How to close:** `tools/drift_test.py` builds a 5-minute file where a bright
+pixel steps one position per second, so **pixel position is elapsed time**.
+Run it on two cards started together; dots on the same pixel means under a
+second of drift, N pixels apart means N seconds. A full-prop flash every 30 s
+gives a coarse visual check and a camera-friendly event.
+
+**If drift turns out to be real**, the mitigation is a **cue-list
+architecture**: build the show as many short scenes rather than one long
+file, and re-trigger each over DMX. Error then cannot accumulate past one
+scene. The GC-6004 holds 62 scene files, which is ample for a 3-minute show
+split into 10–20 second cues. This is a better architecture anyway, since it
+also gives per-section control and recovery from a missed start.
 
 ### Start trigger over DMX in — PROTOCOL DOCUMENTED, UNTESTED ON GC-6004
 **Solved on paper.** The vendor's own GC-6612Pro datasheet gives the complete

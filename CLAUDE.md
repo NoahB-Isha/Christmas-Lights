@@ -84,8 +84,11 @@ out/                    generated, gitignored
   `Add+6` selects the scene, four DMX values per scene, 64 scenes max. The
   audio box on the DMX in port was only ever a scene selector.
   **Selecting a scene is a synchronised start trigger.** `tools/dmx_scene.py`.
-- **`Sync master` / `Sync slave` modes** exist on the GC-6612Pro but are
-  **not listed for the GC-6004**. Do not assume we have hardware sync.
+- **No sync modes on the GC-6004** — confirmed on the unit's panel. Those
+  are GC-6612Pro features. Sync comes only from a simultaneous DMX
+  scene-select. If drift proves real, build the show as a **cue list** of
+  short scenes re-triggered over DMX (62 scene files available) so error
+  cannot accumulate past one scene.
 - **RJ45 DMX pinout:** pin1 D+, pin2 D−, pin7 GND. RS-485, not Ethernet.
 - **Filename rule:** `XXXXXXXX-NN.rgb`, trailing digits are the scene number
   played in order in auto mode. **Max 62 scenes** on the GC-6004.
@@ -101,7 +104,8 @@ is for the 12-port GC-6612Pro.
   daisy chain. Run `tools/chain_map.py`, swap two units, run again.
 - **Is the daisy chain control or pixel data?** `tools/bus_probe.py`
   distinguishes them. The two need different deployment manifests.
-- **Real-world drift** over a full song, even with sync modes engaged.
+- **Real-world drift** over a full song. Top risk. `tools/drift_test.py`
+  measures it: a pixel steps once per second, so position is elapsed time.
 
 Details and the rest in `docs/06-OPEN-QUESTIONS.md`.
 
