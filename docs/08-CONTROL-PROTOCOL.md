@@ -31,6 +31,17 @@ Sourced from GIGACOLOR's own datasheets, not from reverse engineering:
 The front panel photo labels the RJ45 pins `1:D+ 2:D- 7:GND`, identical to
 the 6612. There is also an 音频 (audio) label on the top right.
 
+### Observed on the unit's own panel
+
+- **`DMX Add` menu item exists, settable 1–512.** Confirmed on the hardware,
+  not inferred. The GC-6004 therefore implements standard DMX addressing
+  across a full universe, and the trigger block is addressed the same way the
+  GC-6612Pro documents. This is the strongest evidence yet that the published
+  6612 channel map applies.
+
+  Note the block must *fit*: if it is 13 channels wide, the highest workable
+  start address is 500. For this project set every controller to **1**.
+
 ### Two corrections to earlier notes in this repo
 
 **`0x0480` = 1152 is *not* the per-port pixel limit.** The 6004 is documented
