@@ -32,8 +32,18 @@ suggested shape that has not been built or approved yet.
 
 ## 2. Groups
 
-Known so far: **Snowflakes**, **Santa's Workshop**, **Stars**, **Yule**,
-"possibly more". Every prop gets a group.
+Four groups, assigned from the owner's marked-up contact sheet (2026-09-07)
+and stored in `assets/layout.json`:
+
+| Group | Props | Pixels | Members |
+|---|---|---|---|
+| Santa's Workshop | 15 | 6,718 | the character props (Santas, snowman 9右, bears, reindeer, nutcracker), spiral tree, cupcake, bell 1号, starburst 60号 |
+| Snowflakes | 25 | 5,784 | all snowflakes, the trees 10号/11号, wreath 55号, starburst 43号, star 53号 |
+| Stars | 18 | 1,702 | the small stars and crosses, candy cane 4号 |
+| Yule | 10 | 2,145 | candy canes 2号, bows 8号/6号/7号, bursts 44号/59号, star tree 41号, star 50号, snowman 9左 |
+
+Names in `layout.json` are shape guesses from the sheet — correct them there.
+Reassigning a prop is one dropdown in the editor.
 
 A group is the unit of:
 
@@ -78,7 +88,8 @@ the prop's centre above ground), `rot` (yaw, degrees), and its `.mod` shape.
 That is enough to render a 3D viewport and to compute real distances for
 physics effects. Full 3D tilt is not needed.
 
-*Proposed* file: `layout.json`, ours, versioned in git.
+**Built:** `assets/layout.json`, read and written only by `lightshow/layout.py`.
+`z` is the height of the prop's *bottom edge* (0 = standing on the ground).
 
 ```json
 {
@@ -98,7 +109,7 @@ physics effects. Full 3D tilt is not needed.
 }
 ```
 
-Two editors over the same file (*proposed*, Phase 1 of the roadmap):
+Two views over the same file (**built**, `make editor` → `out/layout_editor.html`):
 
 - **Top-down editor** — drag props on a grid, snap to 6 in, distance
   readouts between selected props, group colouring, port/pixel-count
@@ -290,12 +301,23 @@ The rules that let an AI make a good change without breaking the show:
 6. **The timeline UI edits the same `show.yaml`** the AI edits. There is no
    second representation to fall out of sync.
 
+## 9b. Music markers
+
+`make markers` builds `out/markers.html`: waveform, playback, the analyser's
+section candidates as clickable ticks, and `S`/`D` to drop **song change** /
+**section** markers while listening. Each marker optionally carries an
+intensity (0–10) and a palette. Export writes `markers.json`; it is committed
+at `assets/show/markers.json` and is the user-input half of `show.yaml`
+(§5). Song markers reset the pattern; section markers "change it up".
+
 ## 10. Order of work
 
 Adjusted from `04-ROADMAP.md` to fit this brief:
 
-1. **Layout** — `layout.json`, import all 66 `.mod` files, top-down editor
-   with groups and distances, 3D viewport. *Blocks everything multi-prop.*
+1. **Layout** — DONE 2026-09-07: `layout.json`, all 68 props, editor with
+   groups, distances, 3D view, controller auto-assign, per-card render
+   (`build_cards.py`). Remaining: drag the placeholder positions into the
+   real course, confirm handedness.
 2. **Group renderer + multi-prop context** — `g.*` above, the six primitives,
    per-group export with identical frame counts, `--from/--to` range renders.
 3. **Ambient patterns** — the nine named looks first (they are music-free, so
@@ -335,10 +357,14 @@ end):
   (`make props`) shows: ~20 snowflakes, ~14 stars (4/5/6/8-point), 2 candy
   canes, 3 bells, 2 bows, a spiral tree, and the character props (Santas,
   snowmen, reindeer, gift piles — 9号/12号/13号/14号/15号/61–65号).
-- **Character props render upside-down in the contact sheet** while candy
-  canes and bells are upright. Either those `.mod` files use a different
-  y convention or they were digitised inverted. Settle before any
-  bottom-to-top effect (Blizzard freeze, Fireside) or "Drawn".
+- **Resolved:** the `.mod` files are y-down on disk; `props.py` now flips
+  them and every prop renders upright. **Still open:** handedness — the
+  owner's 180° rotation of the sheet put snowman 9左's broom on the left,
+  a vertical flip puts it on the right. Check one asymmetric prop in the
+  vendor tool; if it is mirrored, set `mirror: true` on the 左/右 pairs.
+- The spiral tree `.mod` is a 62 × 1.5 in strip — the strip that wraps the
+  cone, not the cone. It needs its own geometry (helix) before geometry-aware
+  effects make sense on it.
 - Course geometry: approximate spacing between groups along the route, and
   which way cars travel (sets the direction of course-wide waves).
 - Whether ambient scenes should react to the between-show songs at all

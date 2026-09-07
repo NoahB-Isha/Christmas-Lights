@@ -3,7 +3,7 @@
 # `python -m lightshow.preview ...` from anywhere.
 PY := PYTHONPATH=src python3
 
-.PHONY: test props show player fps chain preview twoprop showcase clean
+.PHONY: test props show player fps chain preview twoprop showcase clean editor cards markers layout
 
 test:            ## run the test suite
 	$(PY) -m pytest tests/ -q
@@ -33,6 +33,18 @@ twoprop:         ## build the two-prop show and its HTML viewer
 
 preview:         ## HTML geometry viewer (PROP=assets/props/47号.mod)
 	$(PY) -m lightshow.preview $(PROP) out/preview.html
+
+layout:          ## print the layout summary and checks
+	$(PY) -m lightshow.layout assets/layout.json
+
+editor:          ## standalone yard layout editor -> out/layout_editor.html
+	$(PY) tools/make_layout_editor.py
+
+cards:           ## one .rgb per controller from layout.json (SECONDS=30)
+	$(PY) tools/build_cards.py --seconds $(or $(SECONDS),30)
+
+markers:         ## music marker tool -> out/markers.html (SONG=assets/audio/show16.mp3)
+	$(PY) tools/make_marker_tool.py $(or $(SONG),assets/audio/show16.mp3)
 
 clean:
 	rm -rf out/* .pytest_cache __pycache__ src/lightshow/__pycache__

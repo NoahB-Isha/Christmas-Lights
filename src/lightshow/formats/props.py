@@ -23,7 +23,10 @@ KEY FACTS ESTABLISHED
   with zero large jumps (median step 10-41 units depending on prop), so
   the list order matches the LED chain order. This is what lets a 2D
   effect be sampled per pixel.
-* Coordinates snap to a 10-unit grid, y increases upward.
+* Coordinates snap to a 10-unit grid. On disk y increases DOWNWARD (screen
+  convention -- the character props only read upright when flipped; the
+  symmetric snowflakes hid this for a long time). Prop flips y at load so
+  everything internal is y-UP, matching the .xml loader.
 * A .moc's per-port dotCount is exactly what the .rgb header stores as a
   channel byte count / 3. So .moc defines the rig and .rgb is the render
   for it:  rgb_channel_bytes[i] == moc.ports[i].dotCount * 3
@@ -56,7 +59,8 @@ class Prop:
 
     def __init__(self, name, dots, lamp_rad=5):
         self.name = name
-        self.xy = [(d["x"], d["y"]) for d in dots]
+        # flip y: disk is y-down, internal is y-up (see module docstring)
+        self.xy = [(d["x"], -d["y"]) for d in dots]
         self.lamp_rad = lamp_rad
 
     def __len__(self):

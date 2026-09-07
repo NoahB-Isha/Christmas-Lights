@@ -6,8 +6,8 @@ Loads .mod (single prop), .moc (controller rig) and Colorloong .xml
 (full project) into the same Rig object, so downstream code never cares
 which tool produced the layout.
 
-Coordinate convention: y-UP, floats. .xml is y-down on disk and gets
-flipped at load. Units are whatever the source used (.mod/.moc use a
+Coordinate convention: y-UP, floats. Both .xml and .mod/.moc are y-down on
+disk and get flipped by their loaders. Units are whatever the source used (.mod/.moc use a
 10-unit grid; .xml uses ~1 unit per pixel spacing).
 """
 

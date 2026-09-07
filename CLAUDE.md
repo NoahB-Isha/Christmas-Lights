@@ -46,10 +46,15 @@ src/lightshow/
   formats/props.py      .mod / .moc + physical scale
   formats/colorloong.py FastLED .xml projects
   rig.py                one geometry model for all input formats
+  layout.py             yard layout: where props are, which controller/port
   music.py              audio analysis (numpy + scipy + ffmpeg, no librosa)
   effects.py            effect registry, pure functions
   preview.py            standalone HTML geometry viewer
 tools/                  generators and hardware diagnostics
+  make_layout_editor.py standalone HTML yard editor (2D drag + 3D, controllers)
+  build_cards.py        one .rgb per controller from layout.json + manifest
+  make_marker_tool.py   standalone HTML music marker tool (song/section cues)
+assets/layout.json      THE yard layout: groups, placements, controller ports
 assets/props            all 68 .mod prop models + .moc rig
 assets/audio            the show track (show16.mp3, 14:42)
 assets/projects         Colorloong .xml projects
@@ -75,6 +80,7 @@ out/                    generated, gitignored
 | Coordinate scale | 20 units per inch (`lampRad: 5` = half-inch bulb) |
 | Empty port | exports as a **32-pixel stub** — omitting it shifts all later channels |
 | `dots[i]` | pixel *i* in wire order |
+| `.mod` y axis | **y-down on disk** (screen convention). `props.py` flips at load; internal is y-up. Found because the character props rendered upside-down — symmetric snowflakes hid it. |
 
 ## Unknowns — do not assume these
 
@@ -110,6 +116,20 @@ is for the 12-port GC-6612Pro.
 
 Details and the rest in `docs/06-OPEN-QUESTIONS.md`.
 
+## The yard layout (assets/layout.json)
+
+`layout.py` is the single reader/writer. 2.5D: `x, y` on the map, `z` =
+height of the prop's bottom edge, `rot` yaw, `mirror`. Every prop has a
+`group` and a `controller`+`port`. `make editor` builds the drag-and-drop
+editor; `make cards` renders one `.rgb` per controller with identical frame
+counts and stub ports; `make layout` prints checks. Auto-assignment packs 4
+neighbouring props per controller and never crosses a group. Limits
+enforced: 1024 px/port, 4096 px/unit, one prop per port.
+
+**Handedness is unverified.** A vertical flip makes the characters upright,
+but the 左/右 pairs may additionally need `mirror: true` — compare one
+asymmetric prop against the vendor tool and set the flag in layout.json.
+
 ## Common tasks
 
 ```bash
@@ -118,6 +138,9 @@ make test                      # 43 tests, ~0.4 s
 make props                     # contact sheet of every prop
 make show SONG=path/to.mp3     # build the music-driven show
 make player SONG=path/to.mp3   # audio-synced HTML preview
+make editor                    # yard layout editor -> out/layout_editor.html
+make cards SECONDS=30          # one .rgb per controller -> out/cards/
+make markers                   # music marker tool -> out/markers.html
 python -m lightshow.preview assets/props/47号.mod out/prop.html
 ```
 

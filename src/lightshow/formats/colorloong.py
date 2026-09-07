@@ -32,7 +32,7 @@ FACTS ESTABLISHED
 * The BufferCards exactly partition the PointShapeList (verified: union of
   703 card-rect centres == the 703 PointShapes, as sets).
 * Canvas coordinates are INTEGER and y-DOWN (screen convention), unlike
-  .mod/.moc which are y-UP. This loader flips y so everything internal is
+  .mod/.moc, which props.py also flips to y-UP. This loader flips y so everything internal is
   y-up.
 * LightCount == the .rgb channel pixel count for that port.
 * >>> LightCount="0" (no prop assigned) EXPORTS AS A 32-PIXEL STUB in the
