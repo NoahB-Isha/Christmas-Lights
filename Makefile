@@ -46,5 +46,11 @@ cards:           ## one .rgb per controller from layout.json (SECONDS=30)
 markers:         ## music marker tool -> out/markers.html (SONG=assets/audio/show16.mp3)
 	$(PY) tools/make_marker_tool.py $(or $(SONG),assets/audio/show16.mp3)
 
+songs:           ## per-song tempo/beat analysis from markers.json -> out/songs.json
+	$(PY) tools/song_report.py
+
+draft:           ## first show.yaml from markers + songs.json (refuses to overwrite)
+	$(PY) tools/draft_show.py
+
 clean:
 	rm -rf out/* .pytest_cache __pycache__ src/lightshow/__pycache__

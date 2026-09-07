@@ -1,0 +1,331 @@
+# show.yaml -- the music show, authored in seconds. See docs/09-SHOW-DESIGN.md §5.
+# Times and notes come from assets/show/markers.json (the owner's listening notes).
+# `look` names are defined under `looks:`; edit freely -- the renderer reads this file.
+# intensity: 0-10 (null = let the analysis decide). palette: per-group defaults per song.
+
+audio: assets/audio/show16.mp3
+fps: 60
+layout: assets/layout.json
+markers: assets/show/markers.json
+songs_analysis: out/songs.json   # per-song beat grids (make songs)
+
+defaults:
+  transition_s: 1.5
+  floor: 0.06          # nothing ever goes fully dark
+  shimmer: true        # always-on low-density twinkle under everything
+
+palettes:
+  frost:       {hues: [0.52, 0.60, 0.68], white_core: true}
+  white-gold:  {hues: [0.11, 0.13], white_core: true, sat_max: 0.6}
+  gold:        {hues: [0.10, 0.12, 0.14], sat_max: 0.9}
+  classic:     {hues: [0.00, 0.33, 0.12], notes: 'red, green (needs hardware tuning), gold'}
+  violet-ice:  {hues: [0.70, 0.78, 0.55], white_core: true}
+  fiesta:      {hues: [0.00, 0.08, 0.15, 0.33], sat_max: 1.0}
+  white:       {hues: [0.60], sat_max: 0.15}
+
+looks:
+  starfield: "mostly dark; single bulbs pop on onsets and cool out (frost); a few whole props twinkle in/out"
+  pulse: "whole-prop breathing on the beat, group colour, low amplitude"
+  build: "brightness and sparkle density ramp toward the next marker"
+  hold-breath: "everything drops to a dim ember; one feature prop holds; ends on the next marker"
+  drop: "everything: full palette, course-wide wave on downbeats, sparkle on hits, arm/ray chases"
+  wave: "slow colour waves travelling along the course, per-group hue, bass sets the width"
+  conversation: "call and response between two sub-groups, phrase-locked to bars"
+  feature: "one prop (or one group) carries the melody; others dim to a floor and ripple when it hits"
+  chase: "wire-order chases and radial rings on the beat, mid-bright"
+  ornaments: "steady group wash with pixel-cluster ornaments twinkling gold/red/blue"
+  shimmer: "always-on low-density twinkle, no beat; used for intros, tails and fades"
+  fade: "current look decays to embers over the section"
+  change-up: "keep the family, re-roll variation seed, rotate palette"
+
+songs:
+  - name: "Chorus of the bells- start of music, piccato violin plucks, sounds like a scattered starfield"
+    from: 0:00.41
+    to: 1:23.13
+    tempo_hint: "166.7 detected"
+    palette: {"snowflakes": "frost", "stars": "white-gold", "workshop": "frost", "yule": "frost"}
+    sections:
+      - at: 0:00.41
+        look: starfield
+        intensity: 2
+        note: "Chorus of the bells- start of music, piccato violin plucks, sounds like a scattered starfield"
+      - at: 0:17.48
+        look: pulse
+        intensity: 3
+        note: "beat comes in, as well as a melody"
+      - at: 0:26.04
+        look: build
+        intensity: 7
+        note: "beat builds up, violin comes in"
+      - at: 0:43.37
+        look: hold-breath
+        intensity: 2
+        note: "many instruments stop for a dramatic pause before a beat drop"
+      - at: 0:45.35
+        look: build
+        intensity: 5
+        note: "violin builds up to beat drop"
+      - at: 0:47.49
+        look: drop
+        intensity: 9
+        note: "Beat Drop!!"
+      - at: 1:04.81
+        look: wave
+        intensity: null
+        note: "Beat drop section finishes"
+      - at: 1:21.68
+        look: fade
+        intensity: null
+        note: "music fades out here"
+
+  - name: "Song 2 (starts with a little spoken \"alright aliright\")"
+    from: 1:23.13
+    to: 3:10.41
+    tempo_hint: "76.0 detected (probably half-time: try x2)"
+    palette: {"snowflakes": "frost", "stars": "gold", "workshop": "classic", "yule": "classic"}
+    sections:
+      - at: 1:23.13
+        look: pulse
+        intensity: null
+        note: "Song 2 (starts with a little spoken \"alright aliright\")"
+      - at: 1:26.03
+        look: pulse
+        intensity: null
+        note: "Song starts with a drum fill"
+      - at: 1:32.46
+        look: change-up
+        intensity: null
+        note: "goes into the main part of the song"
+      - at: 1:44.98
+        look: conversation
+        intensity: null
+        note: "vocals come in"
+      - at: 2:17.04
+        look: feature
+        intensity: null
+        note: "honkey tonk piano comes in"
+      - at: 2:36.27
+        look: hold-breath
+        intensity: null
+        note: "piano stops"
+      - at: 2:55.18
+        look: feature
+        intensity: null
+        note: "electric guitar solo"
+      - at: 3:07.33
+        look: fade
+        intensity: null
+        note: "song fades out"
+
+  - name: "Sugarplum fairy remix starts"
+    from: 3:10.41
+    to: 4:48.01
+    tempo_hint: "64.6 detected (probably half-time: try x2)"
+    palette: {"snowflakes": "violet-ice", "stars": "violet-ice", "workshop": "violet-ice", "yule": "violet-ice"}
+    sections:
+      - at: 3:10.41
+        look: pulse
+        intensity: null
+        note: "Sugarplum fairy remix starts"
+      - at: 3:25.04
+        look: pulse
+        intensity: null
+        note: "first drum hit"
+      - at: 3:55.52
+        look: change-up
+        intensity: null
+      - at: 4:09.17
+        look: change-up
+        intensity: null
+      - at: 4:39.16
+        look: wave
+        intensity: null
+        note: "outro"
+
+  - name: "JIngle bells starts"
+    from: 4:48.01
+    to: 6:44.01
+    tempo_hint: "123.0 detected"
+    palette: {"snowflakes": "frost", "stars": "white-gold", "workshop": "frost", "yule": "frost"}
+    sections:
+      - at: 4:48.01
+        look: pulse
+        intensity: null
+        note: "JIngle bells starts"
+      - at: 5:03.63
+        look: feature
+        intensity: null
+        note: "horns come in (Dashing through the snow)"
+      - at: 5:19.29
+        look: conversation
+        intensity: null
+        note: "female chorus comes in (jingle bells)"
+      - at: 5:32.97
+        look: feature
+        intensity: null
+        note: "fun vocal harmony stacking solo"
+      - at: 5:34.97
+        look: wave
+        intensity: null
+        note: "song resumes"
+      - at: 5:50.40
+        look: conversation
+        intensity: null
+        note: "gent comes back with female chorus)"
+      - at: 6:06.20
+        look: drop
+        intensity: null
+        note: "ladies drop out"
+      - at: 6:21.65
+        look: conversation
+        intensity: null
+        note: "gentle chorus with gents and ladies"
+      - at: 6:37.36
+        look: fade
+        intensity: null
+        note: "music picks up, and then starts to fade"
+      - at: 6:43.42
+        look: fade
+        intensity: null
+        note: "fade out"
+
+  - name: "Rockin around the christmas tree starts"
+    from: 6:44.01
+    to: 8:11.19
+    tempo_hint: "69.8 detected (probably half-time: try x2)"
+    palette: {"snowflakes": "classic", "stars": "gold", "workshop": "classic", "yule": "classic"}
+    sections:
+      - at: 6:44.01
+        look: pulse
+        intensity: null
+        note: "Rockin around the christmas tree starts"
+      - at: 7:23.24
+        look: change-up
+        intensity: null
+        note: "first \"deck the halls w...\""
+      - at: 7:26.82
+        look: wave
+        intensity: null
+        note: "deck the halls section ends, song resumes as before"
+      - at: 7:39.11
+        look: feature
+        intensity: null
+        note: "Solo horn comes in"
+      - at: 8:07.76
+        look: fade
+        intensity: null
+        note: "song fades out"
+
+  - name: "Song 6"
+    from: 8:11.19
+    to: 10:21.02
+    tempo_hint: "64.6 detected (probably half-time: try x2)"
+    palette: {"snowflakes": "frost", "stars": "gold", "workshop": "classic", "yule": "classic"}
+    sections:
+      - at: 8:11.19
+        look: pulse
+        intensity: null
+        note: "Song 6"
+      - at: 8:19.22
+        look: change-up
+        intensity: null
+      - at: 8:50.25
+        look: change-up
+        intensity: null
+      - at: 9:20.47
+        look: feature
+        intensity: null
+        note: "horn solo"
+      - at: 9:35.22
+        look: feature
+        intensity: null
+        note: "guitar solo"
+      - at: 9:49.79
+        look: feature
+        intensity: null
+        note: "solo end"
+      - at: 10:06.42
+        look: change-up
+        intensity: null
+      - at: 10:20.19
+        look: fade
+        intensity: null
+        note: "fades out"
+
+  - name: "Snowman by sia starts- a little romantic"
+    from: 10:21.02
+    to: 11:12.73
+    tempo_hint: "69.8 detected (probably half-time: try x2)"
+    palette: {"snowflakes": "frost", "stars": "white", "workshop": "frost", "yule": "frost"}
+    sections:
+      - at: 10:21.02
+        look: pulse
+        intensity: null
+        note: "Snowman by sia starts- a little romantic"
+      - at: 11:08.37
+        look: fade
+        intensity: null
+        note: "fades out"
+
+  - name: "Feliz navidad starts"
+    from: 11:12.73
+    to: 12:43.43
+    tempo_hint: "73.8 detected (probably half-time: try x2)"
+    palette: {"snowflakes": "fiesta", "stars": "gold", "workshop": "fiesta", "yule": "fiesta"}
+    sections:
+      - at: 11:12.73
+        look: pulse
+        intensity: null
+        note: "Feliz navidad starts"
+      - at: 11:25.56
+        look: change-up
+        intensity: null
+      - at: 11:39.98
+        look: change-up
+        intensity: null
+      - at: 12:04.60
+        look: change-up
+        intensity: null
+      - at: 12:42.93
+        look: fade
+        intensity: null
+        note: "fades out"
+
+  - name: "Cool accapela song starts"
+    from: 12:43.43
+    to: 14:41.71
+    tempo_hint: "136.0 detected"
+    palette: {"snowflakes": "frost", "stars": "white-gold", "workshop": "classic", "yule": "classic"}
+    sections:
+      - at: 12:43.43
+        look: pulse
+        intensity: null
+        note: "Cool accapela song starts"
+      - at: 12:50.43
+        look: conversation
+        intensity: null
+        note: "Words start"
+      - at: 13:06.81
+        look: change-up
+        intensity: null
+      - at: 13:13.40
+        look: change-up
+        intensity: null
+      - at: 13:29.64
+        look: change-up
+        intensity: null
+      - at: 13:36.64
+        look: change-up
+        intensity: null
+      - at: 13:53.10
+        look: change-up
+        intensity: null
+      - at: 13:59.19
+        look: change-up
+        intensity: null
+      - at: 14:16.50
+        look: change-up
+        intensity: null
+      - at: 14:34.79
+        look: change-up
+        intensity: null

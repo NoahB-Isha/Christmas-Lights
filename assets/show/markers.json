@@ -1,1 +1,433 @@
-{"audio": "assets/audio/show16.mp3", "markers": []}
+{
+ "audio": "assets/audio/show16.mp3",
+ "duration": 881.71,
+ "markers": [
+  {
+   "t": 0.41,
+   "type": "song",
+   "label": "Chorus of the bells- start of music, piccato violin plucks, sounds like a scattered starfield",
+   "intensity": 2,
+   "palette": null
+  },
+  {
+   "t": 17.48,
+   "type": "section",
+   "label": "beat comes in, as well as a melody",
+   "intensity": 3,
+   "palette": null
+  },
+  {
+   "t": 26.04,
+   "type": "section",
+   "label": "beat builds up, violin comes in",
+   "intensity": 7,
+   "palette": null
+  },
+  {
+   "t": 43.37,
+   "type": "section",
+   "label": "many instruments stop for a dramatic pause before a beat drop",
+   "intensity": 2,
+   "palette": null
+  },
+  {
+   "t": 45.35,
+   "type": "section",
+   "label": "violin builds up to beat drop",
+   "intensity": 5,
+   "palette": null
+  },
+  {
+   "t": 47.49,
+   "type": "section",
+   "label": "Beat Drop!!",
+   "intensity": 9,
+   "palette": null
+  },
+  {
+   "t": 64.81,
+   "type": "section",
+   "label": "Beat drop section finishes",
+   "intensity": null,
+   "palette": null
+  },
+  {
+   "t": 81.68,
+   "type": "section",
+   "label": "music fades out here ",
+   "intensity": null,
+   "palette": null
+  },
+  {
+   "t": 83.13,
+   "type": "song",
+   "label": "Song 2 (starts with a little spoken \"alright aliright\")",
+   "intensity": null,
+   "palette": null
+  },
+  {
+   "t": 86.03,
+   "type": "section",
+   "label": "Song starts with a drum fill",
+   "intensity": null,
+   "palette": null
+  },
+  {
+   "t": 92.46,
+   "type": "section",
+   "label": "goes into the main part of the song",
+   "intensity": null,
+   "palette": null
+  },
+  {
+   "t": 104.98,
+   "type": "section",
+   "label": "vocals come in",
+   "intensity": null,
+   "palette": null
+  },
+  {
+   "t": 137.04,
+   "type": "section",
+   "label": "honkey tonk piano comes in ",
+   "intensity": null,
+   "palette": null
+  },
+  {
+   "t": 156.27,
+   "type": "section",
+   "label": "piano stops",
+   "intensity": null,
+   "palette": null
+  },
+  {
+   "t": 175.18,
+   "type": "section",
+   "label": "electric guitar solo ",
+   "intensity": null,
+   "palette": null
+  },
+  {
+   "t": 187.33,
+   "type": "section",
+   "label": "song fades out",
+   "intensity": null,
+   "palette": null
+  },
+  {
+   "t": 190.41,
+   "type": "song",
+   "label": "Sugarplum fairy remix starts ",
+   "intensity": null,
+   "palette": null
+  },
+  {
+   "t": 205.04,
+   "type": "section",
+   "label": "first drum hit ",
+   "intensity": null,
+   "palette": null
+  },
+  {
+   "t": 235.52,
+   "type": "section",
+   "label": "",
+   "intensity": null,
+   "palette": null
+  },
+  {
+   "t": 249.17,
+   "type": "section",
+   "label": "",
+   "intensity": null,
+   "palette": null
+  },
+  {
+   "t": 279.16,
+   "type": "section",
+   "label": "outro ",
+   "intensity": null,
+   "palette": null
+  },
+  {
+   "t": 288.01,
+   "type": "song",
+   "label": "JIngle bells starts ",
+   "intensity": null,
+   "palette": null
+  },
+  {
+   "t": 303.63,
+   "type": "section",
+   "label": "horns come in (Dashing through the snow)",
+   "intensity": null,
+   "palette": null
+  },
+  {
+   "t": 319.29,
+   "type": "section",
+   "label": "female chorus comes in (jingle bells) ",
+   "intensity": null,
+   "palette": null
+  },
+  {
+   "t": 332.97,
+   "type": "section",
+   "label": "fun vocal harmony stacking solo",
+   "intensity": null,
+   "palette": null
+  },
+  {
+   "t": 334.97,
+   "type": "section",
+   "label": "song resumes",
+   "intensity": null,
+   "palette": null
+  },
+  {
+   "t": 350.4,
+   "type": "section",
+   "label": "gent comes back with female chorus)",
+   "intensity": null,
+   "palette": null
+  },
+  {
+   "t": 366.2,
+   "type": "section",
+   "label": "ladies drop out",
+   "intensity": null,
+   "palette": null
+  },
+  {
+   "t": 381.65,
+   "type": "section",
+   "label": "gentle chorus with gents and ladies",
+   "intensity": null,
+   "palette": null
+  },
+  {
+   "t": 397.36,
+   "type": "section",
+   "label": "music picks up, and then starts to fade",
+   "intensity": null,
+   "palette": null
+  },
+  {
+   "t": 403.42,
+   "type": "section",
+   "label": "fade out",
+   "intensity": null,
+   "palette": null
+  },
+  {
+   "t": 404.01,
+   "type": "song",
+   "label": "Rockin around the christmas tree starts",
+   "intensity": null,
+   "palette": null
+  },
+  {
+   "t": 443.24,
+   "type": "section",
+   "label": "first \"deck the halls w...\"",
+   "intensity": null,
+   "palette": null
+  },
+  {
+   "t": 446.82,
+   "type": "section",
+   "label": "deck the halls section ends, song resumes as before",
+   "intensity": null,
+   "palette": null
+  },
+  {
+   "t": 459.11,
+   "type": "section",
+   "label": "Solo horn comes in",
+   "intensity": null,
+   "palette": null
+  },
+  {
+   "t": 487.76,
+   "type": "section",
+   "label": "song fades out",
+   "intensity": null,
+   "palette": null
+  },
+  {
+   "t": 491.19,
+   "type": "song",
+   "label": "Song 6",
+   "intensity": null,
+   "palette": null
+  },
+  {
+   "t": 499.22,
+   "type": "section",
+   "label": "",
+   "intensity": null,
+   "palette": null
+  },
+  {
+   "t": 530.25,
+   "type": "section",
+   "label": "",
+   "intensity": null,
+   "palette": null
+  },
+  {
+   "t": 560.47,
+   "type": "section",
+   "label": "horn solo",
+   "intensity": null,
+   "palette": null
+  },
+  {
+   "t": 575.22,
+   "type": "section",
+   "label": "guitar solo",
+   "intensity": null,
+   "palette": null
+  },
+  {
+   "t": 589.79,
+   "type": "section",
+   "label": "solo end",
+   "intensity": null,
+   "palette": null
+  },
+  {
+   "t": 606.42,
+   "type": "section",
+   "label": "",
+   "intensity": null,
+   "palette": null
+  },
+  {
+   "t": 620.19,
+   "type": "section",
+   "label": "fades out",
+   "intensity": null,
+   "palette": null
+  },
+  {
+   "t": 621.02,
+   "type": "song",
+   "label": "Snowman by sia starts- a little romantic",
+   "intensity": null,
+   "palette": null
+  },
+  {
+   "t": 668.37,
+   "type": "section",
+   "label": "fades out",
+   "intensity": null,
+   "palette": null
+  },
+  {
+   "t": 672.73,
+   "type": "song",
+   "label": "Feliz navidad starts ",
+   "intensity": null,
+   "palette": null
+  },
+  {
+   "t": 685.56,
+   "type": "section",
+   "label": "",
+   "intensity": null,
+   "palette": null
+  },
+  {
+   "t": 699.98,
+   "type": "section",
+   "label": "",
+   "intensity": null,
+   "palette": null
+  },
+  {
+   "t": 724.6,
+   "type": "section",
+   "label": "",
+   "intensity": null,
+   "palette": null
+  },
+  {
+   "t": 762.93,
+   "type": "section",
+   "label": "fades out",
+   "intensity": null,
+   "palette": null
+  },
+  {
+   "t": 763.43,
+   "type": "song",
+   "label": "Cool accapela song starts ",
+   "intensity": null,
+   "palette": null
+  },
+  {
+   "t": 770.43,
+   "type": "section",
+   "label": "Words start",
+   "intensity": null,
+   "palette": null
+  },
+  {
+   "t": 786.81,
+   "type": "section",
+   "label": "",
+   "intensity": null,
+   "palette": null
+  },
+  {
+   "t": 793.4,
+   "type": "section",
+   "label": "",
+   "intensity": null,
+   "palette": null
+  },
+  {
+   "t": 809.64,
+   "type": "section",
+   "label": "",
+   "intensity": null,
+   "palette": null
+  },
+  {
+   "t": 816.64,
+   "type": "section",
+   "label": "",
+   "intensity": null,
+   "palette": null
+  },
+  {
+   "t": 833.1,
+   "type": "section",
+   "label": "",
+   "intensity": null,
+   "palette": null
+  },
+  {
+   "t": 839.19,
+   "type": "section",
+   "label": "",
+   "intensity": null,
+   "palette": null
+  },
+  {
+   "t": 856.5,
+   "type": "section",
+   "label": "",
+   "intensity": null,
+   "palette": null
+  },
+  {
+   "t": 874.79,
+   "type": "section",
+   "label": "",
+   "intensity": null,
+   "palette": null
+  }
+ ]
+}
