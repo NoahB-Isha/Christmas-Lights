@@ -1,5 +1,9 @@
 # Roadmap
 
+**2026-09-07:** the production brief is in `09-SHOW-DESIGN.md`; its §10
+re-orders the phases below around groups, ambient scenes and a show runner.
+The phases here remain the reference for what each step must deliver.
+
 Phases are ordered so that each one produces something usable on its own,
 and so the risky unknowns get resolved early rather than late.
 

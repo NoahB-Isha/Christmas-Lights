@@ -50,7 +50,8 @@ src/lightshow/
   effects.py            effect registry, pure functions
   preview.py            standalone HTML geometry viewer
 tools/                  generators and hardware diagnostics
-assets/props            .mod prop models, .moc rig
+assets/props            all 68 .mod prop models + .moc rig
+assets/audio            the show track (show16.mp3, 14:42)
 assets/projects         Colorloong .xml projects
 assets/factory          real controller files -- the round-trip fixtures
 docs/                   full documentation, start at 01-CONTEXT.md
@@ -169,6 +170,15 @@ Palette is **ice**, not Christmas red/green/gold — the shape wants frost.
 The signature element is a sparkle whose core is white and whose falloff is
 blue: saturation *rises* as brightness falls, so grains are born white-hot
 and cool into blue. That inversion is one line in `frost()`.
+
+## The production show
+
+`docs/09-SHOW-DESIGN.md` is the brief: 68 props in themed groups on a driven
+course, a 14:42 music show every half hour (scene 1), 15 looping ambient
+patterns (scenes 2–16), a 2.5D `layout.json`, a seconds-based `show.yaml`
+with user markers over a computed baseline, and a show-runner box that fires
+DMX scene-select and audio from one clock. Read it before designing effects
+or the timeline. The track is `assets/audio/show16.mp3`.
 
 ## Where to pick up
 

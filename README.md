@@ -55,6 +55,8 @@ its offset slider is how you tune sync before committing it to the file.
 | `docs/05-PROMPTS.md` | prompts per phase |
 | `docs/06-OPEN-QUESTIONS.md` | what is still unknown |
 | `docs/07-MUSIC-MAPPING.md` | how audio becomes light |
+| `docs/08-CONTROL-PROTOCOL.md` | DMX512 trigger map, GC-6004 specs |
+| `docs/09-SHOW-DESIGN.md` | the production show: groups, scenes, layout, show.yaml, runner |
 
 ## Hardware diagnostics
 

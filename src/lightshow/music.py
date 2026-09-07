@@ -268,12 +268,17 @@ class Analysis:
             F.append(self.S[:, m].sum(1) if m.any() else np.zeros(self.S.shape[0]))
         F = np.log1p(np.array(F)).T
         F = np.hstack([F, self.chroma * F.sum(1, keepdims=True) * 0.35])
-        step = max(1, int(0.25 * self.sr / HOP))          # 4 Hz feature rate
+        step = max(1, int(0.25 * self.sr / HOP))          # ~4 Hz feature rate
+        # Use the TRUE feature rate, not a nominal 4 Hz. With HOP=256 at
+        # 22050 Hz, step is 21 and the rate is 4.10 Hz; assuming 4.0 put every
+        # boundary 2.5% late -- 22 s adrift by the end of a 15-minute track,
+        # with the last section running past the end of the audio (NaNs).
+        frate = self.sr / (HOP * step)
         F = uniform_filter1d(F, step, axis=0)[::step]
         F = (F - F.mean(0)) / (F.std(0) + 1e-9)
 
         # novelty: cosine distance across a small time lag
-        L = max(2, int(2.0 * 4))                          # 2 s half-window
+        L = max(2, int(round(2.0 * frate)))               # 2 s half-window
         nov = np.zeros(len(F))
         for i in range(L, len(F) - L):
             a = F[i - L:i].mean(0); b = F[i:i + L].mean(0)
@@ -281,8 +286,9 @@ class Analysis:
             nov[i] = 1 - (a @ b) / max(1e-9, na * nb)
         nov = _norm(uniform_filter1d(nov, 3))
 
-        peak = (nov >= maximum_filter1d(nov, int(min_len * 4))) & (nov > 0.35)
-        cuts = [0.0] + [i / 4.0 for i in np.flatnonzero(peak)] + [self.duration]
+        peak = (nov >= maximum_filter1d(nov, int(min_len * frate))) & (nov > 0.35)
+        cuts = [0.0] + [i / frate for i in np.flatnonzero(peak)
+                        if i / frate < self.duration - min_len] + [self.duration]
         cuts = sorted(set(round(c, 2) for c in cuts))
         merged = [cuts[0]]
         for c in cuts[1:]:
