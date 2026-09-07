@@ -39,7 +39,7 @@ looks:
   change-up: "keep the family, re-roll variation seed, rotate palette"
 
 songs:
-  - name: "Chorus of the bells- start of music, piccato violin plucks, sounds like a scattered starfield"
+  - name: "Carol of the Bells"
     from: 0:00.41
     to: 1:23.13
     tempo_hint: "166.7 detected"
@@ -78,11 +78,11 @@ songs:
         intensity: null
         note: "music fades out here"
 
-  - name: "Song 2 (starts with a little spoken \"alright aliright\")"
+  - name: "Run Rudolph Run — Chuck Berry"
     from: 1:23.13
     to: 3:10.41
-    tempo_hint: "76.0 detected (probably half-time: try x2)"
-    palette: {"snowflakes": "frost", "stars": "gold", "workshop": "classic", "yule": "classic"}
+    tempo_hint: "76.0 detected (probably half-time: try x2 = ~152)"
+    palette: {"snowflakes": "classic", "stars": "gold", "workshop": "classic", "yule": "classic"}
     sections:
       - at: 1:23.13
         look: pulse
@@ -117,7 +117,7 @@ songs:
         intensity: null
         note: "song fades out"
 
-  - name: "Sugarplum fairy remix starts"
+  - name: "Dance of the Sugar Plum Fairy (Remix) — Trap Music Now"
     from: 3:10.41
     to: 4:48.01
     tempo_hint: "64.6 detected (probably half-time: try x2)"
@@ -142,7 +142,7 @@ songs:
         intensity: null
         note: "outro"
 
-  - name: "JIngle bells starts"
+  - name: "Jingle Bells"
     from: 4:48.01
     to: 6:44.01
     tempo_hint: "123.0 detected"
@@ -189,7 +189,7 @@ songs:
         intensity: null
         note: "fade out"
 
-  - name: "Rockin around the christmas tree starts"
+  - name: "Rockin' Around the Christmas Tree"
     from: 6:44.01
     to: 8:11.19
     tempo_hint: "69.8 detected (probably half-time: try x2)"
@@ -216,7 +216,7 @@ songs:
         intensity: null
         note: "song fades out"
 
-  - name: "Song 6"
+  - name: "Song 6 (unidentified)"
     from: 8:11.19
     to: 10:21.02
     tempo_hint: "64.6 detected (probably half-time: try x2)"
@@ -252,7 +252,7 @@ songs:
         intensity: null
         note: "fades out"
 
-  - name: "Snowman by sia starts- a little romantic"
+  - name: "Snowman — Sia"
     from: 10:21.02
     to: 11:12.73
     tempo_hint: "69.8 detected (probably half-time: try x2)"
@@ -267,7 +267,7 @@ songs:
         intensity: null
         note: "fades out"
 
-  - name: "Feliz navidad starts"
+  - name: "Feliz Navidad"
     from: 11:12.73
     to: 12:43.43
     tempo_hint: "73.8 detected (probably half-time: try x2)"
@@ -291,7 +291,7 @@ songs:
         intensity: null
         note: "fades out"
 
-  - name: "Cool accapela song starts"
+  - name: "God Rest Ye Merry Gentlemen — Pentatonix"
     from: 12:43.43
     to: 14:41.71
     tempo_hint: "136.0 detected"
