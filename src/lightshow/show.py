@@ -146,7 +146,8 @@ class Ctx:
         ph = self.phrase_phase
         self.unison = float(np.clip(1.0 - 4.0 * min(ph, 1.0 - ph) / 0.75, 0, 1)) if ph > 0.75 or ph < 0.08 else 0.0
         self.unison = max(self.unison, float(np.clip((ph - 0.7) / 0.3, 0, 1)))
-        self.feature = R.feature_for(sec, song)           # PropGeom
+        self.params = sec.get("params", {})
+        self.feature = R.feature_for(sec, song, t)        # PropGeom
         nxt = R.sections[sec["index"] + 1] if sec["index"] + 1 < len(R.sections) else None
         self.next_look = nxt["look"] if nxt else None
         self.prop_flash = R.prop_flash                    # {prop_id: 0..1} one prop per onset, decaying
@@ -433,10 +434,12 @@ def look_conversation(c):
     order = sorted(c.props, key=lambda q: q.cx)
     left = {q.id for k, q in enumerate(order) if k * 2 < len(order)}
     bar_s = 60.0 / c.bpm * c.bar_beats
-    active_left = int(c.t_song / bar_s) % 2 == 0
+    bar_i = int(c.t_song / bar_s)
+    together = (bar_i % 3 == 2) or c.unison > 0.8        # every third bar, and on the phrase turn
+    active_left = bar_i % 2 == 0
     out = {}
     for p in c.props:
-        on = (p.id in left) == active_left or c.unison > 0.8
+        on = together or (p.id in left) == active_left
         mm = dict(m) if on else dict(m, wash=0.35, ring=0.2, hits=0.0, sparkle=0.2, melody=0.0)
         out[p.id] = stack(c, p, mm, hue_k=0 if on else 1, time_off=0.0, sector_off=p.idx)
     return transition_wipe(c, out)
@@ -605,7 +608,8 @@ class ShowRenderer:
                 self.sections.append({"index": idx, "song": s, "t0": t0, "t1": t1, "look": lk,
                                       "intensity": None if inten is None else float(inten) / 10.0,
                                       "palette": x.get("palette"), "note": x.get("note", ""),
-                                      "variation": variation, "feature_k": k})
+                                      "variation": variation, "feature_k": k,
+                                      "params": x.get("params") or {}})
                 idx += 1
         self.sections.sort(key=lambda z: z["t0"])
 
@@ -706,10 +710,17 @@ class ShowRenderer:
         i = int(np.clip(np.searchsorted(b, t) - 1, 0, len(b) - 2))
         return ((i % 4) + self.beat_phase_at(t, song)) / 4
 
-    def feature_for(self, sec, song):
-        # rotate the feature prop per section; prefer the biggest props
-        order = sorted(self.props, key=lambda p: -p.n)
-        return order[sec["feature_k"] % len(order)]
+    def feature_for(self, sec, song, t=None):
+        """The solo is PASSED between props: every `hand_beats` beats (section
+        param, default 16 = two counts of 8) the next prop along the row takes
+        it. Order runs left to right, starting on a different prop per section."""
+        order = sorted(self.props, key=lambda p: p.cx)
+        hand = int(sec.get("params", {}).get("hand_beats", 16))
+        if t is None:
+            return order[sec["feature_k"] % len(order)]
+        b0 = self.beat_index_at(sec["t0"], song); b = self.beat_index_at(t, song)
+        k = (b - b0) // max(1, hand)
+        return order[(sec["feature_k"] + k) % len(order)]
 
     # ---- rendering
     def frame(self, t):

@@ -136,7 +136,8 @@ songs:
       - at: 2:17.04
         look: feature
         intensity: 8
-        note: "honky-tonk piano -- one prop carries it hot, the rest answer with the bass ring"
+        params: {hand_beats: 16}    # pass the solo every two counts of 8
+        note: "honky-tonk piano -- the solo passes prop to prop, the rest answer with the bass ring"
       - at: 2:36.27
         look: change-up
         intensity: 7
@@ -144,7 +145,8 @@ songs:
       - at: 2:55.18
         look: feature
         intensity: 9
-        note: "electric guitar solo -- feature prop, everything else in support"
+        params: {hand_beats: 16}
+        note: "electric guitar solo -- passed prop to prop every two counts of 8"
       - at: 3:07.33
         look: fade
         intensity: null
