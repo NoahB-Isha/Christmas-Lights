@@ -42,7 +42,7 @@ songs:
   - name: "Carol of the Bells"
     from: 0:00.41
     to: 1:23.13
-    tempo_hint: "166.7 detected"
+    tempo_hint: "168 (Tunebat; ours 166.7)"
     palette: {"snowflakes": "frost", "stars": "white-gold", "workshop": "frost", "yule": "frost"}
     sections:
       - at: 0:00.41
@@ -81,7 +81,7 @@ songs:
   - name: "Run Rudolph Run — Chuck Berry"
     from: 1:23.13
     to: 3:10.41
-    tempo_hint: "76.0 detected (probably half-time: try x2 = ~152)"
+    tempo_hint: "152 (Tunebat; ours detected half-time 76)"
     palette: {"snowflakes": "classic", "stars": "gold", "workshop": "classic", "yule": "classic"}
     sections:
       - at: 1:23.13
@@ -219,7 +219,7 @@ songs:
   - name: "Winter Wonderland — Brooks & Dunn"
     from: 8:11.19
     to: 10:21.02
-    tempo_hint: "64.6 detected (probably half-time: try x2)"
+    tempo_hint: "130 (Tunebat; ours detected half-time 64.6)"
     palette: {"snowflakes": "frost", "stars": "gold", "workshop": "classic", "yule": "classic"}
     sections:
       - at: 8:11.19
@@ -255,7 +255,7 @@ songs:
   - name: "Snowman — Sia"
     from: 10:21.02
     to: 11:12.73
-    tempo_hint: "69.8 detected (probably half-time: try x2)"
+    tempo_hint: "105 (Tunebat; our tracker said 69.8 -- wrong, use 105)"
     palette: {"snowflakes": "frost", "stars": "white", "workshop": "frost", "yule": "frost"}
     sections:
       - at: 10:21.02
@@ -294,7 +294,7 @@ songs:
   - name: "God Rest Ye Merry Gentlemen — Pentatonix"
     from: 12:43.43
     to: 14:41.71
-    tempo_hint: "136.0 detected"
+    tempo_hint: "136 (Tunebat; ours 136)"
     palette: {"snowflakes": "frost", "stars": "white-gold", "workshop": "classic", "yule": "classic"}
     sections:
       - at: 12:43.43
