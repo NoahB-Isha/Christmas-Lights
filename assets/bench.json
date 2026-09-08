@@ -1,7 +1,7 @@
 {
  "version": 1,
  "units": "in",
- "notes": "TEST BENCH: 6 props, 2 GC-6004 (A, B), audio box. Ports assigned sequentially; change in the editor if the bench is wired differently. Positions are a row 30 in apart.",
+ "notes": "TEST BENCH. Props lean against the wall in a row; viewer stands at y<0 looking at the wall (+y). Order RIGHT to LEFT as seen from the room: 1, 4, 27, 47, 19, 61 (x increases to the viewer's right). Gaps ~12 in, estimated from video. Ports A1-4 = 1,4,27,47; B1-2 = 19,61 -- change in the editor if rewired.",
  "groups": {
   "workshop": {
    "label": "Santa's Workshop",
@@ -32,14 +32,14 @@
   "A": {
    "model": "GC-6004",
    "dmx_addr": 1,
-   "x": 90,
-   "y": -36
+   "x": 154.8,
+   "y": -30
   },
   "B": {
    "model": "GC-6004",
    "dmx_addr": 1,
-   "x": 300,
-   "y": -36
+   "x": 37.8,
+   "y": -30
   }
  },
  "props": [
@@ -48,7 +48,7 @@
    "mod": "1号.mod",
    "label": "bell",
    "group": "workshop",
-   "x": 12.5,
+   "x": 210.0,
    "y": 0.0,
    "z": 0.0,
    "rot": 0.0,
@@ -61,7 +61,7 @@
    "mod": "4号.mod",
    "label": "candy cane",
    "group": "stars",
-   "x": 63.0,
+   "x": 177.5,
    "y": 0.0,
    "z": 0.0,
    "rot": 0.0,
@@ -74,7 +74,7 @@
    "mod": "27号.mod",
    "label": "snowflake",
    "group": "snowflakes",
-   "x": 114.0,
+   "x": 144.5,
    "y": 0.0,
    "z": 0.0,
    "rot": 0.0,
@@ -87,7 +87,7 @@
    "mod": "47号.mod",
    "label": "cross snowflake",
    "group": "stars",
-   "x": 177.0,
+   "x": 99.5,
    "y": 0.0,
    "z": 0.0,
    "rot": 0.0,
@@ -100,7 +100,7 @@
    "mod": "19号.mod",
    "label": "snowflake",
    "group": "snowflakes",
-   "x": 239.0,
+   "x": 55.5,
    "y": 0.0,
    "z": 0.0,
    "rot": 0.0,
@@ -113,7 +113,7 @@
    "mod": "61号.mod",
    "label": "santa waving",
    "group": "workshop",
-   "x": 292.5,
+   "x": 20.0,
    "y": 0.0,
    "z": 0.0,
    "rot": 0.0,
