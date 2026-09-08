@@ -65,6 +65,8 @@ songs:
     from: 0:00.41
     to: 1:23.13
     tempo_hint: "168 (Tunebat; ours 166.7)"
+    pulse_beats: 2        # felt pulse = 84 BPM; detected beats are the ostinato 8ths
+    bar_beats: 6          # 3/4 at 84 = six detected beats per bar
     theme: "Ice Storm"
     palette: ice-storm
     theme_notes: "cool white/blue turbulence; sparkle born white cools to blue; gusts sweep the course on the ostinato"

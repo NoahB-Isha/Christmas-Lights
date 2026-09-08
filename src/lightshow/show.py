@@ -128,6 +128,15 @@ class Ctx:
         self.beat_phase = R.beat_phase_at(t, song)
         self.bar_phase = R.bar_phase_at(t, song)
         self.bpm = song["bpm"]
+        # THE MAIN PULSE. Looks should breathe with this, not twitch at every
+        # onset. pulse_beats (per song, show.yaml) says how many detected
+        # beats make one felt pulse -- Carol of the Bells is 2 (168 -> 84).
+        self.pulse_beats = song.get("pulse_beats", 1)
+        self.bar_beats = song.get("bar_beats", 4)
+        self.pulse_phase = R.pulse_phase_at(t, song)      # 0..1 within the felt pulse
+        self.pulse = 0.5 + 0.5 * math.cos(2 * math.pi * self.pulse_phase)   # 1 on the pulse, soft
+        self.phrase_phase = R.phrase_phase_at(t, song)    # 0..1 over 4 bars
+        self.energy = R.energy[f]                         # slow loudness, ~1 s window, 0..1 per song
         self.feature = R.feature_for(sec, song)           # PropGeom
         self.rng = np.random.default_rng(int(t * 10) + sec["index"] * 7919 + self.variation * 104729)
 
@@ -169,12 +178,39 @@ def _wave_x(c, p, speed_in_s=60.0, width_in=40.0, phase=0.0):
     return np.exp(-((p.wx - head) / (width_in / 2)) ** 2)
 
 
+def turb(c, p, scale_in=18.0, speed=1.0, octaves=3, seed=0.0):
+    """Cheap moving noise field 0..1 over world x/z -- the 'weather' behind a
+    storm. Sum of drifting sines at 3 scales, so gusts have structure larger
+    than one bulb and smaller than one prop."""
+    x, z = p.wx / scale_in, p.wz / scale_in
+    t = c.t * speed + seed
+    v = (np.sin(1.0 * x + 0.7 * t) * np.cos(0.8 * z - 0.5 * t)
+         + 0.5 * np.sin(2.3 * x - 1.9 * t + 1.3) * np.cos(2.1 * z + 1.1 * t)
+         + 0.25 * np.sin(4.7 * x + 3.1 * t + 0.4) * np.cos(4.3 * z - 2.7 * t + 2.0))
+    return np.clip(v / 1.75 * 0.5 + 0.5, 0, 1)
+
+
+def gust(c, p, period=2.6, width_in=70.0, direction=1.0, strength=1.0):
+    """A bright front sweeping the whole course; one per `period` seconds."""
+    x0, x1 = c.world
+    span = x1 - x0 + 2 * width_in
+    ph = (c.t / period) % 1.0
+    head = (x0 - width_in + ph * span) if direction > 0 else (x1 + width_in - ph * span)
+    return np.exp(-((p.wx - head) / (width_in / 2)) ** 2) * strength
+
+
+def flash(c, since, dur=0.35):
+    """1 -> 0 white flash envelope starting at `since` seconds into the section."""
+    d = c.t_sec - since
+    return 0.0 if d < 0 or d > dur else (1 - d / dur) ** 1.5
+
+
 @look("starfield")
 def look_starfield(c):
     pal = c.palette
     def f(p):
         base = pal.color(np.full(p.n, 0.10 + 0.05 * c.rms), k=0, variation=c.variation)
-        g = c.grains(p, 4 + 12 * c.hit_high + 6 * c.intensity, 0.9)
+        g = c.grains(p, 3 + 6 * c.energy + 4 * c.intensity, 1.1)
         whole = 0.5 + 0.5 * math.sin(2 * math.pi * (c.t / (7 + p.idx % 3) + p.idx * 0.37))
         wash = pal.color(np.full(p.n, 0.18 * whole ** 3), k=1, variation=c.variation)
         return lighten(base, wash, pal.color(g, k=0, variation=c.variation, sat=0.4))
@@ -184,10 +220,11 @@ def look_starfield(c):
 @look("pulse")
 def look_pulse(c):
     pal = c.palette
-    lvl = 0.55 + 0.30 * c.intensity
+    lvl = 0.5 + 0.3 * c.intensity + 0.1 * c.energy
     def f(p):
-        breath = lvl + 0.25 * c.beat * (0.5 + 0.5 * c.intensity)
-        col = pal.color(np.full(p.n, min(1.0, breath)), k=p.idx, variation=c.variation)
+        breath = lvl + 0.25 * c.pulse * (0.4 + 0.6 * c.energy)      # breathe on the felt pulse
+        tex = 0.8 + 0.4 * turb(c, p, 16, 0.9)                     # per-pixel weather
+        col = pal.color(np.clip(breath * tex, 0, 1), k=p.idx, variation=c.variation)
         return lighten(col, pal.color(c.shimmer(p), k=p.idx + 1, variation=c.variation, sat=0.3))
     return c.per_prop(f)
 
@@ -202,33 +239,64 @@ def look_build(c):
     pal = c.palette
     lvl = 0.45 + 0.5 * c.progress
     def f(p):
-        col = pal.color(np.full(p.n, lvl * (0.85 + 0.15 * c.beat)), k=p.idx, variation=c.variation)
-        g = c.grains(p, 2 + 30 * c.progress ** 2, 0.5)
-        return lighten(col, pal.color(g, k=p.idx + 2, variation=c.variation, sat=0.2))
+        tex = 0.65 + 0.7 * turb(c, p, 14, 1.5 + 3 * c.progress)
+        col = pal.color(np.clip(lvl * tex * (0.85 + 0.15 * c.beat), 0, 1), k=p.idx, variation=c.variation)
+        bar_s = 60.0 / c.bpm * c.bar_beats
+        gs = gust(c, p, period=bar_s / (1 + int(2 * c.progress)), width_in=60)   # bars, then half-bars
+        g = c.grains(p, 2 + 24 * c.progress ** 2, 0.5)
+        stutter = 1.0
+        if c.progress > 0.75:                                        # last quarter: on/off stutter on 8ths
+            stutter = 0.35 + 0.65 * (c.pulse_phase < 0.5)          # on/off with the felt pulse
+        return lighten(col, pal.color(gs, k=1, variation=c.variation, sat=0.4),
+                       pal.color(g, k=2, variation=c.variation, sat=0.2)) * stutter
     return c.per_prop(f)
 
 
 @look("hold-breath")
 def look_hold(c):
+    """Everything collapses to BLACK. The first 30% of the section is a fast
+    fall from the previous level; the rest is darkness with a few lonely
+    glints so the props still exist. The contrast is the point -- the drop
+    that follows lands on black."""
     pal = c.palette
+    fall = np.clip(1 - c.progress / 0.3, 0, 1) ** 2
     def f(p):
-        if p is c.feature:
-            return pal.color(np.full(p.n, 0.75 + 0.2 * c.rms), k=0, variation=c.variation)
-        return pal.color(np.full(p.n, 0.14), k=1, variation=c.variation)
+        lvl = 0.6 * fall + 0.02
+        g = c.grains(p, 1.5, 1.2) * 0.5 * (1 - fall)
+        return lighten(pal.color(np.full(p.n, lvl), k=1, variation=c.variation),
+                       pal.color(g, k=0, variation=c.variation, sat=0.3))
     return c.per_prop(f)
 
 
 @look("drop")
 def look_drop(c):
+    """EXPLOSION then STORM. t=0: every prop goes full white from its centre
+    outward in 0.25 s (a shockwave), then holds white and decays into the
+    palette over ~0.8 s. After that: full-brightness turbulent weather,
+    gusts racing along the course on every bar, rings on every beat, and
+    LIGHTNING -- whole-prop white flashes on the strongest hits."""
     pal = c.palette
+    x0, x1 = c.world
     def f(p):
-        base = pal.color(np.full(p.n, 0.6 + 0.3 * c.low), k=p.idx, variation=c.variation)
-        wave = _wave_x(c, p, speed_in_s=120 + 80 * c.intensity, width_in=48) * (0.6 + 0.4 * c.bar)
-        wv = pal.color(wave, k=p.idx + 1, variation=c.variation, sat=0.5)
-        g = c.grains(p, 20 * c.hit + 6, 0.35)
-        ring = np.exp(-((p.r01 - (c.beat_phase)) / 0.12) ** 2) * c.beat
-        return lighten(base, wv, pal.color(g, k=p.idx + 2, variation=c.variation, sat=0.2),
-                       pal.color(ring, k=p.idx + 3, variation=c.variation, sat=0.6))
+        # explosion: expanding white shockwave from each prop centre
+        if c.t_sec < 1.2:
+            rad = c.t_sec / 0.25                                    # 0..1 covers the prop in 0.25 s
+            shock = (p.r01 <= rad).astype(float)
+            white = shock * max(0.0, 1 - max(0.0, c.t_sec - 0.25) / 0.95)
+            body = pal.color(shock * (0.85 + 0.15 * c.low), k=p.idx, variation=c.variation)
+            return lighten(body, np.full((p.n, 3), 1.0) * white[:, None])
+        tex = 0.7 + 0.5 * turb(c, p, 12, 3.0)
+        base = pal.color(np.clip((0.7 + 0.3 * c.low) * tex, 0, 1), k=p.idx, variation=c.variation)
+        bar_s = 60.0 / c.bpm * c.bar_beats
+        gs = gust(c, p, period=bar_s, width_in=54, direction=1 if (int(c.t_song / bar_s) % 2 == 0) else -1)
+        ring = np.exp(-((p.r01 - c.pulse_phase) / 0.12) ** 2) * (0.6 + 0.4 * c.energy)
+        g = c.grains(p, 6 + 14 * c.energy, 0.4)
+        out = lighten(base, pal.color(gs, k=1, variation=c.variation, sat=0.35),
+                      pal.color(ring, k=2, variation=c.variation, sat=0.5),
+                      pal.color(g, k=0, variation=c.variation, sat=0.15))
+        if c.bar > 0.9 and c.energy > 0.6:                           # lightning on loud downbeats
+            out = lighten(out, np.full((p.n, 3), 0.95 * c.bar))
+        return out
     return c.per_prop(f)
 
 
@@ -236,7 +304,8 @@ def look_drop(c):
 def look_wave(c):
     pal = c.palette
     def f(p):
-        base = pal.color(np.full(p.n, 0.45 + 0.15 * c.intensity), k=p.idx, variation=c.variation)
+        tex = 0.75 + 0.5 * turb(c, p, 20, 0.8)
+        base = pal.color(np.clip((0.5 + 0.15 * c.intensity) * tex, 0, 1), k=p.idx, variation=c.variation)
         w1 = _wave_x(c, p, speed_in_s=40, width_in=60 + 60 * c.low)
         w2 = _wave_x(c, p, speed_in_s=-28, width_in=50, phase=137)
         return lighten(base, pal.color(w1 * 0.95, k=1, variation=c.variation),
@@ -392,7 +461,17 @@ class ShowRenderer:
                 beats = np.arange(t0, t1, 60.0 / bpm)
             self.songs.append({"index": k, "name": s["name"], "from": t0, "to": t1, "bpm": bpm,
                                "beats": beats, "spec": s, "palette": s.get("palette"),
-                               "theme": s.get("theme")})
+                               "theme": s.get("theme"), "pulse_beats": int(s.get("pulse_beats", 1)),
+                               "bar_beats": int(s.get("bar_beats", 4))})
+        # slow energy: rms smoothed over ~1 s and normalised per song (5th..95th pct)
+        from scipy.ndimage import uniform_filter1d
+        sm = uniform_filter1d(self.a.rms, int(FPS * 1.0))
+        self.energy = np.zeros(self.n_frames)
+        for s in self.songs:
+            i0, i1 = int(s["from"] * FPS), min(self.n_frames, max(int(s["from"] * FPS) + 1, int(s["to"] * FPS)))
+            seg = sm[i0:i1]
+            lo, hi = np.percentile(seg, 5), np.percentile(seg, 95)
+            self.energy[i0:i1] = np.clip((seg - lo) / max(1e-6, hi - lo), 0, 1)
         # per-frame beat / bar envelopes from the corrected grids
         self.beat_env = np.zeros(self.n_frames); self.bar_env = np.zeros(self.n_frames)
         for s in self.songs:
@@ -400,7 +479,7 @@ class ShowRenderer:
                 i = int(round(b * FPS))
                 if 0 <= i < self.n_frames:
                     self.beat_env[i] = 1.0
-                    if j % 4 == 0:
+                    if j % s["bar_beats"] == 0:
                         self.bar_env[i] = 1.0
         for env, decay in ((self.beat_env, 0.22), (self.bar_env, 0.4)):
             k = math.exp(-1.0 / (decay * FPS))
@@ -458,6 +537,20 @@ class ShowRenderer:
         seg = self.a.rms[i0:i1]
         lo, hi = np.percentile(seg, 5), np.percentile(seg, 95)
         return float(np.clip((self.a.rms[f] - lo) / max(1e-6, hi - lo), 0, 1)) * 0.7 + 0.2
+
+    def pulse_phase_at(self, t, song):
+        b = song["beats"]; pb = song.get("pulse_beats", 1)
+        if len(b) < 2:
+            return (t * song["bpm"] / 60 / pb) % 1.0
+        i = int(np.clip(np.searchsorted(b, t) - 1, 0, len(b) - 2))
+        return ((i % pb) + self.beat_phase_at(t, song)) / pb
+
+    def phrase_phase_at(self, t, song):
+        b = song["beats"]; bb = song.get("bar_beats", 4) * 4
+        if len(b) < 2:
+            return (t * song["bpm"] / 60 / bb) % 1.0
+        i = int(np.clip(np.searchsorted(b, t) - 1, 0, len(b) - 2))
+        return ((i % bb) + self.beat_phase_at(t, song)) / bb
 
     def beat_phase_at(self, t, song):
         b = song["beats"]

@@ -50,6 +50,7 @@ function toggle(){playing=!playing;$('#play').textContent=playing?'❚❚ Pause'
 $('#play').onclick=toggle;window.addEventListener('keydown',e=>{if(e.key===' '){e.preventDefault();toggle();}if(e.key==='ArrowLeft')seek(t-5);if(e.key==='ArrowRight')seek(t+5);});
 function seek(v){t=Math.max(D.t0,Math.min(D.t1,v));if(ready)audio.currentTime=t;draw();}
 const c=$('#c'),tc=$('#t');
+let _gc=null;function glowCanvas(W,H){if(!_gc)_gc=document.createElement('canvas');const w=Math.ceil(W/2),h=Math.ceil(H/2);if(_gc.width!==w||_gc.height!==h){_gc.width=w;_gc.height=h;}return _gc;}
 function fmt(s){const m=Math.floor(s/60);return `${m}:${(s%60).toFixed(2).padStart(5,'0')}`;}
 function frameAt(tt){return Math.max(0,Math.min(D.frames-1,Math.round((tt-D.t0+offset/1000)*D.fps)));}
 function sizeCanvas(cv){const r=cv.getBoundingClientRect();cv.width=r.width*devicePixelRatio;cv.height=r.height*devicePixelRatio;return [r.width,r.height];}
@@ -62,10 +63,17 @@ function draw(){
   const ox=pad+((W-2*pad)-(D.x1-D.x0)*s)/2, oy=H-pad;
   g.fillStyle='#1a2030';g.fillRect(0,oy,W,2);
   if(px){const row=f*img.width*4;
+    // GLOW: draw soft blobs into a half-resolution offscreen canvas, blur it once, composite 'lighter'.
+    // One blur pass for the whole frame instead of an alpha disc per bulb -- cheaper and it actually blooms.
+    if(glow){const oc=glowCanvas(W,H);const og=oc.getContext('2d');og.setTransform(0.5,0,0,0.5,0,0);og.clearRect(0,0,W,H);og.globalCompositeOperation='lighter';
+      for(const p of D.props){for(let i=0;i<p.n;i++){const k=row+(p.col+i)*4;let r=px[k],gg=px[k+1],b=px[k+2];if(r+gg+b<30)continue;
+        if(gam){r=255*Math.pow(r/255,1/2.2);gg=255*Math.pow(gg/255,1/2.2);b=255*Math.pow(b/255,1/2.2);}
+        const X=ox+(p.x[i]-D.x0)*s, Y=oy-p.z[i]*s; const rad=Math.max(2,p.pitch*s*0.9);
+        og.fillStyle=`rgba(${r|0},${gg|0},${b|0},0.55)`;og.beginPath();og.arc(X,Y,rad,0,6.283);og.fill();}}
+      g.save();g.globalCompositeOperation='lighter';g.filter='blur(7px)';g.drawImage(oc,0,0,W,H);g.filter='none';g.globalAlpha=0.9;g.filter='blur(2px)';g.drawImage(oc,0,0,W,H);g.restore();}
     for(const p of D.props){for(let i=0;i<p.n;i++){const k=row+(p.col+i)*4;let r=px[k],gg=px[k+1],b=px[k+2];
       if(gam){r=255*Math.pow(r/255,1/2.2);gg=255*Math.pow(gg/255,1/2.2);b=255*Math.pow(b/255,1/2.2);}
       const X=ox+(p.x[i]-D.x0)*s, Y=oy-p.z[i]*s; const rad=Math.max(1.2,p.pitch*s*0.3);
-      if(glow&&(r+gg+b)>60){g.fillStyle=`rgba(${r|0},${gg|0},${b|0},0.25)`;g.beginPath();g.arc(X,Y,rad*2.6,0,6.283);g.fill();}
       g.fillStyle=`rgb(${r|0},${gg|0},${b|0})`;g.beginPath();g.arc(X,Y,rad,0,6.283);g.fill();}
       g.fillStyle='#6b7385';g.font='11px system-ui';g.textAlign='center';g.fillText(p.id,ox+(p.cx-D.x0)*s,oy+16);}}
   const sec=D.sections.find(q=>t>=q.t0&&t<q.t1)||D.sections[D.sections.length-1];
