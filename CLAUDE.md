@@ -47,6 +47,7 @@ src/lightshow/
   formats/colorloong.py FastLED .xml projects
   rig.py                one geometry model for all input formats
   layout.py             yard layout: where props are, which controller/port
+  show.py               show.yaml renderer: looks, palettes, sections, cards
   music.py              audio analysis (numpy + scipy + ffmpeg, no librosa)
   effects.py            effect registry, pure functions
   preview.py            standalone HTML geometry viewer
@@ -129,6 +130,16 @@ enforced: 1024 px/port, 4096 px/unit, one prop per port.
 **Handedness is unverified.** A vertical flip makes the characters upright,
 but the 左/右 pairs may additionally need `mirror: true` — compare one
 asymmetric prop against the vendor tool and set the flag in layout.json.
+
+## The show renderer (src/lightshow/show.py)
+
+`make render SONG=1 SLUG=carol` renders song 1 of `assets/show/show.yaml`
+against the bench layout into `out/show_bench/<CTRL>/Sc-01-01-carol.rgb` plus
+an audio-synced `player.html`. A **look** is `LOOKS[name](ctx) -> {prop_id:
+(n,3)}`; add one function and reference it from the yaml. `ctx` has per-frame
+music features, the per-song beat grid (tempo corrected from `tempo_hint`),
+the palette, intensity 0..1, section progress, prop geometry in inches and
+prop-to-prop distances. Filenames: `Sc-01-NN-<slug>.rgb`, NN = scene.
 
 ## Common tasks
 

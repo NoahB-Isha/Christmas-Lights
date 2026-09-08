@@ -62,5 +62,8 @@ bench:           ## bench editor + 30 s ident cards for the 2-controller test be
 	$(PY) tools/make_layout_editor.py assets/bench.json out/bench_editor.html
 	$(PY) tools/build_cards.py --layout assets/bench.json --out out/bench_cards --seconds $(or $(SECONDS),30)
 
+render:          ## render show.yaml to cards (LAYOUT=assets/bench.json SONG=1 SLUG=name) + HTML player
+	PYTHONPATH=src:tools python3 tools/render_show.py --layout $(or $(LAYOUT),assets/bench.json) $(if $(SONG),--song $(SONG),) --slug $(or $(SLUG),show) --player
+
 clean:
 	rm -rf out/* .pytest_cache __pycache__ src/lightshow/__pycache__
