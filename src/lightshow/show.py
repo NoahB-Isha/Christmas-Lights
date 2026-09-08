@@ -134,7 +134,8 @@ class Ctx:
         self.pulse_beats = song.get("pulse_beats", 1)
         self.bar_beats = song.get("bar_beats", 4)
         self.pulse_phase = R.pulse_phase_at(t, song)      # 0..1 within the felt pulse
-        self.pulse = 0.5 + 0.5 * math.cos(2 * math.pi * self.pulse_phase)   # 1 on the pulse, soft
+        # JAGGED, not smooth: 1.0 on the pulse, then an exponential fall.
+        self.pulse = math.exp(-4.0 * self.pulse_phase)
         self.phrase_phase = R.phrase_phase_at(t, song)    # 0..1 over 4 bars
         self.energy = R.energy[f]                         # slow loudness, ~1 s window, 0..1 per song
         self.chroma = R.a.chroma_f[f] if hasattr(R.a, "chroma_f") else None
@@ -146,6 +147,9 @@ class Ctx:
         self.unison = float(np.clip(1.0 - 4.0 * min(ph, 1.0 - ph) / 0.75, 0, 1)) if ph > 0.75 or ph < 0.08 else 0.0
         self.unison = max(self.unison, float(np.clip((ph - 0.7) / 0.3, 0, 1)))
         self.feature = R.feature_for(sec, song)           # PropGeom
+        nxt = R.sections[sec["index"] + 1] if sec["index"] + 1 < len(R.sections) else None
+        self.next_look = nxt["look"] if nxt else None
+        self.prop_flash = R.prop_flash                    # {prop_id: 0..1} one prop per onset, decaying
         self.rng = np.random.default_rng(int(t * 10) + sec["index"] * 7919 + self.variation * 104729)
 
     def per_prop(self, fn):
@@ -190,12 +194,14 @@ def turb(c, p, scale_in=18.0, speed=1.0, seed=0.0):
 
 
 def gust(c, p, period=2.6, width_in=70.0, direction=1.0, phase=0.0):
-    """A bright front sweeping the whole course once per `period` seconds."""
+    """A bright front sweeping the whole course once per `period` seconds.
+    Sharp leading edge, long tail -- it arrives, it does not ooze."""
     x0, x1 = c.world
     span = x1 - x0 + 2 * width_in
     ph = (c.t / period + phase) % 1.0
     head = (x0 - width_in + ph * span) if direction > 0 else (x1 + width_in - ph * span)
-    return np.exp(-((p.wx - head) / (width_in / 2)) ** 2)
+    d = (head - p.wx) * direction                    # >0 behind the front
+    return np.where(d < 0, np.exp(-(d / (width_in * 0.08)) ** 2), np.exp(-d / (width_in * 0.6)))
 
 
 def _rainbow(c, p, speed=0.18):
@@ -256,8 +262,8 @@ def stack(c, p, m, hue_k=0, time_off=0.0, sector_off=0):
     hue = (h0 + chroma_hue_nudge(c) + div * 0.06 * ((p.idx % 3) - 1)) % 1.0
     t = c.t + div * time_off
 
-    # 0 wash
-    lvl = 0.30 + (0.35 * c.rms + 0.65 * c.harm) * m["wash"] * 1.1   # floor: lights stay ON (owner rule)
+    # 0 wash -- hits with the felt pulse (attack + fall), never a smooth breath
+    lvl = 0.30 + (0.35 * c.rms + 0.65 * c.harm) * m["wash"] * (0.85 + 0.45 * c.pulse)
     rad_fall = 1.0 - 0.2 * p.r01
     sat = m["sat"] * (0.7 + 0.3 * (1 - c.centroid))
     if pal.white_core:
@@ -344,6 +350,8 @@ def look_starfield(c):
 
 @look("build")
 def look_build(c):
+    if c.next_look == "drop":
+        return look_build_dark(c)
     m = mix_for(c)
     k = c.progress
     m.update(wash=0.4 + 0.3 * k, ring=1.0, hits=0.5 + 0.5 * k, sparkle=0.5 + 0.5 * k, melody=0.6)
@@ -357,13 +365,41 @@ def look_build(c):
     return transition_wipe(c, out)
 
 
+def look_build_dark(c):
+    """The build straight into a drop: DARK, so the drop has something to
+    explode out of. Props flash one at a time on the hits, faster and with
+    more of them lit as the drop nears; the last half-second is black."""
+    pal = c.palette
+    k = c.progress
+    out = {}
+    for p in c.props:
+        fl = c.prop_flash[p.id]
+        trail = 0.05 * k                                     # a faint growing ember
+        v = trail + 0.95 * fl
+        if k > 0.82:                                         # final beat: black
+            v = 0.0
+        col = pal.color(np.full(p.n, v), k=p.idx % 2, variation=c.variation)
+        if fl > 0.7:
+            col = lighten(col, np.full((p.n, 3), (fl - 0.7) / 0.3))
+        out[p.id] = col
+    return out
+
+
 @look("hold-breath")
 def look_hold(c):
-    """Everything collapses to BLACK, fast, then a few lonely glints."""
-    fall = np.clip(1 - c.progress / 0.3, 0, 1) ** 2
-    m = mix_for(c); m.update(wash=0.5 * fall, ring=0.3 * fall, hits=0.0, melody=0.0, sparkle=0.4, shimmer=0.3)
-    out = stack_all(c, m)
-    return {k: v * (0.15 + 0.85 * fall) for k, v in out.items()}
+    """Everything drops to black at once; then each little bell hit lights
+    ONE prop -- full, in the palette's brightest colour -- which falls away
+    before the next. The props take turns. Contrast is the point."""
+    pal = c.palette
+    out = {}
+    for p in c.props:
+        fl = c.prop_flash[p.id]
+        v = 0.03 + 0.97 * fl
+        col = pal.color(np.full(p.n, v), k=0, variation=c.variation)
+        if fl > 0.7:                                        # white flash on the attack
+            col = lighten(col, np.full((p.n, 3), (fl - 0.7) / 0.3))
+        out[p.id] = col
+    return out
 
 
 @look("drop")
@@ -659,12 +695,13 @@ class ShowRenderer:
     def frame(self, t):
         sec = self.section_at(t)
         cur = LOOKS[sec["look"]](Ctx(self, t, sec, sec["song"]))
+        # NO CROSSFADES. A new section lands HARD: an over-bright attack on
+        # its first frames that falls back to the look's normal level. The
+        # music changes on a beat; the lights should hit with it.
         dt = t - sec["t0"]
-        if dt < self.transition and sec["index"] > 0:
-            prev = self.sections[sec["index"] - 1]
-            pv = LOOKS[prev["look"]](Ctx(self, t, prev, prev["song"]))
-            a = dt / self.transition
-            cur = {k: pv[k] * (1 - a) + cur[k] * a for k in cur}
+        if sec["index"] > 0 and dt < 0.6 and sec["look"] not in ("hold-breath", "fade"):
+            gain = 1.0 + 0.9 * math.exp(-dt / 0.18)
+            cur = {k: v * gain for k, v in cur.items()}
         return {k: np.clip(v, 0, 1) for k, v in cur.items()}
 
     def _advance_spark(self, t):
@@ -676,6 +713,20 @@ class ShowRenderer:
         f = min(self.n_frames - 1, int(round(t * FPS)))
         k = math.exp(-1.0 / (0.30 * FPS))
         hit, hh = self.a.hit[f], self.a.hit_high[f]
+        # one-prop-per-onset flashes (the "bell hits" mechanic): on a rising
+        # onset the next prop in a shuffled order lights fully and decays
+        if not hasattr(self, "prop_flash"):
+            self.prop_flash = {p.id: 0.0 for p in self.props}; self._flash_prev = 0.0
+            self._flash_order = list(np.random.default_rng(11).permutation(len(self.props))); self._flash_i = 0
+        kf = math.exp(-1.0 / (0.45 * FPS))
+        for pid in self.prop_flash:
+            self.prop_flash[pid] *= kf
+        onset = max(hh, hit * 0.8)
+        if onset > 0.5 and self._flash_prev < 0.35:
+            pid = self.props[self._flash_order[self._flash_i % len(self.props)]].id
+            self._flash_i += 1
+            self.prop_flash[pid] = 1.0
+        self._flash_prev = onset
         for p in self.props:
             g = self.spark[p.id]; g *= k
             if hit > 0.55 and self._spark_rng.random() < 0.35:
@@ -690,6 +741,8 @@ class ShowRenderer:
         out = []
         self.spark = {p.id: np.zeros(p.n) for p in self.props}
         self._spark_rng = np.random.default_rng(4)
+        self.prop_flash = {p.id: 0.0 for p in self.props}; self._flash_prev = 0.0
+        self._flash_order = list(np.random.default_rng(11).permutation(len(self.props))); self._flash_i = 0
         for f in range(n):
             self._advance_spark(t0 + f / fps)
             out.append(self.frame(t0 + f / fps))

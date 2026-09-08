@@ -28,6 +28,7 @@ defaults:
 palettes:
   # -- theme palettes (one per song, owner's list) --
   ice-storm:   {hues: [0.52, 0.58, 0.64], white_core: true, sat_max: 0.9, notes: 'cool white to deep blue, turbulent'}
+  ice-plum:    {hues: [0.58, 0.78, 0.86, 0.52], white_core: true, sat_max: 0.95, notes: 'the ice storm with purple breaking through -- for drops'}
   classic:     {hues: [0.00, 0.33, 0.12], notes: 'red, green (needs hardware tuning), gold'}
   plum-storm:  {hues: [0.78, 0.85, 0.70], white_core: true, sat_max: 1.0, notes: 'plum/magenta/violet with lightning-white cores'}
   jewels:      {hues: [0.12], accents: {emerald: 0.38, ruby: 0.99, diamond: null}, accent_density: 0.06, notes: 'predominantly gold; scattered emerald, ruby, white-diamond pixels'}
@@ -94,11 +95,13 @@ songs:
       - at: 0:47.49
         look: drop
         intensity: 9
+        palette: ice-plum
         note: "Beat Drop!!"
       - at: 1:04.81
-        look: wave
-        intensity: null
-        note: "Beat drop section finishes"
+        look: pulse
+        intensity: 7
+        palette: ice-plum
+        note: "Beat drop section finishes -- keep the stack hot, purple stays"
       - at: 1:21.68
         look: fade
         intensity: null
