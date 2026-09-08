@@ -366,9 +366,12 @@ def look_build(c):
 
 
 def look_build_dark(c):
-    """The build straight into a drop: BLACK. The hold-breath before it did
-    the prop-by-prop flashes; this is the silence that makes the drop hit."""
-    return {p.id: np.zeros((p.n, 3)) for p in c.props}
+    """The build straight into a drop: the same prop-by-prop flashes as the
+    hold-breath (one prop per local onset, taking turns), then 0.7 s of
+    BLACK right before the drop so it has silence to explode out of."""
+    if c.sec["t1"] - c.t <= 0.7:
+        return {p.id: np.zeros((p.n, 3)) for p in c.props}
+    return look_hold(c)
 
 
 @look("hold-breath")
