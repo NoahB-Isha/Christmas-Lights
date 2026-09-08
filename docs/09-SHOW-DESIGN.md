@@ -256,7 +256,13 @@ green ramp test file and record the RGB that looks right in
 
 ## 8. Show runner
 
-Decision: **build one.** A small always-on box (Raspberry Pi or a spare Mac)
+**Bench (now):** the laptop, via `tools/make_cue_track.py` — a stereo file
+with music on one channel and kick-shaped cue beeps on the other, the beep
+channel wired into the GC-102C audio box, which fires the DMX scene-select.
+Details and the box characterisation checklist are in
+`08-CONTROL-PROTOCOL.md`.
+
+**Yard (later):** build one. A small always-on box (Raspberry Pi or a spare Mac)
 with a USB–RS485 adapter on the DMX chain and audio out to the PA.
 
 Responsibilities (*proposed*):

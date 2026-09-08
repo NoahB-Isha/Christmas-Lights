@@ -52,5 +52,11 @@ songs:           ## per-song tempo/beat analysis from markers.json -> out/songs.
 draft:           ## first show.yaml from markers + songs.json (refuses to overwrite)
 	$(PY) tools/draft_show.py
 
+cue:             ## bench cue track: music L + start beep R -> out/cue_show.wav
+	python3 tools/make_cue_track.py $(or $(SONG),assets/audio/show16.mp3) out/cue_show.wav $(ARGS)
+
+cuetest:         ## audio-box characterisation track: beep every 10 s, no music
+	python3 tools/make_cue_track.py --test --every 10 --seconds 180 out/cue_test.wav
+
 clean:
 	rm -rf out/* .pytest_cache __pycache__ src/lightshow/__pycache__

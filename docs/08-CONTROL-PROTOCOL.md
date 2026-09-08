@@ -83,6 +83,34 @@ scene 2 in a loop, another scene 3, and so on.
 So the DMX in port was never a mystery protocol. It is standard DMX512
 selecting scenes, which means **selecting a scene is a start trigger**.
 
+## Bench sync through the audio box (decided 2026-09-08)
+
+Until the yard runner exists, the **laptop is the runner**. One stereo file:
+music on one channel to the speakers, **cue beeps** on the other channel into
+the GC-102C. The box hears a "drum hit", emits a DMX scene-select, and every
+controller on the chain starts the scene at the same instant — locked to the
+music because both channels come off one clock.
+
+`tools/make_cue_track.py` builds the file. The beep is kick-shaped (80 Hz,
+150 ms decay, click transient) at full scale; the cue channel carries nothing
+else, so the detector only ever sees our cues.
+
+**Characterise the box first** (`--test`, a beep every 10 s, no music) and
+record here what a beep actually does:
+
+| Question | How to see it | Result |
+|---|---|---|
+| Does one beep **advance** to the next scene, **restart** the current one, or pick at **random**? | count scenes on the LCD across 6 beeps | *unknown* |
+| Shortest gap between beeps it honours? | `--every 2`, then 1, 0.5 | *unknown* |
+| Does it need a burst (`--repeat 3`) or one hit? | try both | *unknown* |
+| Level needed at the box input? | lower `--beep-gain-db` until it stops | *unknown* |
+| Beep → lights-on latency (box + DMX + controller)? | phone video at 60 fps, count frames between the beep and the first lit frame | *unknown* → becomes `--music-delay-ms` |
+| Does the box also react to the music channel bleeding in? | play music only, cue channel silent | *unknown* |
+
+If a beep *advances* rather than selects, scene order on the card is the
+show order, and a "reset to scene 1" needs its own procedure (power cycle, or
+N beeps to wrap around). Note it here once known.
+
 ## Channel map
 
 Thirteen channels from a user-set base address (`Add`):
