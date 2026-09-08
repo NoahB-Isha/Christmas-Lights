@@ -137,6 +137,14 @@ class Ctx:
         self.pulse = 0.5 + 0.5 * math.cos(2 * math.pi * self.pulse_phase)   # 1 on the pulse, soft
         self.phrase_phase = R.phrase_phase_at(t, song)    # 0..1 over 4 bars
         self.energy = R.energy[f]                         # slow loudness, ~1 s window, 0..1 per song
+        self.chroma = R.a.chroma_f[f] if hasattr(R.a, "chroma_f") else None
+        self.beat_index = R.beat_index_at(t, song)
+        # unison: 1 on the phrase downbeat and through the last bar of the
+        # phrase, ~0 mid-phrase. Props separate when it is low and snap back
+        # together as it rises.
+        ph = self.phrase_phase
+        self.unison = float(np.clip(1.0 - 4.0 * min(ph, 1.0 - ph) / 0.75, 0, 1)) if ph > 0.75 or ph < 0.08 else 0.0
+        self.unison = max(self.unison, float(np.clip((ph - 0.7) / 0.3, 0, 1)))
         self.feature = R.feature_for(sec, song)           # PropGeom
         self.rng = np.random.default_rng(int(t * 10) + sec["index"] * 7919 + self.variation * 104729)
 
@@ -171,17 +179,8 @@ def look(name):
     return deco
 
 
-def _wave_x(c, p, speed_in_s=60.0, width_in=40.0, phase=0.0):
-    x0, x1 = c.world
-    span = max(1.0, x1 - x0)
-    head = x0 - width_in + ((c.t * speed_in_s + phase) % (span + 2 * width_in))
-    return np.exp(-((p.wx - head) / (width_in / 2)) ** 2)
-
-
-def turb(c, p, scale_in=18.0, speed=1.0, octaves=3, seed=0.0):
-    """Cheap moving noise field 0..1 over world x/z -- the 'weather' behind a
-    storm. Sum of drifting sines at 3 scales, so gusts have structure larger
-    than one bulb and smaller than one prop."""
+def turb(c, p, scale_in=18.0, speed=1.0, seed=0.0):
+    """Cheap moving noise 0..1 over world x/z -- the weather behind a storm."""
     x, z = p.wx / scale_in, p.wz / scale_in
     t = c.t * speed + seed
     v = (np.sin(1.0 * x + 0.7 * t) * np.cos(0.8 * z - 0.5 * t)
@@ -190,214 +189,294 @@ def turb(c, p, scale_in=18.0, speed=1.0, octaves=3, seed=0.0):
     return np.clip(v / 1.75 * 0.5 + 0.5, 0, 1)
 
 
-def gust(c, p, period=2.6, width_in=70.0, direction=1.0, strength=1.0):
-    """A bright front sweeping the whole course; one per `period` seconds."""
+def gust(c, p, period=2.6, width_in=70.0, direction=1.0, phase=0.0):
+    """A bright front sweeping the whole course once per `period` seconds."""
     x0, x1 = c.world
     span = x1 - x0 + 2 * width_in
-    ph = (c.t / period) % 1.0
+    ph = (c.t / period + phase) % 1.0
     head = (x0 - width_in + ph * span) if direction > 0 else (x1 + width_in - ph * span)
-    return np.exp(-((p.wx - head) / (width_in / 2)) ** 2) * strength
+    return np.exp(-((p.wx - head) / (width_in / 2)) ** 2)
 
 
-def flash(c, since, dur=0.35):
-    """1 -> 0 white flash envelope starting at `since` seconds into the section."""
-    d = c.t_sec - since
-    return 0.0 if d < 0 or d > dur else (1 - d / dur) ** 1.5
+def _rainbow(c, p, speed=0.18):
+    x0, x1 = c.world
+    ph = (p.wx - x0) / max(1.0, x1 - x0)
+    return hsv((ph * 0.8 - c.t * speed) % 1.0, 0.95, np.ones(p.n))
 
 
-@look("starfield")
-def look_starfield(c):
+# ---------------------------------------------------------------- the stack
+#
+# THE MUSIC LAYER STACK is what made the prop-47 show feel connected: each
+# music feature owns one spatial channel of every prop, and the layers
+# composite by lighten. Looks do not replace it -- they set its MIX and add
+# gestures on top. Per prop:
+#
+#   wash      harmonic energy -> level, palette hue nudged by the chord   whole prop
+#   ring      low band -> radius of a ring from the centre                  radius
+#   hits      percussive onsets -> one SECTOR of the prop flashes, the       angle
+#             sector advancing on each beat (drums walk around the prop)
+#   sparkle   high-band onsets -> grains born white, cooling into colour     bulbs
+#             (stateful: grains persist and decay across frames)
+#   melody    spectral centroid -> a glow travelling the wire               wire order
+#   shimmer   time only -> always-on idle glint                             bulbs
+#
+# SEPARATE AND COME BACK TOGETHER: c.unison (0..1) rises toward the end of
+# every 4-bar phrase and peaks on the phrase downbeat. When unison is low,
+# props diverge -- each gets its own hue offset, its own sector order and
+# its own time offset, so they visibly do their own thing; as unison rises
+# those offsets shrink to zero and everything snaps back into one gesture.
+
+def mix_for(c):
+    """Intensity 0..1 -> layer gains (the ladder from the prop-47 show)."""
+    r = c.intensity
+    if r <= 0.25:
+        m = dict(wash=0.45, ring=0.30, hits=0.10, sparkle=0.25, melody=0.0, shimmer=0.8, sat=0.85)
+    elif r < 0.55:
+        m = dict(wash=0.65, ring=0.80, hits=0.50, sparkle=0.60, melody=0.25, shimmer=0.6, sat=0.9)
+    elif r < 0.85:
+        m = dict(wash=0.80, ring=0.92, hits=0.80, sparkle=0.85, melody=0.55, shimmer=0.45, sat=0.92)
+    else:
+        m = dict(wash=0.95, ring=1.00, hits=1.00, sparkle=1.00, melody=0.80, shimmer=0.35, sat=0.95)
+    return m
+
+
+def chroma_hue_nudge(c):
+    if c.chroma is None:
+        return 0.0
+    k = int(np.argmax(c.chroma))
+    fifths = [0, 7, 2, 9, 4, 11, 6, 1, 8, 3, 10, 5]
+    return 0.03 * math.sin(2 * math.pi * fifths.index(k) / 12.0)
+
+
+def stack(c, p, m, hue_k=0, time_off=0.0, sector_off=0):
+    """The six music layers for one prop under mix m -> (n,3)."""
     pal = c.palette
-    def f(p):
-        base = pal.color(np.full(p.n, 0.10 + 0.05 * c.rms), k=0, variation=c.variation)
-        g = c.grains(p, 3 + 6 * c.energy + 4 * c.intensity, 1.1)
-        whole = 0.5 + 0.5 * math.sin(2 * math.pi * (c.t / (7 + p.idx % 3) + p.idx * 0.37))
-        wash = pal.color(np.full(p.n, 0.18 * whole ** 3), k=1, variation=c.variation)
-        return lighten(base, wash, pal.color(g, k=0, variation=c.variation, sat=0.4))
-    return c.per_prop(f)
+    div = 1.0 - c.unison                          # how far this prop may stray
+    h0 = pal.hue(hue_k, c.variation)
+    hue = (h0 + chroma_hue_nudge(c) + div * 0.06 * ((p.idx % 3) - 1)) % 1.0
+    t = c.t + div * time_off
+
+    # 0 wash
+    lvl = 0.30 + (0.35 * c.rms + 0.65 * c.harm) * m["wash"] * 1.1   # floor: lights stay ON (owner rule)
+    rad_fall = 1.0 - 0.2 * p.r01
+    sat = m["sat"] * (0.7 + 0.3 * (1 - c.centroid))
+    if pal.white_core:
+        frame = hsv(hue, np.clip((1 - lvl * rad_fall) * 1.1, 0, sat), lvl * rad_fall)
+    else:
+        frame = hsv(hue, min(sat, pal.sat_max), lvl * rad_fall)
+
+    # 1 bass ring
+    if m["ring"] > 0:
+        edge = c.low * 1.05
+        band = np.exp(-((p.r01 - edge) / 0.09) ** 2)
+        frame = lighten(frame, pal.color(band * c.low * m["ring"], k=hue_k + 1, variation=c.variation, sat=0.6))
+
+    # 2 percussive hits -> one sector, advancing per beat
+    if m["hits"] > 0 and c.hit > 0.03:
+        n_sec = 4 if p.n < 200 else 6
+        sec_i = (c.beat_index + sector_off + (p.idx if div > 0.5 else 0)) % n_sec
+        ang = (p.ang + math.pi) / (2 * math.pi) * n_sec
+        sel = (ang.astype(int) % n_sec) == sec_i
+        v = np.zeros(p.n); v[sel] = c.hit * m["hits"] * (0.5 + 0.5 * p.r01[sel])
+        frame = lighten(frame, pal.color(v, k=hue_k + 2, variation=c.variation, sat=0.5))
+
+    # 3 sparkle (stateful grains, see Renderer.spark)
+    if m["sparkle"] > 0:
+        g = c.R.spark[p.id]
+        frame = lighten(frame, pal.color(g * m["sparkle"], k=hue_k, variation=c.variation, sat=0.35))
+
+    # 3b shimmer
+    if m["shimmer"] > 0:
+        ph = (p.i * 0.618 + t * 0.13) % 1.0
+        g = np.exp(-((ph - 0.5) / 0.035) ** 2) * m["shimmer"] * 0.9
+        frame = lighten(frame, pal.color(g, k=hue_k + 1, variation=c.variation, sat=0.3))
+
+    # 4 melody glow along the wire
+    if m["melody"] > 0:
+        pos = ((c.centroid * 0.6 + (t * 0.11) % 1.0) % 1.0) * p.n
+        d = np.abs(((p.i - pos + p.n / 2) % p.n) - p.n / 2)
+        v = np.exp(-(d / max(4.0, p.n / 10)) ** 2) * c.mid * m["melody"]
+        frame = lighten(frame, pal.color(v, k=hue_k + 2, variation=c.variation, sat=0.5))
+    return frame
 
 
+def stack_all(c, m, hue_spread=True):
+    out = {}
+    for p in c.props:
+        out[p.id] = stack(c, p, m, hue_k=(p.idx % 2 if hue_spread else 0),
+                          time_off=0.9 * math.sin(p.idx * 2.1), sector_off=p.idx)
+    return out
+
+
+def transition_wipe(c, frames, dur=0.55):
+    """Section boundary: a bright wipe bottom->top on every prop (from 47)."""
+    if c.t_sec > dur or c.sec["index"] == 0:
+        return frames
+    pr = c.t_sec / dur
+    for p in c.props:
+        v = np.exp(-((p.y01 - pr) / 0.16) ** 2) * (1 - pr) * 1.1
+        frames[p.id] = lighten(frames[p.id], c.palette.color(v, k=1, variation=c.variation, sat=0.2))
+    return frames
+
+
+# ------------------------------------------------------------- the looks
 @look("pulse")
 def look_pulse(c):
-    pal = c.palette
-    lvl = 0.5 + 0.3 * c.intensity + 0.1 * c.energy
-    def f(p):
-        breath = lvl + 0.25 * c.pulse * (0.4 + 0.6 * c.energy)      # breathe on the felt pulse
-        tex = 0.8 + 0.4 * turb(c, p, 16, 0.9)                     # per-pixel weather
-        col = pal.color(np.clip(breath * tex, 0, 1), k=p.idx, variation=c.variation)
-        return lighten(col, pal.color(c.shimmer(p), k=p.idx + 1, variation=c.variation, sat=0.3))
-    return c.per_prop(f)
+    return transition_wipe(c, stack_all(c, mix_for(c)))
 
 
 @look("change-up")
 def look_changeup(c):
-    return look_pulse(c)
+    m = mix_for(c)
+    m["melody"] = min(1.0, m["melody"] + 0.3); m["hits"] = min(1.0, m["hits"] + 0.2)
+    return transition_wipe(c, stack_all(c, m, hue_spread=True))
+
+
+@look("starfield")
+def look_starfield(c):
+    m = mix_for(c); m.update(wash=0.12, ring=0.0, hits=0.0, melody=0.0, shimmer=0.9, sparkle=1.0)
+    out = stack_all(c, m)
+    for p in c.props:                                   # whole props fading in and out
+        whole = 0.5 + 0.5 * math.sin(2 * math.pi * (c.t / (7 + p.idx % 3) + p.idx * 0.37))
+        out[p.id] = lighten(out[p.id], c.palette.color(np.full(p.n, 0.2 * whole ** 3), k=1, variation=c.variation))
+    return out
 
 
 @look("build")
 def look_build(c):
-    pal = c.palette
-    lvl = 0.45 + 0.5 * c.progress
-    def f(p):
-        tex = 0.65 + 0.7 * turb(c, p, 14, 1.5 + 3 * c.progress)
-        col = pal.color(np.clip(lvl * tex * (0.85 + 0.15 * c.beat), 0, 1), k=p.idx, variation=c.variation)
-        bar_s = 60.0 / c.bpm * c.bar_beats
-        gs = gust(c, p, period=bar_s / (1 + int(2 * c.progress)), width_in=60)   # bars, then half-bars
-        g = c.grains(p, 2 + 24 * c.progress ** 2, 0.5)
-        stutter = 1.0
-        if c.progress > 0.75:                                        # last quarter: on/off stutter on 8ths
-            stutter = 0.35 + 0.65 * (c.pulse_phase < 0.5)          # on/off with the felt pulse
-        return lighten(col, pal.color(gs, k=1, variation=c.variation, sat=0.4),
-                       pal.color(g, k=2, variation=c.variation, sat=0.2)) * stutter
-    return c.per_prop(f)
+    m = mix_for(c)
+    k = c.progress
+    m.update(wash=0.4 + 0.3 * k, ring=1.0, hits=0.5 + 0.5 * k, sparkle=0.5 + 0.5 * k, melody=0.6)
+    out = stack_all(c, m)
+    bar_s = 60.0 / c.bpm * c.bar_beats
+    for p in c.props:
+        gs = gust(c, p, period=bar_s / (1 + int(2 * k)), width_in=60)
+        out[p.id] = lighten(out[p.id], c.palette.color(gs * (0.5 + 0.5 * k), k=1, variation=c.variation, sat=0.35))
+        if k > 0.75:                                    # last quarter: stutter with the felt pulse
+            out[p.id] = out[p.id] * (0.3 + 0.7 * (c.pulse_phase < 0.5))
+    return transition_wipe(c, out)
 
 
 @look("hold-breath")
 def look_hold(c):
-    """Everything collapses to BLACK. The first 30% of the section is a fast
-    fall from the previous level; the rest is darkness with a few lonely
-    glints so the props still exist. The contrast is the point -- the drop
-    that follows lands on black."""
-    pal = c.palette
+    """Everything collapses to BLACK, fast, then a few lonely glints."""
     fall = np.clip(1 - c.progress / 0.3, 0, 1) ** 2
-    def f(p):
-        lvl = 0.6 * fall + 0.02
-        g = c.grains(p, 1.5, 1.2) * 0.5 * (1 - fall)
-        return lighten(pal.color(np.full(p.n, lvl), k=1, variation=c.variation),
-                       pal.color(g, k=0, variation=c.variation, sat=0.3))
-    return c.per_prop(f)
+    m = mix_for(c); m.update(wash=0.5 * fall, ring=0.3 * fall, hits=0.0, melody=0.0, sparkle=0.4, shimmer=0.3)
+    out = stack_all(c, m)
+    return {k: v * (0.15 + 0.85 * fall) for k, v in out.items()}
 
 
 @look("drop")
 def look_drop(c):
-    """EXPLOSION then STORM. t=0: every prop goes full white from its centre
-    outward in 0.25 s (a shockwave), then holds white and decays into the
-    palette over ~0.8 s. After that: full-brightness turbulent weather,
-    gusts racing along the course on every bar, rings on every beat, and
-    LIGHTNING -- whole-prop white flashes on the strongest hits."""
+    """White shockwave from every centre, then the full stack at max with
+    bar-locked gusts and lightning on loud downbeats."""
     pal = c.palette
-    x0, x1 = c.world
-    def f(p):
-        # explosion: expanding white shockwave from each prop centre
-        if c.t_sec < 1.2:
-            rad = c.t_sec / 0.25                                    # 0..1 covers the prop in 0.25 s
+    if c.t_sec < 1.2:
+        out = {}
+        for p in c.props:
+            rad = c.t_sec / 0.25
             shock = (p.r01 <= rad).astype(float)
             white = shock * max(0.0, 1 - max(0.0, c.t_sec - 0.25) / 0.95)
             body = pal.color(shock * (0.85 + 0.15 * c.low), k=p.idx, variation=c.variation)
-            return lighten(body, np.full((p.n, 3), 1.0) * white[:, None])
-        tex = 0.7 + 0.5 * turb(c, p, 12, 3.0)
-        base = pal.color(np.clip((0.7 + 0.3 * c.low) * tex, 0, 1), k=p.idx, variation=c.variation)
-        bar_s = 60.0 / c.bpm * c.bar_beats
-        gs = gust(c, p, period=bar_s, width_in=54, direction=1 if (int(c.t_song / bar_s) % 2 == 0) else -1)
-        ring = np.exp(-((p.r01 - c.pulse_phase) / 0.12) ** 2) * (0.6 + 0.4 * c.energy)
-        g = c.grains(p, 6 + 14 * c.energy, 0.4)
-        out = lighten(base, pal.color(gs, k=1, variation=c.variation, sat=0.35),
-                      pal.color(ring, k=2, variation=c.variation, sat=0.5),
-                      pal.color(g, k=0, variation=c.variation, sat=0.15))
-        if c.bar > 0.9 and c.energy > 0.6:                           # lightning on loud downbeats
-            out = lighten(out, np.full((p.n, 3), 0.95 * c.bar))
+            out[p.id] = lighten(body, np.full((p.n, 3), 1.0) * white[:, None])
         return out
-    return c.per_prop(f)
+    m = dict(wash=1.0, ring=1.0, hits=1.0, sparkle=1.0, melody=0.8, shimmer=0.3, sat=0.95)
+    out = stack_all(c, m)
+    bar_s = 60.0 / c.bpm * c.bar_beats
+    for p in c.props:
+        gs = gust(c, p, period=bar_s, width_in=54, direction=1 if (int(c.t_song / bar_s) % 2 == 0) else -1)
+        tex = 0.8 + 0.4 * turb(c, p, 12, 3.0)
+        out[p.id] = lighten(out[p.id] * tex[:, None], pal.color(gs, k=1, variation=c.variation, sat=0.35))
+        if c.bar > 0.9 and c.energy > 0.6:
+            out[p.id] = lighten(out[p.id], np.full((p.n, 3), 0.95 * c.bar))
+    return out
 
 
 @look("wave")
 def look_wave(c):
-    pal = c.palette
-    def f(p):
-        tex = 0.75 + 0.5 * turb(c, p, 20, 0.8)
-        base = pal.color(np.clip((0.5 + 0.15 * c.intensity) * tex, 0, 1), k=p.idx, variation=c.variation)
-        w1 = _wave_x(c, p, speed_in_s=40, width_in=60 + 60 * c.low)
-        w2 = _wave_x(c, p, speed_in_s=-28, width_in=50, phase=137)
-        return lighten(base, pal.color(w1 * 0.95, k=1, variation=c.variation),
-                       pal.color(w2 * 0.8, k=2, variation=c.variation))
-    return c.per_prop(f)
+    m = mix_for(c); m["hits"] *= 0.5
+    out = stack_all(c, m)
+    for p in c.props:
+        w1 = gust(c, p, period=4.0, width_in=60 + 60 * c.low)
+        w2 = gust(c, p, period=5.5, width_in=50, direction=-1, phase=0.4)
+        out[p.id] = lighten(out[p.id], c.palette.color(w1 * 0.9, k=1, variation=c.variation),
+                            c.palette.color(w2 * 0.7, k=2, variation=c.variation))
+    return transition_wipe(c, out)
 
 
 @look("conversation")
 def look_conversation(c):
-    pal = c.palette
-    # split props into two halves by x; the active half swaps every bar
+    """Two halves of the row trade bars: the active half runs the stack hot,
+    the other half holds a dim wash -- then both come together on the phrase."""
+    m = mix_for(c)
     order = sorted(c.props, key=lambda q: q.cx)
-    half = {q.id: (k * 2 < len(order)) for k, q in enumerate(order)}
-    active_left = (int(c.t_song / max(0.5, 60.0 / c.bpm * 4)) % 2) == 0
-    def f(p):
-        on = half[p.id] == active_left
-        lvl = (0.75 + 0.2 * c.rms) if on else 0.35
-        col = pal.color(np.full(p.n, lvl), k=(0 if on else 1), variation=c.variation)
-        if on:
-            col = lighten(col, pal.color(c.grains(p, 8 * c.hit_high + 3, 0.4), k=2, variation=c.variation, sat=0.3))
-        return col
-    return c.per_prop(f)
+    left = {q.id for k, q in enumerate(order) if k * 2 < len(order)}
+    bar_s = 60.0 / c.bpm * c.bar_beats
+    active_left = int(c.t_song / bar_s) % 2 == 0
+    out = {}
+    for p in c.props:
+        on = (p.id in left) == active_left or c.unison > 0.8
+        mm = dict(m) if on else dict(m, wash=0.35, ring=0.2, hits=0.0, sparkle=0.2, melody=0.0)
+        out[p.id] = stack(c, p, mm, hue_k=0 if on else 1, time_off=0.0, sector_off=p.idx)
+    return transition_wipe(c, out)
 
 
 @look("feature")
 def look_feature(c):
-    pal = c.palette
-    fe = c.feature
-    def f(p):
-        if p is fe:
-            glow = 0.7 + 0.3 * c.rms
-            trav = np.exp(-(((p.i / p.n) - ((c.t_sec * 0.6) % 1.0)) / 0.08) ** 2)
-            col = pal.color(np.full(p.n, glow), k=0, variation=c.variation)
-            return lighten(col, pal.color(trav, k=1, variation=c.variation, sat=0.3),
-                           pal.color(c.grains(p, 6 + 20 * c.hit_high, 0.3), k=2, variation=c.variation, sat=0.2))
-        d = c.dist[p.idx, fe.idx]
-        ripple = np.exp(-((d - c.beat_phase * 240) / 30.0) ** 2) * c.beat * 0.5
-        base = pal.color(np.full(p.n, 0.45), k=p.idx + 1, variation=c.variation)
-        return lighten(base, pal.color(np.full(p.n, ripple), k=1, variation=c.variation))
-    return c.per_prop(f)
+    """One prop carries the melody hot; the others answer with the ring only."""
+    m = mix_for(c)
+    out = {}
+    for p in c.props:
+        if p is c.feature:
+            out[p.id] = stack(c, p, dict(m, melody=1.0, sparkle=1.0, wash=0.7), hue_k=0)
+        else:
+            out[p.id] = stack(c, p, dict(m, hits=0.3, melody=0.0, sparkle=0.3, wash=0.45), hue_k=1)
+    return transition_wipe(c, out)
 
 
 @look("chase")
 def look_chase(c):
-    pal = c.palette
-    def f(p):
+    m = mix_for(c); m["melody"] = 1.0
+    out = stack_all(c, m)
+    for p in c.props:
         tail = max(8, p.n // 5)
-        head = ((c.t_song * c.bpm / 60.0) % 4) / 4 * (p.n + tail)
+        head = c.pulse_phase * (p.n + tail)
         d = head - p.i
         v = np.clip(1 - d / tail, 0, 1) ** 1.2; v[d < 0] = 0
-        ring = np.exp(-((p.r01 - c.beat_phase) / 0.1) ** 2) * 0.7
-        base = pal.color(np.full(p.n, 0.55), k=p.idx, variation=c.variation)
-        return lighten(base, pal.color(v, k=p.idx + 1, variation=c.variation, sat=0.4),
-                       pal.color(ring, k=p.idx + 2, variation=c.variation))
-    return c.per_prop(f)
+        out[p.id] = lighten(out[p.id], c.palette.color(v, k=1, variation=c.variation, sat=0.4))
+    return transition_wipe(c, out)
 
 
 @look("ornaments")
 def look_ornaments(c):
     pal = c.palette
-    def f(p):
-        base = pal.color(np.full(p.n, 0.6 + 0.1 * c.rms), k=0, variation=c.variation)
+    m = mix_for(c); m.update(hits=0.3, sparkle=0.4)
+    out = stack_all(c, m, hue_spread=False)
+    for p in c.props:
         r = np.random.default_rng(p.idx * 17 + c.variation)
         acc = pal.accent_colors()
         n_acc = max(3, int(p.n * max(0.05, pal.accent_density or 0.08)))
         idx = r.choice(p.n, n_acc, replace=False)
-        out = base.copy()
+        fr = out[p.id]
         for k, j in enumerate(idx):
             h = acc[k % len(acc)]
             tw = 0.6 + 0.4 * math.sin(2 * math.pi * (c.t / 1.7 + k * 0.31))
-            out[j] = np.array([1, 1, 1]) * tw if h is None else hsv(h, 0.95, tw)
-        return out
-    return c.per_prop(f)
+            fr[j] = np.array([1, 1, 1]) * tw if h is None else hsv(h, 0.95, tw)
+    return out
 
 
 @look("shimmer")
 def look_shimmer(c):
-    pal = c.palette
-    def f(p):
-        base = pal.color(np.full(p.n, 0.45), k=0, variation=c.variation)
-        return lighten(base, pal.color(c.shimmer(p, 0.8), k=1, variation=c.variation, sat=0.3))
-    return c.per_prop(f)
+    m = mix_for(c); m.update(hits=0.0, melody=0.0, ring=0.2, shimmer=1.0, wash=0.4)
+    return stack_all(c, m)
 
 
 @look("fade")
 def look_fade(c):
-    pal = c.palette
-    lvl = 0.7 * (1 - c.progress) + 0.18 * c.progress
-    def f(p):
-        return lighten(pal.color(np.full(p.n, lvl), k=p.idx, variation=c.variation),
-                       pal.color(c.shimmer(p, 0.5 * lvl), k=1, variation=c.variation, sat=0.3))
-    return c.per_prop(f)
+    lvl = 1.0 * (1 - c.progress) + 0.25 * c.progress
+    m = mix_for(c); m.update(hits=0.3 * (1 - c.progress), melody=0.0)
+    out = stack_all(c, m)
+    return {k: v * lvl for k, v in out.items()}
 
 
 # ----------------------------------------------------------------- renderer
@@ -433,7 +512,7 @@ class ShowRenderer:
             return a
         A = music.analyse(audio)
         keep = {k: getattr(A, k) for k in ("rms", "low", "mid", "high", "centroid", "harm", "perc",
-                                             "hit", "hit_high", "beat_env", "downbeat_env")}
+                                             "hit", "hit_high", "beat_env", "downbeat_env", "chroma_f")}
         keep["n_frames"] = A.n_frames; keep["duration"] = A.duration
         os.makedirs(os.path.dirname(cpath), exist_ok=True)
         np.savez(cpath, **keep)
@@ -538,6 +617,10 @@ class ShowRenderer:
         lo, hi = np.percentile(seg, 5), np.percentile(seg, 95)
         return float(np.clip((self.a.rms[f] - lo) / max(1e-6, hi - lo), 0, 1)) * 0.7 + 0.2
 
+    def beat_index_at(self, t, song):
+        b = song["beats"]
+        return int(np.clip(np.searchsorted(b, t) - 1, 0, max(0, len(b) - 1)))
+
     def pulse_phase_at(self, t, song):
         b = song["beats"]; pb = song.get("pulse_beats", 1)
         if len(b) < 2:
@@ -584,11 +667,31 @@ class ShowRenderer:
             cur = {k: pv[k] * (1 - a) + cur[k] * a for k in cur}
         return {k: np.clip(v, 0, 1) for k, v in cur.items()}
 
+    def _advance_spark(self, t):
+        """Stateful sparkle grains: born on high-band onsets (and some strong
+        hits), decaying over ~0.3 s. Called once per rendered frame."""
+        if not hasattr(self, "spark"):
+            self.spark = {p.id: np.zeros(p.n) for p in self.props}
+            self._spark_rng = np.random.default_rng(4)
+        f = min(self.n_frames - 1, int(round(t * FPS)))
+        k = math.exp(-1.0 / (0.30 * FPS))
+        hit, hh = self.a.hit[f], self.a.hit_high[f]
+        for p in self.props:
+            g = self.spark[p.id]; g *= k
+            if hit > 0.55 and self._spark_rng.random() < 0.35:
+                g[self._spark_rng.choice(p.n, size=min(3, p.n), replace=False)] = 0.85
+            if hh > 0.25:
+                kk = max(2, int((4 + 11 * hh) * p.n / 72))
+                g[self._spark_rng.choice(p.n, size=min(kk, p.n), replace=False)] = 1.0
+
     def render(self, t0=0.0, t1=None, fps=FPS, progress=None):
         t1 = self.duration if t1 is None else min(t1, self.duration)
         n = int(round((t1 - t0) * fps))
         out = []
+        self.spark = {p.id: np.zeros(p.n) for p in self.props}
+        self._spark_rng = np.random.default_rng(4)
         for f in range(n):
+            self._advance_spark(t0 + f / fps)
             out.append(self.frame(t0 + f / fps))
             if progress and f % 600 == 0:
                 progress(f, n)
