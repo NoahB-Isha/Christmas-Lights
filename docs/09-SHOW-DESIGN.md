@@ -336,6 +336,22 @@ intensity (0–10) and a palette. Export writes `markers.json`; it is committed
 at `assets/show/markers.json` and is the user-input half of `show.yaml`
 (§5). Song markers reset the pattern; section markers "change it up".
 
+## 9c. How the show is developed and tested
+
+- **Test bench, now → mid-November:** 6 props, 2 GC-6004 controllers, 1 audio
+  box (GC-102C, the DMX scene selector). Every pattern is proven here on a
+  technical level first — sync, stubs, brightness, readability.
+- **Assembly, mid-November:** a team builds the prop groups in the yard.
+  Groups may change at that point; expect to re-run auto-assign, define
+  feature props, and rework a few looks against the real `layout.json`.
+- **Hardware headroom:** one or two more controllers/props can be added a few
+  weeks out if a test needs them.
+
+Design consequence: every pattern renders against *whatever layout it is
+given*. The bench is just a second layout file (`assets/bench.json`, 6 props
+on 2 controllers) — the same `show.yaml` renders to the bench for testing and
+to the full yard for the show. Nothing may be hard-coded to a prop count.
+
 ## 10. Order of work
 
 Adjusted from `04-ROADMAP.md` to fit this brief:
