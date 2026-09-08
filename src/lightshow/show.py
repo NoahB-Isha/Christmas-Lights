@@ -377,9 +377,10 @@ def look_hold(c):
     ONE prop -- full, in the palette's brightest colour -- which falls away
     before the next. The props take turns. Contrast is the point."""
     pal = c.palette
+    flashes = c.R.turn_flash(c)
     out = {}
     for p in c.props:
-        fl = c.prop_flash[p.id]
+        fl = flashes[p.id]
         v = 0.03 + 0.97 * fl
         col = pal.color(np.full(p.n, v), k=0, variation=c.variation)
         if fl > 0.7:                                        # white flash on the attack
@@ -631,6 +632,41 @@ class ShowRenderer:
         seg = self.a.rms[i0:i1]
         lo, hi = np.percentile(seg, 5), np.percentile(seg, 95)
         return float(np.clip((self.a.rms[f] - lo) / max(1e-6, hi - lo), 0, 1)) * 0.7 + 0.2
+
+    def local_onsets(self, sec, min_gap=0.14):
+        """Onsets detected INSIDE one section, normalised to that section --
+        so a quiet passage (the bells in a pause) still yields its hits even
+        though the track-wide detector barely notices them. Cached."""
+        key = ("onsets", sec["index"])
+        if not hasattr(self, "_cache"):
+            self._cache = {}
+        if key in self._cache:
+            return self._cache[key]
+        i0, i1 = int(sec["t0"] * FPS), min(self.n_frames, int(sec["t1"] * FPS))
+        seg = self.a.high[i0:i1] * 0.6 + self.a.rms[i0:i1] * 0.4
+        d = np.diff(seg, prepend=seg[:1])
+        d = np.clip(d, 0, None)
+        thr = 0.3 * (np.percentile(d, 99) or 1e-6)
+        times, last = [], -1e9
+        for j in range(1, len(d) - 1):
+            if d[j] >= thr and d[j] >= d[j - 1] and d[j] >= d[j + 1]:
+                t = sec["t0"] + j / FPS
+                if t - last >= min_gap:
+                    times.append(t); last = t
+        self._cache[key] = times
+        return times
+
+    def turn_flash(self, c, decay=0.45):
+        """{prop_id: 0..1}: props take turns, one per local onset."""
+        times = self.local_onsets(c.sec)
+        out = {p.id: 0.0 for p in self.props}
+        order = list(np.random.default_rng(11 + c.sec["index"]).permutation(len(self.props)))
+        for k, t0 in enumerate(times):
+            dt = c.t - t0
+            if 0 <= dt < 2.0:
+                pid = self.props[order[k % len(self.props)]].id
+                out[pid] = max(out[pid], math.exp(-dt / decay))
+        return out
 
     def beat_index_at(self, t, song):
         b = song["beats"]
