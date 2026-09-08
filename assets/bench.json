@@ -1,7 +1,7 @@
 {
  "version": 1,
  "units": "in",
- "notes": "TEST BENCH. Props lean against the wall in a row; viewer stands at y<0 looking at the wall (+y). Order RIGHT to LEFT as seen from the room: 1, 4, 27, 47, 19, 61 (x increases to the viewer's right). Gaps ~12 in, estimated from video. Ports A1-4 = 1,4,27,47; B1-2 = 19,61 -- change in the editor if rewired.",
+ "notes": "TEST BENCH ONLY. Props lean against one wall in a row; the viewer stands at y<0 looking at the wall (+y), so x increases to the viewer's right. Order right-to-left as seen from the room: 1, 4, 27, 47, 19, 61. Gaps ~12 in, estimated from video. Ports A1-4 = 1,4,27,47; B1-2 = 19,61 -- change in the editor if rewired. This viewing direction is specific to the bench, not a rule for the yard: there each prop's rot says which way it faces.",
  "groups": {
   "workshop": {
    "label": "Santa's Workshop",
