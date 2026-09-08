@@ -264,6 +264,8 @@ def stack(c, p, m, hue_k=0, time_off=0.0, sector_off=0):
 
     # 0 wash -- hits with the felt pulse (attack + fall), never a smooth breath
     lvl = 0.30 + (0.35 * c.rms + 0.65 * c.harm) * m["wash"] * (0.85 + 0.45 * c.pulse)
+    if not pal.white_core:                       # saturated palettes read dimmer at the same value
+        lvl = np.clip(lvl * 1.35 + 0.08, 0, 1)
     rad_fall = 1.0 - 0.2 * p.r01
     sat = m["sat"] * (0.7 + 0.3 * (1 - c.centroid))
     if pal.white_core:

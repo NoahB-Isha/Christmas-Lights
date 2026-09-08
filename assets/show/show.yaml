@@ -111,38 +111,40 @@ songs:
     from: 1:23.13
     to: 3:10.41
     tempo_hint: "152 (Tunebat; ours detected half-time 76)"
+    pulse_beats: 1        # rock'n'roll: the felt pulse is the 152 quarter
+    bar_beats: 4
     theme: "Classic Christmas"
     palette: classic
-    theme_notes: "red/green/gold, honky-tonk chases, guitar solo = feature prop"
+    theme_notes: "red/green/gold; drums walk the sectors, guitar and piano solos take a prop each, vocals trade halves"
     sections:
       - at: 1:23.13
-        look: pulse
-        intensity: null
-        note: "Song 2 (starts with a little spoken \"alright aliright\")"
+        look: shimmer
+        intensity: 3
+        note: "spoken \"alright alright\" -- warm idle glint, nothing moving yet"
       - at: 1:26.03
         look: pulse
-        intensity: null
-        note: "Song starts with a drum fill"
+        intensity: 7
+        note: "drum fill -- hits walk the sectors, full stack"
       - at: 1:32.46
-        look: change-up
-        intensity: null
-        note: "goes into the main part of the song"
+        look: chase
+        intensity: 7
+        note: "main riff -- comets run the wires on the pulse"
       - at: 1:44.98
         look: conversation
-        intensity: null
-        note: "vocals come in"
+        intensity: 7
+        note: "vocals come in -- halves trade bars, together on the phrase"
       - at: 2:17.04
         look: feature
-        intensity: null
-        note: "honkey tonk piano comes in"
+        intensity: 8
+        note: "honky-tonk piano -- one prop carries it hot, the rest answer with the bass ring"
       - at: 2:36.27
-        look: hold-breath
-        intensity: null
-        note: "piano stops"
+        look: change-up
+        intensity: 7
+        note: "piano stops -- back to the band, new variation"
       - at: 2:55.18
         look: feature
-        intensity: null
-        note: "electric guitar solo"
+        intensity: 9
+        note: "electric guitar solo -- feature prop, everything else in support"
       - at: 3:07.33
         look: fade
         intensity: null
