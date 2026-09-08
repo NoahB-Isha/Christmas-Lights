@@ -366,23 +366,9 @@ def look_build(c):
 
 
 def look_build_dark(c):
-    """The build straight into a drop: DARK, so the drop has something to
-    explode out of. Props flash one at a time on the hits, faster and with
-    more of them lit as the drop nears; the last half-second is black."""
-    pal = c.palette
-    k = c.progress
-    out = {}
-    for p in c.props:
-        fl = c.prop_flash[p.id]
-        trail = 0.05 * k                                     # a faint growing ember
-        v = trail + 0.95 * fl
-        if k > 0.82:                                         # final beat: black
-            v = 0.0
-        col = pal.color(np.full(p.n, v), k=p.idx % 2, variation=c.variation)
-        if fl > 0.7:
-            col = lighten(col, np.full((p.n, 3), (fl - 0.7) / 0.3))
-        out[p.id] = col
-    return out
+    """The build straight into a drop: BLACK. The hold-breath before it did
+    the prop-by-prop flashes; this is the silence that makes the drop hit."""
+    return {p.id: np.zeros((p.n, 3)) for p in c.props}
 
 
 @look("hold-breath")
@@ -404,18 +390,11 @@ def look_hold(c):
 
 @look("drop")
 def look_drop(c):
-    """White shockwave from every centre, then the full stack at max with
-    bar-locked gusts and lightning on loud downbeats."""
+    """The full stack at max from the first frame, bar-locked gusts,
+    lightning on loud downbeats."""
     pal = c.palette
-    if c.t_sec < 1.2:
-        out = {}
-        for p in c.props:
-            rad = c.t_sec / 0.25
-            shock = (p.r01 <= rad).astype(float)
-            white = shock * max(0.0, 1 - max(0.0, c.t_sec - 0.25) / 0.95)
-            body = pal.color(shock * (0.85 + 0.15 * c.low), k=p.idx, variation=c.variation)
-            out[p.id] = lighten(body, np.full((p.n, 3), 1.0) * white[:, None])
-        return out
+    # no geometry-aware intro: the drop comes in FULL BLAST on its first frame
+    # (the renderer's hard-cut attack makes it over-bright for ~0.2 s on top)
     m = dict(wash=1.0, ring=1.0, hits=1.0, sparkle=1.0, melody=0.8, shimmer=0.3, sat=0.95)
     out = stack_all(c, m)
     bar_s = 60.0 / c.bpm * c.bar_beats
@@ -722,7 +701,7 @@ class ShowRenderer:
         for pid in self.prop_flash:
             self.prop_flash[pid] *= kf
         onset = max(hh, hit * 0.8)
-        if onset > 0.5 and self._flash_prev < 0.35:
+        if onset > 0.35 and self._flash_prev < 0.22:
             pid = self.props[self._flash_order[self._flash_i % len(self.props)]].id
             self._flash_i += 1
             self.prop_flash[pid] = 1.0
