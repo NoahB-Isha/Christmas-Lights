@@ -58,5 +58,9 @@ cue:             ## bench cue track: music L + start beep R -> out/cue_show.wav
 cuetest:         ## audio-box characterisation track: beep every 10 s, no music
 	python3 tools/make_cue_track.py --test --every 10 --seconds 180 out/cue_test.wav
 
+bench:           ## bench editor + 30 s ident cards for the 2-controller test bench
+	$(PY) tools/make_layout_editor.py assets/bench.json out/bench_editor.html
+	$(PY) tools/build_cards.py --layout assets/bench.json --out out/bench_cards --seconds $(or $(SECONDS),30)
+
 clean:
 	rm -rf out/* .pytest_cache __pycache__ src/lightshow/__pycache__

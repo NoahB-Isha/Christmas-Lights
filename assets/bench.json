@@ -1,0 +1,125 @@
+{
+ "version": 1,
+ "units": "in",
+ "notes": "TEST BENCH: 6 props, 2 GC-6004 (A, B), audio box. Ports assigned sequentially; change in the editor if the bench is wired differently. Positions are a row 30 in apart.",
+ "groups": {
+  "workshop": {
+   "label": "Santa's Workshop",
+   "prefix": "WS",
+   "palette": "classic",
+   "color": "#e8b04b"
+  },
+  "snowflakes": {
+   "label": "Snowflakes",
+   "prefix": "SF",
+   "palette": "frost",
+   "color": "#5fb8ff"
+  },
+  "stars": {
+   "label": "Stars",
+   "prefix": "ST",
+   "palette": "gold",
+   "color": "#ff6b5f"
+  },
+  "yule": {
+   "label": "Yule",
+   "prefix": "YU",
+   "palette": "classic",
+   "color": "#c77dff"
+  }
+ },
+ "controllers": {
+  "A": {
+   "model": "GC-6004",
+   "dmx_addr": 1,
+   "x": 90,
+   "y": -36
+  },
+  "B": {
+   "model": "GC-6004",
+   "dmx_addr": 1,
+   "x": 300,
+   "y": -36
+  }
+ },
+ "props": [
+  {
+   "id": "1",
+   "mod": "1号.mod",
+   "label": "bell",
+   "group": "workshop",
+   "x": 12.5,
+   "y": 0.0,
+   "z": 0.0,
+   "rot": 0.0,
+   "mirror": false,
+   "controller": "A",
+   "port": 1
+  },
+  {
+   "id": "2R",
+   "mod": "2号右.mod",
+   "label": "candy cane (R)",
+   "group": "yule",
+   "x": 62.0,
+   "y": 0.0,
+   "z": 0.0,
+   "rot": 0.0,
+   "mirror": false,
+   "controller": "A",
+   "port": 2
+  },
+  {
+   "id": "27",
+   "mod": "27号.mod",
+   "label": "snowflake",
+   "group": "snowflakes",
+   "x": 112.0,
+   "y": 0.0,
+   "z": 0.0,
+   "rot": 0.0,
+   "mirror": false,
+   "controller": "A",
+   "port": 3
+  },
+  {
+   "id": "47",
+   "mod": "47号.mod",
+   "label": "cross snowflake",
+   "group": "stars",
+   "x": 175.0,
+   "y": 0.0,
+   "z": 0.0,
+   "rot": 0.0,
+   "mirror": false,
+   "controller": "A",
+   "port": 4
+  },
+  {
+   "id": "19",
+   "mod": "19号.mod",
+   "label": "snowflake",
+   "group": "snowflakes",
+   "x": 237.0,
+   "y": 0.0,
+   "z": 0.0,
+   "rot": 0.0,
+   "mirror": false,
+   "controller": "B",
+   "port": 1
+  },
+  {
+   "id": "61",
+   "mod": "61号.mod",
+   "label": "santa waving",
+   "group": "workshop",
+   "x": 290.5,
+   "y": 0.0,
+   "z": 0.0,
+   "rot": 0.0,
+   "mirror": false,
+   "controller": "B",
+   "port": 2
+  }
+ ]
+}
