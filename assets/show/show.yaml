@@ -216,7 +216,7 @@ songs:
         intensity: null
         note: "song fades out"
 
-  - name: "Song 6 (unidentified)"
+  - name: "Winter Wonderland — Brooks & Dunn"
     from: 8:11.19
     to: 10:21.02
     tempo_hint: "64.6 detected (probably half-time: try x2)"
