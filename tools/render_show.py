@@ -33,6 +33,7 @@ def main():
     ap.add_argument("--scene", type=int, default=1)
     ap.add_argument("--slug", default="show")
     ap.add_argument("--player", action="store_true", help="also write an HTML preview")
+    ap.add_argument("--no-cards", action="store_true", help="skip writing .rgb cards (fast preview iteration)")
     a = ap.parse_args()
 
     R = ShowRenderer(a.show, a.layout)
@@ -49,9 +50,11 @@ def main():
     tic = time.time()
     frames = R.render(t0, t1, progress=lambda f, n: print(f"  {f}/{n}", end="\r"))
     print(f"  rendered in {time.time()-tic:.1f} s          ")
-    man = R.write_cards(frames, out, scene=a.scene, slug=a.slug, fps=FPS)
-    for cid, c in man["cards"].items():
-        print(f"  {cid}: {c['file']}  {c['channels']}  {c['bytes']/1e6:.1f} MB")
+    if not a.no_cards:
+        man = R.write_cards(frames, out, scene=a.scene, slug=a.slug, fps=FPS)
+        for cid, c in man["cards"].items():
+            print(f"  {cid}: {c['file']}  {c['channels']}  {c['bytes']/1e6:.1f} MB")
+    os.makedirs(out, exist_ok=True)
     print("\nbrightness (share of time >= 60%, non-exempt looks | mean level | all looks):")
     for name, share, mean, share_all in R.brightness_report(frames, t0):
         print(f"  {share:5.0f}%   {mean:.2f}   {share_all:5.0f}%   {name}")

@@ -65,16 +65,21 @@ function draw(){
   if(px){const row=f*img.width*4;
     // GLOW: draw soft blobs into a half-resolution offscreen canvas, blur it once, composite 'lighter'.
     // One blur pass for the whole frame instead of an alpha disc per bulb -- cheaper and it actually blooms.
-    if(glow){const oc=glowCanvas(W,H);const og=oc.getContext('2d');og.setTransform(0.5,0,0,0.5,0,0);og.clearRect(0,0,W,H);og.globalCompositeOperation='lighter';
-      for(const p of D.props){for(let i=0;i<p.n;i++){const k=row+(p.col+i)*4;let r=px[k],gg=px[k+1],b=px[k+2];if(r+gg+b<30)continue;
+    if(glow){const oc=glowCanvas(W,H);const og=oc.getContext('2d');og.setTransform(0.5,0,0,0.5,0,0);og.clearRect(0,0,W,H);og.globalCompositeOperation='screen';
+      for(const p of D.props){const dens=Math.min(1,p.pitch/1.6);          // dense props overlap more -> less alpha per bulb
+        for(let i=0;i<p.n;i++){const k=row+(p.col+i)*4;let r=px[k],gg=px[k+1],b=px[k+2];const lum=(r+gg+b)/765;if(lum<0.06)continue;
         if(gam){r=255*Math.pow(r/255,1/2.2);gg=255*Math.pow(gg/255,1/2.2);b=255*Math.pow(b/255,1/2.2);}
-        const X=ox+(p.x[i]-D.x0)*s, Y=oy-p.z[i]*s; const rad=Math.max(2,p.pitch*s*0.9);
-        og.fillStyle=`rgba(${r|0},${gg|0},${b|0},0.55)`;og.beginPath();og.arc(X,Y,rad,0,6.283);og.fill();}}
-      g.save();g.globalCompositeOperation='lighter';g.filter='blur(7px)';g.drawImage(oc,0,0,W,H);g.filter='none';g.globalAlpha=0.9;g.filter='blur(2px)';g.drawImage(oc,0,0,W,H);g.restore();}
+        const X=ox+(p.x[i]-D.x0)*s, Y=oy-p.z[i]*s; const rad=Math.max(2.5,p.pitch*s*0.75);
+        og.fillStyle=`rgba(${r|0},${gg|0},${b|0},${(0.14+0.55*lum)*dens})`;og.beginPath();og.arc(X,Y,rad,0,6.283);og.fill();}}
+      // two blur passes: a wide soft haze and a tighter halo, both 'screen' so colour survives and nothing saturates to white
+      g.save();g.globalCompositeOperation='screen';
+      g.filter=`blur(${Math.max(7,s*2.0)}px)`;g.globalAlpha=0.9;g.drawImage(oc,0,0,W,H);
+      g.filter=`blur(${Math.max(2,s*0.5)}px)`;g.globalAlpha=0.6;g.drawImage(oc,0,0,W,H);g.restore();}
     for(const p of D.props){for(let i=0;i<p.n;i++){const k=row+(p.col+i)*4;let r=px[k],gg=px[k+1],b=px[k+2];
       if(gam){r=255*Math.pow(r/255,1/2.2);gg=255*Math.pow(gg/255,1/2.2);b=255*Math.pow(b/255,1/2.2);}
-      const X=ox+(p.x[i]-D.x0)*s, Y=oy-p.z[i]*s; const rad=Math.max(1.2,p.pitch*s*0.3);
-      g.fillStyle=`rgb(${r|0},${gg|0},${b|0})`;g.beginPath();g.arc(X,Y,rad,0,6.283);g.fill();}
+      const X=ox+(p.x[i]-D.x0)*s, Y=oy-p.z[i]*s; const rad=Math.max(1.4,p.pitch*s*0.32);
+      const lum=(r+gg+b)/765, k2=1+0.35*lum;                                  // bright bulbs get a hot core
+      g.fillStyle=`rgb(${Math.min(255,r*k2)|0},${Math.min(255,gg*k2)|0},${Math.min(255,b*k2)|0})`;g.beginPath();g.arc(X,Y,rad,0,6.283);g.fill();}
       g.fillStyle='#6b7385';g.font='11px system-ui';g.textAlign='center';g.fillText(p.id,ox+(p.cx-D.x0)*s,oy+16);}}
   const sec=D.sections.find(q=>t>=q.t0&&t<q.t1)||D.sections[D.sections.length-1];
   const song=D.songs.find(q=>t>=q.t0&&t<q.t1);
