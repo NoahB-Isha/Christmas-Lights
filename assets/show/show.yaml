@@ -13,9 +13,11 @@ songs_analysis: out/songs.json   # per-song beat grids (make songs)
 defaults:
   transition_s: 1.5
   shimmer: true        # always-on low-density twinkle under everything
-  # BRIGHTNESS POLICY (owner, 2026-09-07): avoid total blackouts. Darkness is
-  # for contrast or for looks that need it (starfield); otherwise lights are
-  # ON. Guideline, not a hard rule -- the renderer reports compliance.
+  # BRIGHTNESS GUIDELINE (owner, 2026-09-07): avoid total blackouts. Darkness
+  # is for contrast or for looks that need it (starfield); otherwise lights are
+  # ON. The 75% is a share of TIME within a song, not of area, and it is a
+  # soft target that a particular effect may stretch. The renderer reports
+  # the figure per song for information -- it never clamps or enforces.
   brightness:
     floor: 0.10              # per-prop mean never below this outside dark looks
     target_level: 0.60       # "60% brightness or higher" (perceptual, pre-gamma)
@@ -168,10 +170,10 @@ songs:
         intensity: null
         note: "outro"
 
-  - name: "Jingle Bells"
+  - name: "Jingle Bells (feat. The Puppini Sisters) — Michael Bublé"
     from: 4:48.01
     to: 6:44.01
-    tempo_hint: "123.0 detected"
+    tempo_hint: "123 (SongBPM; ours 123) -- 3/4 swing feel"
     theme: "Jewels"
     palette: jewels
     theme_notes: "golden wash; scattered emerald/ruby/diamond pixels twinkle like set stones; bells = diamond glints"
@@ -217,10 +219,10 @@ songs:
         intensity: null
         note: "fade out"
 
-  - name: "Rockin' Around the Christmas Tree"
+  - name: "Rockin' Around the Christmas Tree — Brenda Lee"
     from: 6:44.01
     to: 8:11.19
-    tempo_hint: "69.8 detected (probably half-time: try x2)"
+    tempo_hint: "142 (SongBPM lists 71 half-time; ours 69.8)"
     theme: "Modern Christmas / candy stripes"
     palette: modern
     theme_notes: "clean red/white stripes rotating on the beat; Deck-the-Halls quote gets a stripe-direction flip"
@@ -301,10 +303,10 @@ songs:
         intensity: null
         note: "fades out"
 
-  - name: "Feliz Navidad"
+  - name: "Feliz Navidad — José Feliciano"
     from: 11:12.73
     to: 12:43.43
-    tempo_hint: "73.8 detected (probably half-time: try x2)"
+    tempo_hint: "149 (SongBPM; ours detected half-time 73.8)"
     theme: "AI Choice"
     palette: ai-choice
     theme_notes: "AI proposes (suggest: fiesta -- warm orange/red/yellow with green, party sparkle on the strummed guitar)"

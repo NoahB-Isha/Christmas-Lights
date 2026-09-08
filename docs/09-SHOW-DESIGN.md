@@ -305,11 +305,11 @@ The rules that let an AI make a good change without breaking the show:
 
 **Lights stay on.** Owner's rule (2026-09-07): avoid total blackouts. As a
 general minimum, props are at **≥ 60 % brightness at least 75 % of the time**
-(measured per song, perceptual scale). It is a guideline, not a hard rule:
-more time at full is welcome, and a look that only works dark (starfield, the
-hold-breath before a drop, a fade) is exempt. Encoded in `show.yaml →
-defaults.brightness`; the renderer will print a per-song compliance figure so
-a violation is a number, not an opinion.
+— 75 % of the *time* within a song, not of area. It is a soft guideline:
+more time at full is welcome, a look that only works dark (starfield, the
+hold-breath before a drop, a fade) is exempt, and a particular effect may
+stretch it. Encoded in `show.yaml → defaults.brightness`; the renderer prints
+a per-song figure for information only — it never clamps or enforces.
 
 **One theme per song**, in mix order (`show.yaml → songs[].theme`):
 
@@ -318,11 +318,11 @@ a violation is a number, not an opinion.
 | 1 | Carol of the Bells — Lindsey Stirling | Ice Storm |
 | 2 | Run Rudolph Run — Chuck Berry | Classic Christmas |
 | 3 | Sugar Plum Fairy (Trap Remix) — Trap Music Now | Plum Energy Storm |
-| 4 | Jingle Bells | Jewels — predominantly gold, scattered emeralds, rubies, diamonds |
-| 5 | Rockin' Around the Christmas Tree | Modern Christmas, candy stripes |
+| 4 | Jingle Bells — Michael Bublé ft. The Puppini Sisters | Jewels — predominantly gold, scattered emeralds, rubies, diamonds |
+| 5 | Rockin' Around the Christmas Tree — Brenda Lee | Modern Christmas, candy stripes |
 | 6 | Winter Wonderland — Brooks & Dunn | Tacky |
 | 7 | Snowman — Sia | Romantic — reds, pinks; icy blues melted away top to bottom |
-| 8 | Feliz Navidad | AI's choice |
+| 8 | Feliz Navidad — José Feliciano | AI's choice |
 | 9 | God Rest Ye Merry Gentlemen — Pentatonix | Pale palette; brightness follows the musical elements |
 
 Song reference data (tempo, key, energy, mood) is in `assets/show/songlist.md`.
