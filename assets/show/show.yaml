@@ -1,7 +1,8 @@
 # show.yaml -- the music show, authored in seconds. See docs/09-SHOW-DESIGN.md §5.
 # Times and notes come from assets/show/markers.json (the owner's listening notes).
 # `look` names are defined under `looks:`; edit freely -- the renderer reads this file.
-# intensity: 0-10 (null = let the analysis decide). palette: per-group defaults per song.
+# intensity: 0-10 (null = let the analysis decide). Each song has a THEME and a theme palette;
+# a group may override with `palette: {snowflakes: frost, ...}` if a theme wants per-group colour.
 
 audio: assets/audio/show16.mp3
 fps: 60
@@ -11,10 +12,29 @@ songs_analysis: out/songs.json   # per-song beat grids (make songs)
 
 defaults:
   transition_s: 1.5
-  floor: 0.06          # nothing ever goes fully dark
   shimmer: true        # always-on low-density twinkle under everything
+  # BRIGHTNESS POLICY (owner, 2026-09-07): avoid total blackouts. Darkness is
+  # for contrast or for looks that need it (starfield); otherwise lights are
+  # ON. Guideline, not a hard rule -- the renderer reports compliance.
+  brightness:
+    floor: 0.10              # per-prop mean never below this outside dark looks
+    target_level: 0.60       # "60% brightness or higher" (perceptual, pre-gamma)
+    target_fraction: 0.75    # "...at least 75% of the time" (measured per song)
+    dark_ok_looks: [starfield, hold-breath, fade]   # exempt from the target
+    max_ok: true             # more time at full is welcome
 
 palettes:
+  # -- theme palettes (one per song, owner's list) --
+  ice-storm:   {hues: [0.52, 0.58, 0.64], white_core: true, sat_max: 0.9, notes: 'cool white to deep blue, turbulent'}
+  classic:     {hues: [0.00, 0.33, 0.12], notes: 'red, green (needs hardware tuning), gold'}
+  plum-storm:  {hues: [0.78, 0.85, 0.70], white_core: true, sat_max: 1.0, notes: 'plum/magenta/violet with lightning-white cores'}
+  jewels:      {hues: [0.12], accents: {emerald: 0.38, ruby: 0.99, diamond: null}, accent_density: 0.06, notes: 'predominantly gold; scattered emerald, ruby, white-diamond pixels'}
+  modern:      {hues: [0.00, 0.98], stripes: {colors: [white, red], width_in: 8}, notes: 'candy stripes, clean modern red/white with cool accents'}
+  tacky:       {hues: [0.00, 0.17, 0.33, 0.50, 0.67, 0.83], sat_max: 1.0, notes: 'every colour, fast changes, multicolour bulbs -- deliberately over the top'}
+  romantic:    {hues: [0.98, 0.92, 0.55], white_core: false, notes: 'reds and pinks; icy blue that melts away top-to-bottom to reveal warm'}
+  ai-choice:   {hues: [], notes: 'AI decides; propose before rendering'}
+  pale:        {hues: [0.10, 0.55, 0.85], sat_max: 0.25, notes: 'pastel/pale; expression is BRIGHTNESS driven by musical elements, not hue'}
+  # -- component palettes --
   frost:       {hues: [0.52, 0.60, 0.68], white_core: true}
   white-gold:  {hues: [0.11, 0.13], white_core: true, sat_max: 0.6}
   gold:        {hues: [0.10, 0.12, 0.14], sat_max: 0.9}
@@ -43,7 +63,9 @@ songs:
     from: 0:00.41
     to: 1:23.13
     tempo_hint: "168 (Tunebat; ours 166.7)"
-    palette: {"snowflakes": "frost", "stars": "white-gold", "workshop": "frost", "yule": "frost"}
+    theme: "Ice Storm"
+    palette: ice-storm
+    theme_notes: "cool white/blue turbulence; sparkle born white cools to blue; gusts sweep the course on the ostinato"
     sections:
       - at: 0:00.41
         look: starfield
@@ -82,7 +104,9 @@ songs:
     from: 1:23.13
     to: 3:10.41
     tempo_hint: "152 (Tunebat; ours detected half-time 76)"
-    palette: {"snowflakes": "classic", "stars": "gold", "workshop": "classic", "yule": "classic"}
+    theme: "Classic Christmas"
+    palette: classic
+    theme_notes: "red/green/gold, honky-tonk chases, guitar solo = feature prop"
     sections:
       - at: 1:23.13
         look: pulse
@@ -121,7 +145,9 @@ songs:
     from: 3:10.41
     to: 4:48.01
     tempo_hint: "64.6 detected (probably half-time: try x2)"
-    palette: {"snowflakes": "violet-ice", "stars": "violet-ice", "workshop": "violet-ice", "yule": "violet-ice"}
+    theme: "Plum Energy Storm"
+    palette: plum-storm
+    theme_notes: "plum/violet with lightning-white hits on the 808s; half-time trap feel -- big slow gestures, sharp accents"
     sections:
       - at: 3:10.41
         look: pulse
@@ -146,7 +172,9 @@ songs:
     from: 4:48.01
     to: 6:44.01
     tempo_hint: "123.0 detected"
-    palette: {"snowflakes": "frost", "stars": "white-gold", "workshop": "frost", "yule": "frost"}
+    theme: "Jewels"
+    palette: jewels
+    theme_notes: "golden wash; scattered emerald/ruby/diamond pixels twinkle like set stones; bells = diamond glints"
     sections:
       - at: 4:48.01
         look: pulse
@@ -193,7 +221,9 @@ songs:
     from: 6:44.01
     to: 8:11.19
     tempo_hint: "69.8 detected (probably half-time: try x2)"
-    palette: {"snowflakes": "classic", "stars": "gold", "workshop": "classic", "yule": "classic"}
+    theme: "Modern Christmas / candy stripes"
+    palette: modern
+    theme_notes: "clean red/white stripes rotating on the beat; Deck-the-Halls quote gets a stripe-direction flip"
     sections:
       - at: 6:44.01
         look: pulse
@@ -220,7 +250,9 @@ songs:
     from: 8:11.19
     to: 10:21.02
     tempo_hint: "130 (Tunebat; ours detected half-time 64.6)"
-    palette: {"snowflakes": "frost", "stars": "gold", "workshop": "classic", "yule": "classic"}
+    theme: "Tacky"
+    palette: tacky
+    theme_notes: "every colour at once, fast multicolour bulb changes, deliberately over the top; highest-energy track"
     sections:
       - at: 8:11.19
         look: pulse
@@ -256,7 +288,9 @@ songs:
     from: 10:21.02
     to: 11:12.73
     tempo_hint: "105 (Tunebat; our tracker said 69.8 -- wrong, use 105)"
-    palette: {"snowflakes": "frost", "stars": "white", "workshop": "frost", "yule": "frost"}
+    theme: "Romantic"
+    palette: romantic
+    theme_notes: "reds and pinks; icy blue melts away TOP TO BOTTOM on each prop revealing warm colour underneath; slow, 105 BPM"
     sections:
       - at: 10:21.02
         look: pulse
@@ -271,7 +305,9 @@ songs:
     from: 11:12.73
     to: 12:43.43
     tempo_hint: "73.8 detected (probably half-time: try x2)"
-    palette: {"snowflakes": "fiesta", "stars": "gold", "workshop": "fiesta", "yule": "fiesta"}
+    theme: "AI Choice"
+    palette: ai-choice
+    theme_notes: "AI proposes (suggest: fiesta -- warm orange/red/yellow with green, party sparkle on the strummed guitar)"
     sections:
       - at: 11:12.73
         look: pulse
@@ -295,7 +331,9 @@ songs:
     from: 12:43.43
     to: 14:41.71
     tempo_hint: "136 (Tunebat; ours 136)"
-    palette: {"snowflakes": "frost", "stars": "white-gold", "workshop": "classic", "yule": "classic"}
+    theme: "Pale palette"
+    palette: pale
+    theme_notes: "pastel; brightness follows the voices -- bass = whole-prop level, beatbox = sparkle, lead = travelling glow"
     sections:
       - at: 12:43.43
         look: pulse
