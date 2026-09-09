@@ -33,7 +33,9 @@ palettes:
   plum-storm:  {hues: [0.78, 0.85, 0.70], white_core: true, sat_max: 1.0, sparkle_hue: 0.92,
                 flash: {hue: 0.88, sat: 0.45, level: 0.75},
                 notes: 'plum/magenta/violet; PINK sparkle grains; lightning is a light pink-purple unless a section asks for white'}
-  jewels:      {hues: [0.12], accents: {emerald: 0.38, ruby: 0.99, diamond: null}, accent_density: 0.06, notes: 'predominantly gold; scattered emerald, ruby, white-diamond pixels'}
+  jewels:      {hues: [0.12, 0.10, 0.14], accents: {emerald: 0.38, ruby: 0.99, diamond: null}, accent_density: 0.07, sat_max: 0.9,
+                flash: {hue: 0.12, sat: 0.35, level: 0.8},
+                notes: 'predominantly gold; scattered emerald, ruby, white-diamond pixels; lightning is warm gold-white'}
   modern:      {hues: [0.00, 0.98], stripes: {colors: [white, red], width_in: 8}, notes: 'candy stripes, clean modern red/white with cool accents'}
   tacky:       {hues: [0.00, 0.17, 0.33, 0.50, 0.67, 0.83], sat_max: 1.0, notes: 'every colour, fast changes, multicolour bulbs -- deliberately over the top'}
   romantic:    {hues: [0.98, 0.92, 0.55], white_core: false, notes: 'reds and pinks; icy blue that melts away top-to-bottom to reveal warm'}
@@ -62,6 +64,7 @@ looks:
   shimmer: "always-on low-density twinkle, no beat; used for intros, tails and fades"
   fade: "current look decays to embers over the section"
   change-up: "keep the family, re-roll variation seed, rotate palette"
+  jewels: "golden stack under slow golden waves; fixed emerald/ruby/diamond pixels twinkle, diamonds flare on the bells"
   finale: "song ending, big: full stack, white pops on the pulse, gusts both ways, unison stutter in the last two bars"
 
 songs:
@@ -193,52 +196,54 @@ songs:
   - name: "Jingle Bells (feat. The Puppini Sisters) — Michael Bublé"
     from: 4:48.01
     to: 6:44.01
-    tempo_hint: "123 (SongBPM; ours 123) -- 3/4 swing feel"
+    tempo_hint: "123 (SongBPM; ours 123) -- swing"
+    pulse_beats: 1
+    bar_beats: 4
     theme: "Jewels"
     palette: jewels
-    theme_notes: "golden wash; scattered emerald/ruby/diamond pixels twinkle like set stones; bells = diamond glints"
+    theme_notes: "golden waves with glittering jewels: gold stack + rolling gold fronts; fixed emerald/ruby/diamond pixels; diamonds flare on the sleigh bells"
     sections:
       - at: 4:48.01
-        look: pulse
-        intensity: null
-        note: "JIngle bells starts"
+        look: jewels
+        intensity: 5
+        note: "intro -- gold waves begin, stones twinkling"
       - at: 5:03.63
-        look: feature
-        intensity: null
-        note: "horns come in (Dashing through the snow)"
+        look: jewels
+        intensity: 7
+        note: "horns come in (Dashing through the snow) -- hits walk the sectors"
       - at: 5:19.29
         look: conversation
-        intensity: null
-        note: "female chorus comes in (jingle bells)"
+        intensity: 7
+        note: "female chorus -- halves trade, together every third bar (gold + stones stay)"
       - at: 5:32.97
-        look: feature
-        intensity: null
-        note: "fun vocal harmony stacking solo"
+        look: hold-breath
+        intensity: 4
+        note: "vocal harmony stacking solo -- props take turns on each voice"
       - at: 5:34.97
-        look: wave
-        intensity: null
-        note: "song resumes"
+        look: jewels
+        intensity: 8
+        note: "song resumes -- full gold"
       - at: 5:50.40
-        look: conversation
-        intensity: null
-        note: "gent comes back with female chorus)"
+        look: feature
+        intensity: 8
+        params: {hand_beats: 16}
+        note: "gent with the female chorus -- lead passes prop to prop"
       - at: 6:06.20
-        look: drop
-        intensity: null
+        look: jewels
+        intensity: 6
         note: "ladies drop out"
       - at: 6:21.65
-        look: conversation
-        intensity: null
-        note: "gentle chorus with gents and ladies"
+        look: change-up
+        intensity: 6
+        note: "gentle chorus, gents and ladies"
       - at: 6:37.36
-        look: fade
-        intensity: null
-        note: "music picks up, and then starts to fade"
+        look: finale
+        intensity: 9
+        note: "picks up -- finale"
       - at: 6:43.42
         look: fade
         intensity: null
         note: "fade out"
-
   - name: "Rockin' Around the Christmas Tree — Brenda Lee"
     from: 6:44.01
     to: 8:11.19
