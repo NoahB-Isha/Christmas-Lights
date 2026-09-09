@@ -414,6 +414,28 @@ def look_drop(c):
     return out
 
 
+@look("finale")
+def look_finale(c):
+    """Song ending, big: the full stack at max, every prop pops white on the
+    pulse (attack + fall), gusts race both ways on the bar, sparkle wide open,
+    and in the last two bars the whole row stutters together on the 8ths."""
+    pal = c.palette
+    m = dict(wash=1.0, ring=1.0, hits=1.0, sparkle=1.0, melody=1.0, shimmer=0.2, sat=0.95)
+    out = stack_all(c, m)
+    bar_s = 60.0 / c.bpm * c.bar_beats
+    remaining = c.sec["t1"] - c.t
+    for p in c.props:
+        g1 = gust(c, p, period=bar_s / 2, width_in=50)
+        g2 = gust(c, p, period=bar_s / 2, width_in=50, direction=-1, phase=0.5)
+        pop = np.full((p.n, 3), 0.9 * c.pulse ** 2)                # white pop on every pulse
+        out[p.id] = lighten(out[p.id], pal.color(g1, k=1, variation=c.variation, sat=0.5),
+                            pal.color(g2, k=2, variation=c.variation, sat=0.5), pop)
+        if remaining < 2 * bar_s:                                    # last two bars: unison stutter on 8ths
+            eighth = ((c.t_song * c.bpm / 60.0 * 2) % 1.0) < 0.5
+            out[p.id] = out[p.id] * (1.0 if eighth else 0.25)
+    return out
+
+
 @look("wave")
 def look_wave(c):
     m = mix_for(c); m["hits"] *= 0.5

@@ -60,6 +60,7 @@ looks:
   shimmer: "always-on low-density twinkle, no beat; used for intros, tails and fades"
   fade: "current look decays to embers over the section"
   change-up: "keep the family, re-roll variation seed, rotate palette"
+  finale: "song ending, big: full stack, white pops on the pulse, gusts both ways, unison stutter in the last two bars"
 
 songs:
   - name: "Carol of the Bells"
@@ -147,6 +148,10 @@ songs:
         intensity: 9
         params: {hand_beats: 16}
         note: "electric guitar solo -- passed prop to prop every two counts of 8"
+      - at: 3:01.50
+        look: finale
+        intensity: 10
+        note: "last bars of the solo -- everything, white pops on the pulse, unison stutter into the end"
       - at: 3:07.33
         look: fade
         intensity: null
@@ -155,30 +160,33 @@ songs:
   - name: "Dance of the Sugar Plum Fairy (Remix) — Trap Music Now"
     from: 3:10.41
     to: 4:48.01
-    tempo_hint: "64.6 detected (probably half-time: try x2)"
+    tempo_hint: "64.6 detected (trap: the felt pulse IS the half-time ~65)"
+    pulse_beats: 1
+    bar_beats: 4
     theme: "Plum Energy Storm"
     palette: plum-storm
-    theme_notes: "plum/violet with lightning-white hits on the 808s; half-time trap feel -- big slow gestures, sharp accents"
+    theme_notes: "plum/violet with lightning-white cores; 808s own the bass ring; big slow gestures, sharp accents"
     sections:
       - at: 3:10.41
-        look: pulse
-        intensity: null
-        note: "Sugarplum fairy remix starts"
+        look: starfield
+        intensity: 3
+        note: "celesta intro -- plum starfield, whole props breathing in and out"
       - at: 3:25.04
-        look: pulse
-        intensity: null
-        note: "first drum hit"
+        look: drop
+        intensity: 9
+        note: "first drum hit -- full blast, 808 ring, lightning on the downbeats"
       - at: 3:55.52
-        look: change-up
-        intensity: null
+        look: conversation
+        intensity: 7
+        note: "halves trade bars, together every third"
       - at: 4:09.17
-        look: change-up
-        intensity: null
+        look: drop
+        intensity: 10
+        note: "second drop"
       - at: 4:39.16
-        look: wave
+        look: fade
         intensity: null
         note: "outro"
-
   - name: "Jingle Bells (feat. The Puppini Sisters) — Michael Bublé"
     from: 4:48.01
     to: 6:44.01
