@@ -64,7 +64,9 @@ looks:
   shimmer: "always-on low-density twinkle, no beat; used for intros, tails and fades"
   fade: "current look decays to embers over the section"
   change-up: "keep the family, re-roll variation seed, rotate palette"
-  jewels: "golden stack under slow golden waves; fixed emerald/ruby/diamond pixels twinkle, diamonds flare on the bells"
+  jewels: "CALM: each prop is a gemstone (mostly gold, a rotating few emerald/ruby/diamond); smooth waves; only glints follow the music"
+  drawn: "the prop as painted -- each REGION (assets/paint) in its own colour, breathing; white sparkle"
+  parts: "regions take turns on the pulse, top to bottom (hat, face, coat, belt, boots), each in its painted colour"
   finale: "song ending, big: full stack, white pops on the pulse, gusts both ways, unison stutter in the last two bars"
 
 songs:

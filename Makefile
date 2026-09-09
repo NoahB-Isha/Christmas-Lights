@@ -65,5 +65,8 @@ bench:           ## bench editor + 30 s ident cards for the 2-controller test be
 render:          ## render show.yaml to cards (LAYOUT=assets/bench.json SONG=1 SLUG=name) + HTML player
 	PYTHONPATH=src:tools python3 tools/render_show.py --layout $(or $(LAYOUT),assets/bench.json) $(if $(SONG),--song $(SONG),) --slug $(or $(SLUG),show) --player
 
+paint:           ## prop region painter -> out/paint.html (regions saved in assets/paint/)
+	$(PY) tools/make_paint_tool.py
+
 clean:
 	rm -rf out/* .pytest_cache __pycache__ src/lightshow/__pycache__

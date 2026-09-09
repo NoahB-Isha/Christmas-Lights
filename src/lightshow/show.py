@@ -37,6 +37,7 @@ import numpy as np
 import yaml
 
 from .layout import Layout
+from . import regions as REG
 from .effects import hsv, frost, lighten, to_bytes
 from . import music
 
@@ -103,6 +104,12 @@ class PropGeom:
         self.ang = np.arctan2(self.ly - self.h / 2, self.lx)
         self.y01 = self.ly / max(1e-6, self.h)            # 0 bottom .. 1 top
         self.group = placement.group
+        # named pixel groups (assets/paint/<prop>.json): name -> bool mask,
+        # plus "rest"; and the painted colour per region
+        self.region_spec = REG.load(placement.mod)
+        self.regions = REG.masks(self.region_spec, self.n) if self.region_spec else {"rest": np.ones(self.n, bool)}
+        self.region_names = [k for k in self.regions if k != "rest"]
+        self.region_color = {k: REG.hex_to_rgb01(v.get("color", "#ffffff")) for k, v in self.region_spec.items()}
 
 
 class Ctx:
@@ -574,6 +581,69 @@ def look_jewels(c):
 
         now, before = colour(cur.get(p.idx)), colour(prev.get(p.idx))
         out[p.id] = before * (1 - xf) + now * xf
+    return out
+
+
+# ------------------------------------------------------- region-aware looks
+#
+# Props painted with regions (assets/paint) expose p.regions {name: mask}
+# and p.region_color {name: rgb}. Unpainted props have only "rest", so every
+# region look must degrade to something sensible on them.
+
+def _region_order(p):
+    """Regions top to bottom by mean height -- hat, face, coat, belt, boots."""
+    names = p.region_names or ["rest"]
+    return sorted(names, key=lambda k: -float(p.ly[p.regions[k]].mean()))
+
+
+@look("drawn")
+def look_drawn(c):
+    """The prop as painted: every region in its own colour (Santa's red coat,
+    flesh face, white glove), breathing gently with the slow energy; the
+    sparkle grains stay white. Unpainted props fall back to the palette."""
+    pal = c.palette
+    out = {}
+    for p in c.props:
+        lvl = 0.55 + 0.25 * c.intensity + 0.15 * c.energy
+        if p.region_names:
+            fr = np.zeros((p.n, 3))
+            for k, m in p.regions.items():
+                col = p.region_color.get(k, np.array([0.6, 0.6, 0.6]))
+                # perceptual: keep dark paint (boots) readable, never off
+                col = np.maximum(col, 0.18)
+                fr[m] = col * lvl
+        else:
+            fr = pal.color(np.full(p.n, lvl), k=p.idx % 2, variation=c.variation)
+        g = c.R.spark[p.id]
+        out[p.id] = lighten(fr, hsv(0.0, 0.0, g * 0.45))
+    return out
+
+
+@look("parts")
+def look_parts(c):
+    """Regions take turns on the pulse: on each felt pulse the next part of
+    the prop (top to bottom -- hat, face, coat, belt, boots) flares in its
+    painted colour and falls back; the rest of the prop holds a dim version
+    of itself. Unpainted props fall back to sectors walking with the beat."""
+    out = {}
+    for p in c.props:
+        order = _region_order(p)
+        k = c.beat_index % len(order)
+        active = order[k]
+        fr = np.zeros((p.n, 3))
+        for name, m in p.regions.items():
+            col = np.maximum(p.region_color.get(name, np.array([0.7, 0.7, 0.7])), 0.18)
+            base = 0.35
+            if name == active:
+                base = 0.5 + 0.5 * c.pulse                          # attack + fall on the pulse
+            fr[m] = col * base
+        if not p.region_names:                                      # unpainted: sector walk
+            n_sec = 4
+            sec_i = c.beat_index % n_sec
+            ang = ((p.ang + math.pi) / (2 * math.pi) * n_sec).astype(int) % n_sec
+            v = np.where(ang == sec_i, 0.5 + 0.5 * c.pulse, 0.35)
+            fr = c.palette.color(v, k=p.idx % 2, variation=c.variation)
+        out[p.id] = lighten(fr, hsv(0.0, 0.0, c.R.spark[p.id] * 0.6))
     return out
 
 

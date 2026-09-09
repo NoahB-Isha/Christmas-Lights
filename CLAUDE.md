@@ -48,6 +48,7 @@ src/lightshow/
   rig.py                one geometry model for all input formats
   layout.py             yard layout: where props are, which controller/port
   show.py               show.yaml renderer: looks, palettes, sections, cards
+  regions.py            named pixel groups per prop (assets/paint/<prop>.json)
   music.py              audio analysis (numpy + scipy + ffmpeg, no librosa)
   effects.py            effect registry, pure functions
   preview.py            standalone HTML geometry viewer
@@ -140,6 +141,15 @@ an audio-synced `player.html`. A **look** is `LOOKS[name](ctx) -> {prop_id:
 music features, the per-song beat grid (tempo corrected from `tempo_hint`),
 the palette, intensity 0..1, section progress, prop geometry in inches and
 prop-to-prop distances. Filenames: `Sc-01-NN-<slug>.rgb`, NN = scene.
+
+## Pixel regions (assets/paint/<prop>.json)
+
+A prop can be split into named groups -- Santa's hat/face/coat/belt/boots,
+the bell and its ribbon -- each with the painted colour. `make paint` builds
+the painter (click, lasso, shift+click flood, W wire range). In looks,
+`p.regions[name]` is a bool mask and `p.region_color[name]` the paint;
+unpainted props have only `rest`, so region looks must degrade gracefully
+(`drawn`, `parts` do). 61号 and 1号 are seeded roughly -- refine in the tool.
 
 ## Common tasks
 

@@ -107,3 +107,19 @@ def test_build_cards_same_frame_count_and_stubs(tmp_path):
     # spatially varied, never uniform
     f = np.frombuffer(s.frames[-1], np.uint8)[:115 * 3].reshape(-1, 3)
     assert len({tuple(px) for px in f}) > 3
+
+
+def test_regions_masks_and_suggest():
+    from lightshow import regions as R
+    spec = R.load("61号.mod")
+    assert set(spec) >= {"hat", "face", "coat", "boots"}
+    m = R.masks(spec, 432)
+    total = sum(int(v.sum()) for k, v in m.items())
+    assert total == 432                                    # every pixel in exactly one region (or rest)
+    for a in m:
+        for b in m:
+            if a != b:
+                assert not (m[a] & m[b]).any()
+    xy = [(i * 10, 0) for i in range(20)] + [(1000 + i * 10, 0) for i in range(20)]
+    runs = R.suggest(xy)
+    assert [len(r) for r in runs] == [20, 20]              # one big jump -> two runs
