@@ -201,45 +201,44 @@ songs:
     bar_beats: 4
     theme: "Jewels"
     palette: jewels
-    theme_notes: "golden waves with glittering jewels: gold stack + rolling gold fronts; fixed emerald/ruby/diamond pixels; diamonds flare on the sleigh bells"
+    theme_notes: "CALM and mature: smooth gold waves rolling along the course, fades not cuts; fixed emerald/ruby/diamond stones twinkle; only the diamonds answer the music (sleigh bells)"
     sections:
       - at: 4:48.01
         look: jewels
-        intensity: 5
-        note: "intro -- gold waves begin, stones twinkling"
+        intensity: 4
+        note: "intro -- soft gold, stones waking up"
       - at: 5:03.63
         look: jewels
-        intensity: 7
-        note: "horns come in (Dashing through the snow) -- hits walk the sectors"
+        intensity: 6
+        note: "horns come in -- gold lifts a little"
       - at: 5:19.29
-        look: conversation
+        look: jewels
         intensity: 7
-        note: "female chorus -- halves trade, together every third bar (gold + stones stay)"
+        note: "female chorus"
       - at: 5:32.97
-        look: hold-breath
+        look: jewels
         intensity: 4
-        note: "vocal harmony stacking solo -- props take turns on each voice"
+        note: "vocal harmony stacking solo -- dip, let the diamonds carry it"
       - at: 5:34.97
         look: jewels
-        intensity: 8
-        note: "song resumes -- full gold"
+        intensity: 7
+        note: "song resumes"
       - at: 5:50.40
-        look: feature
+        look: jewels
         intensity: 8
-        params: {hand_beats: 16}
-        note: "gent with the female chorus -- lead passes prop to prop"
+        note: "gent with the female chorus"
       - at: 6:06.20
         look: jewels
-        intensity: 6
+        intensity: 5
         note: "ladies drop out"
       - at: 6:21.65
-        look: change-up
+        look: jewels
         intensity: 6
-        note: "gentle chorus, gents and ladies"
+        note: "gentle chorus"
       - at: 6:37.36
-        look: finale
+        look: jewels
         intensity: 9
-        note: "picks up -- finale"
+        note: "picks up -- gold at its brightest, then it settles"
       - at: 6:43.42
         look: fade
         intensity: null

@@ -528,24 +528,31 @@ def look_ornaments(c):
 
 @look("jewels")
 def look_jewels(c):
-    """GOLDEN WAVES WITH GLITTERING JEWELS. The stack runs in gold (hits walk
-    the sectors, bass ring, melody glow) under slow golden waves rolling along
-    the course. On every prop a fixed scatter of pixels are set stones --
-    emeralds, rubies and diamonds -- that twinkle on their own clocks and
-    catch the light: diamonds flare white on the bells (high-band hits),
-    rubies and emeralds flare on the pulse. Stones stay put; only the light
-    on them moves."""
+    """CALM. Smooth waves of gold roll along the course and drift up the props;
+    the golds breathe slowly with the music's energy, never with its hits.
+    On every prop a fixed scatter of set stones -- emeralds, rubies,
+    diamonds -- twinkle gently on their own clocks; the diamonds are the one
+    thing that answers the music, glinting on the sleigh bells. No stack, no
+    sectors, no rings: eye candy, mature."""
     pal = c.palette
-    m = mix_for(c); m.update(sparkle=0.35, shimmer=0.5)
-    out = stack_all(c, m, hue_spread=False)
-    bar_s = 60.0 / c.bpm * c.bar_beats
-    stones = [(0.38, 0.95), (0.99, 0.95), (None, 0.0)]          # emerald, ruby, diamond(white)
+    x0, x1 = c.world
+    span = max(1.0, x1 - x0)
+    energy = c.energy
+    inten = c.intensity
+    out = {}
+    stones = [(0.38, 0.95), (0.99, 0.95), (None, 0.0)]          # emerald, ruby, diamond
     for p in c.props:
-        # golden waves: two soft fronts, one per bar each way, riding the bass
-        w1 = gust(c, p, period=bar_s * 2, width_in=90 + 60 * c.low)
-        w2 = gust(c, p, period=bar_s * 3, width_in=70, direction=-1, phase=0.37)
-        fr = lighten(out[p.id], pal.color(w1 * 0.9, k=0, variation=0, sat=0.85),
-                     pal.color(w2 * 0.7, k=0, variation=0, sat=0.7))
+        u = (p.wx - x0) / span                                    # 0..1 along the course
+        # three slow travelling waves, different wavelengths and speeds
+        w = (0.5 + 0.5 * np.sin(2 * np.pi * (u * 1.2 - c.t / 9.0))
+             + 0.5 * (0.5 + 0.5 * np.sin(2 * np.pi * (u * 2.3 + c.t / 13.0 + 0.3)))
+             + 0.35 * (0.5 + 0.5 * np.sin(2 * np.pi * (p.y01 * 1.5 - c.t / 7.0))))
+        w = w / 1.85                                              # 0..1
+        level = 0.42 + 0.20 * inten + 0.12 * energy + 0.30 * w   # 0.4 .. ~1.0, slow
+        # hue drifts between the palette golds with the wave: deeper gold in the troughs
+        hue = 0.095 + 0.045 * w + 0.01 * math.sin(2 * math.pi * c.t / 21.0)
+        sat = 0.92 - 0.25 * w                                     # crests go paler/whiter gold
+        fr = hsv(hue, sat, np.clip(level, 0, 1))
         # the stones
         r = np.random.default_rng(p.idx * 977 + 5)
         n_st = max(4, int(p.n * max(0.05, pal.accent_density or 0.07)))
@@ -553,16 +560,15 @@ def look_jewels(c):
         kind = r.integers(0, 3, n_st)
         phase = r.random(n_st)
         for j, kd, ph in zip(idx, kind, phase):
-            h, sat = stones[kd]
-            tw = 0.35 + 0.65 * (0.5 + 0.5 * math.sin(2 * math.pi * (c.t / (1.3 + 0.9 * ph) + ph)))
-            if h is None:                                          # diamond: white, flares on the bells
-                lvl = tw * 0.7 + 0.5 * c.hit_high
+            h, st = stones[kd]
+            tw = 0.5 + 0.5 * math.sin(2 * math.pi * (c.t / (2.2 + 1.6 * ph) + ph))
+            if h is None:                                          # diamond: glints on the bells
+                lvl = 0.35 + 0.35 * tw + 0.6 * c.hit_high
                 fr[j] = np.array([1, 1, 1]) * min(1.0, lvl)
-            else:                                                  # ruby / emerald: flare on the pulse
-                lvl = tw * 0.75 + 0.35 * c.pulse
-                fr[j] = hsv(h, sat, min(1.0, lvl))
+            else:                                                  # ruby / emerald: slow twinkle
+                fr[j] = hsv(h, st, 0.45 + 0.5 * tw)
         out[p.id] = fr
-    return transition_wipe(c, out)
+    return out
 
 
 @look("shimmer")
@@ -577,6 +583,10 @@ def look_fade(c):
     m = mix_for(c); m.update(hits=0.3 * (1 - c.progress), melody=0.0)
     out = stack_all(c, m)
     return {k: v * lvl for k, v in out.items()}
+
+
+# Looks that are meant to be calm: no over-bright attack on section entry.
+SMOOTH_LOOKS = {"hold-breath", "fade", "jewels", "shimmer", "starfield"}
 
 
 # ----------------------------------------------------------------- renderer
@@ -806,7 +816,7 @@ class ShowRenderer:
         # its first frames that falls back to the look's normal level. The
         # music changes on a beat; the lights should hit with it.
         dt = t - sec["t0"]
-        if sec["index"] > 0 and dt < 0.6 and sec["look"] not in ("hold-breath", "fade"):
+        if sec["index"] > 0 and dt < 0.6 and sec["look"] not in SMOOTH_LOOKS:
             gain = 1.0 + 0.9 * math.exp(-dt / 0.18)
             cur = {k: v * gain for k, v in cur.items()}
         return {k: np.clip(v, 0, 1) for k, v in cur.items()}
