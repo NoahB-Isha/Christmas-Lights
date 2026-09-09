@@ -528,46 +528,52 @@ def look_ornaments(c):
 
 @look("jewels")
 def look_jewels(c):
-    """CALM. Smooth waves of gold roll along the course and drift up the props;
-    the golds breathe slowly with the music's energy, never with its hits.
-    On every prop a fixed scatter of set stones -- emeralds, rubies,
-    diamonds -- twinkle gently on their own clocks; the diamonds are the one
-    thing that answers the music, glinting on the sleigh bells. No stack, no
-    sectors, no rings: eye candy, mature."""
-    pal = c.palette
+    """EACH PROP IS A GEMSTONE. Most props are gold; in every section two or
+    three of them are set as emerald, ruby or diamond, and which ones rotates
+    from section to section (crossfading over 2 s -- calm). Smooth waves of
+    light roll along the course through all of them; the gold breathes with
+    the song's slow energy, never its hits. Glints are the only music
+    response: diamonds and rubies glint white on the sleigh bells, gold
+    props glint softly on the pulse."""
     x0, x1 = c.world
     span = max(1.0, x1 - x0)
-    energy = c.energy
-    inten = c.intensity
+    inten, energy = c.intensity, c.energy
+    P = len(c.props)
+    gems = [(0.38, 0.95), (0.99, 0.95), (None, 0.0)]            # emerald, ruby, diamond
+    n_gem = max(1, round(P / 3))
+
+    def assignment(k):
+        """section k -> {prop idx: gem} -- a different scatter each section"""
+        r = np.random.default_rng(4242 + k)
+        picks = r.choice(P, n_gem, replace=False)
+        return {int(i): gems[j % 3] for j, i in enumerate(picks)}
+
+    cur, prev = assignment(c.sec["index"]), assignment(c.sec["index"] - 1)
+    xf = min(1.0, c.t_sec / 2.0)                                   # 2 s smooth hand-over
     out = {}
-    stones = [(0.38, 0.95), (0.99, 0.95), (None, 0.0)]          # emerald, ruby, diamond
     for p in c.props:
-        u = (p.wx - x0) / span                                    # 0..1 along the course
-        # three slow travelling waves, different wavelengths and speeds
+        u = (p.wx - x0) / span
         w = (0.5 + 0.5 * np.sin(2 * np.pi * (u * 1.2 - c.t / 9.0))
              + 0.5 * (0.5 + 0.5 * np.sin(2 * np.pi * (u * 2.3 + c.t / 13.0 + 0.3)))
-             + 0.35 * (0.5 + 0.5 * np.sin(2 * np.pi * (p.y01 * 1.5 - c.t / 7.0))))
-        w = w / 1.85                                              # 0..1
-        level = 0.42 + 0.20 * inten + 0.12 * energy + 0.30 * w   # 0.4 .. ~1.0, slow
-        # hue drifts between the palette golds with the wave: deeper gold in the troughs
-        hue = 0.095 + 0.045 * w + 0.01 * math.sin(2 * math.pi * c.t / 21.0)
-        sat = 0.92 - 0.25 * w                                     # crests go paler/whiter gold
-        fr = hsv(hue, sat, np.clip(level, 0, 1))
-        # the stones
-        r = np.random.default_rng(p.idx * 977 + 5)
-        n_st = max(4, int(p.n * max(0.05, pal.accent_density or 0.07)))
-        idx = r.choice(p.n, n_st, replace=False)
-        kind = r.integers(0, 3, n_st)
-        phase = r.random(n_st)
-        for j, kd, ph in zip(idx, kind, phase):
-            h, st = stones[kd]
-            tw = 0.5 + 0.5 * math.sin(2 * math.pi * (c.t / (2.2 + 1.6 * ph) + ph))
-            if h is None:                                          # diamond: glints on the bells
-                lvl = 0.35 + 0.35 * tw + 0.6 * c.hit_high
-                fr[j] = np.array([1, 1, 1]) * min(1.0, lvl)
-            else:                                                  # ruby / emerald: slow twinkle
-                fr[j] = hsv(h, st, 0.45 + 0.5 * tw)
-        out[p.id] = fr
+             + 0.35 * (0.5 + 0.5 * np.sin(2 * np.pi * (p.y01 * 1.5 - c.t / 7.0)))) / 1.85
+        level = np.clip(0.42 + 0.20 * inten + 0.12 * energy + 0.30 * w, 0, 1)
+
+        def colour(gem):
+            if gem is None:                                        # gold
+                hue = 0.095 + 0.045 * w + 0.01 * math.sin(2 * math.pi * c.t / 21.0)
+                fr = hsv(hue, 0.92 - 0.25 * w, level)
+                glint = c.grains(p, 3, 1.6) * (0.35 + 0.35 * c.pulse)
+                return lighten(fr, hsv(0.13, 0.15, glint))
+            h, sat = gem
+            if h is None:                                          # diamond: white with a cool tint
+                fr = hsv(0.6, 0.12 + 0.1 * (1 - w), level)
+            else:
+                fr = hsv(h, sat - 0.15 * w, level)
+            glint = c.grains(p, 4, 1.2) * (0.4 + 0.6 * c.hit_high)  # bells make the stones flash
+            return lighten(fr, hsv(0.0, 0.0, glint))
+
+        now, before = colour(cur.get(p.idx)), colour(prev.get(p.idx))
+        out[p.id] = before * (1 - xf) + now * xf
     return out
 
 
