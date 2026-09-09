@@ -238,3 +238,7 @@ USB-RS485 adapter.
 2. Send scene-select on `Add+6` and watch for a program change.
 3. If nothing responds, sweep the base address — the map may be shared but
    offset, or the 6004 may implement a subset.
+
+## Bench playback on a Mac (speakers + box)
+
+A Mac cannot drive its built-in speakers and the headphone jack at once (the jack takes over the same output device), so the GC-102C needs its own output: a USB-C → 3.5 mm adapter. `tools/bench_play.py` plays `cue_show.mp3` to two devices at once — music (L) to the speakers, beep (R) to the USB adapter → RCA → box. No aggregate device or BlackHole needed; the two streams start within a few ms, and after the beep the controller runs on its own clock. `--offset-ms` shifts music vs. beep at playback (no re-render); `--list` shows devices.
