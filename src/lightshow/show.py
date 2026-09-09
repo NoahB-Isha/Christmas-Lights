@@ -64,15 +64,17 @@ class Palette:
         self.accents = spec.get("accents") or {}
         self.accent_density = float(spec.get("accent_density", 0.0))
         self.stripes = spec.get("stripes")
+        self.sparkle_hue = spec.get("sparkle_hue")       # e.g. pink grains on a plum wash
+        self.flash = spec.get("flash", {})               # default lightning: {hue, sat, level}
 
     def hue(self, k, variation=0):
         return self.hues[(k + variation) % len(self.hues)]
 
-    def color(self, v, k=0, variation=0, sat=None):
+    def color(self, v, k=0, variation=0, sat=None, hue=None):
         """Perceptual brightness array v -> (n,3). white_core palettes go
         white at the top like frost(); others keep saturation."""
         v = np.clip(np.asarray(v, float), 0, 1)
-        h = self.hue(k, variation)
+        h = self.hue(k, variation) if hue is None else hue
         s = self.sat_max if sat is None else min(sat, self.sat_max)
         if self.white_core:
             return hsv(h, np.clip((1 - v) * 1.15, 0, s), v)
@@ -292,7 +294,10 @@ def stack(c, p, m, hue_k=0, time_off=0.0, sector_off=0):
     # 3 sparkle (stateful grains, see Renderer.spark)
     if m["sparkle"] > 0:
         g = c.R.spark[p.id]
-        frame = lighten(frame, pal.color(g * m["sparkle"], k=hue_k, variation=c.variation, sat=0.35))
+        if pal.sparkle_hue is not None:
+            frame = lighten(frame, hsv(pal.sparkle_hue, 0.55, g * m["sparkle"]))
+        else:
+            frame = lighten(frame, pal.color(g * m["sparkle"], k=hue_k, variation=c.variation, sat=0.35))
 
     # 3b shimmer
     if m["shimmer"] > 0:
@@ -410,7 +415,7 @@ def look_drop(c):
         tex = 0.8 + 0.4 * turb(c, p, 12, 3.0)
         out[p.id] = lighten(out[p.id] * tex[:, None], pal.color(gs, k=1, variation=c.variation, sat=0.35))
         if c.bar > 0.9 and c.energy > 0.6:
-            out[p.id] = lighten(out[p.id], np.full((p.n, 3), 0.95 * c.bar))
+            out[p.id] = lighten(out[p.id], lightning(c, p) * c.bar)
     return out
 
 
@@ -434,6 +439,16 @@ def look_finale(c):
             eighth = ((c.t_song * c.bpm / 60.0 * 2) % 1.0) < 0.5
             out[p.id] = out[p.id] * (1.0 if eighth else 0.25)
     return out
+
+
+def lightning(c, p):
+    """One flash colour for the whole prop. Section params override the
+    palette default: flash: {hue: 0.9, sat: 0.4, level: 0.7}. No hue = white."""
+    f = dict(c.palette.flash or {}); f.update(c.params.get("flash", {}))
+    level = float(f.get("level", 0.95))
+    if f.get("hue") is None:
+        return np.full((p.n, 3), level)
+    return hsv(float(f["hue"]), float(f.get("sat", 0.45)), np.full(p.n, level))
 
 
 @look("wave")

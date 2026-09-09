@@ -30,7 +30,9 @@ palettes:
   ice-storm:   {hues: [0.52, 0.58, 0.64], white_core: true, sat_max: 0.9, notes: 'cool white to deep blue, turbulent'}
   ice-plum:    {hues: [0.58, 0.78, 0.86, 0.52], white_core: true, sat_max: 0.95, notes: 'the ice storm with purple breaking through -- for drops'}
   classic:     {hues: [0.00, 0.33, 0.12], notes: 'red, green (needs hardware tuning), gold'}
-  plum-storm:  {hues: [0.78, 0.85, 0.70], white_core: true, sat_max: 1.0, notes: 'plum/magenta/violet with lightning-white cores'}
+  plum-storm:  {hues: [0.78, 0.85, 0.70], white_core: true, sat_max: 1.0, sparkle_hue: 0.92,
+                flash: {hue: 0.88, sat: 0.45, level: 0.75},
+                notes: 'plum/magenta/violet; PINK sparkle grains; lightning is a light pink-purple unless a section asks for white'}
   jewels:      {hues: [0.12], accents: {emerald: 0.38, ruby: 0.99, diamond: null}, accent_density: 0.06, notes: 'predominantly gold; scattered emerald, ruby, white-diamond pixels'}
   modern:      {hues: [0.00, 0.98], stripes: {colors: [white, red], width_in: 8}, notes: 'candy stripes, clean modern red/white with cool accents'}
   tacky:       {hues: [0.00, 0.17, 0.33, 0.50, 0.67, 0.83], sat_max: 1.0, notes: 'every colour, fast changes, multicolour bulbs -- deliberately over the top'}
@@ -174,7 +176,8 @@ songs:
       - at: 3:25.04
         look: drop
         intensity: 9
-        note: "first drum hit -- full blast, 808 ring, lightning on the downbeats"
+        params: {flash: {hue: null, level: 0.95}}     # the FIRST drop gets white lightning
+        note: "first drum hit -- full blast, 808 ring, WHITE lightning on the downbeats"
       - at: 3:55.52
         look: conversation
         intensity: 7
@@ -182,7 +185,7 @@ songs:
       - at: 4:09.17
         look: drop
         intensity: 10
-        note: "second drop"
+        note: "second drop -- lightning in light pink-purple (palette default), easier on the eyes"
       - at: 4:39.16
         look: fade
         intensity: null
