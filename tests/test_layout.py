@@ -112,7 +112,7 @@ def test_build_cards_same_frame_count_and_stubs(tmp_path):
 def test_regions_masks_and_suggest():
     from lightshow import regions as R
     spec = R.load("61号.mod")
-    assert set(spec) >= {"hat", "face", "coat", "boots"}
+    assert set(spec) >= {"hat body", "face", "jacket body", "boots", "hands"}   # user-painted regions
     m = R.masks(spec, 432)
     total = sum(int(v.sum()) for k, v in m.items())
     assert total == 432                                    # every pixel in exactly one region (or rest)
