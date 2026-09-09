@@ -32,6 +32,7 @@ button,input,select{background:#1d2330;color:var(--fg);border:1px solid var(--li
 <label class="hint">offset <input type="range" id="off" min="-500" max="500" value="0" step="10" style="width:160px"> <span class="mono" id="offv">0 ms</span></label>
 <label class="hint">glow <input type="checkbox" id="glow" checked></label>
 <label class="hint">perceived <input type="checkbox" id="gam" checked></label>
+<label class="hint" title="checked: props as rotated in the layout (a cane at rot 270 is edge-on). unchecked: every prop faces you">match scene geometry <input type="checkbox" id="geo"></label>
 <span style="flex:1"></span><span id="astate" class="hint"></span><button id="bload">Load audio</button><input type="file" id="afile" accept="audio/*" hidden></header>
 <div id="stage"><canvas id="c"></canvas><div id="info"></div></div>
 <div id="tl"><canvas id="t"></canvas></div></div>
@@ -57,7 +58,8 @@ function sizeCanvas(cv){const r=cv.getBoundingClientRect();cv.width=r.width*devi
 function draw(){
   const [W,H]=sizeCanvas(c);const g=c.getContext('2d');g.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);
   g.fillStyle='#07080c';g.fillRect(0,0,W,H);
-  const f=frameAt(t);const gam=$('#gam').checked, glow=$('#glow').checked;
+  const f=frameAt(t);const gam=$('#gam').checked, glow=$('#glow').checked, geo=$('#geo').checked;
+  const PX=p=>geo?p.x:p.fx, PZ=p=>geo?p.z:p.fz;
   // world -> screen: x across, z up
   const pad=40;const sx=(W-2*pad)/Math.max(1,D.x1-D.x0), sz=(H-2*pad-40)/Math.max(1,D.z1);const s=Math.min(sx,sz);
   const ox=pad+((W-2*pad)-(D.x1-D.x0)*s)/2, oy=H-pad;
@@ -69,7 +71,7 @@ function draw(){
       for(const p of D.props){const dens=Math.min(1,p.pitch/1.6);          // dense props overlap more -> less alpha per bulb
         for(let i=0;i<p.n;i++){const k=row+(p.col+i)*4;let r=px[k],gg=px[k+1],b=px[k+2];const lum=(r+gg+b)/765;if(lum<0.06)continue;
         if(gam){r=255*Math.pow(r/255,1/2.2);gg=255*Math.pow(gg/255,1/2.2);b=255*Math.pow(b/255,1/2.2);}
-        const X=ox+(p.x[i]-D.x0)*s, Y=oy-p.z[i]*s; const rad=Math.max(2.5,p.pitch*s*0.75);
+        const X=ox+(PX(p)[i]-D.x0)*s, Y=oy-PZ(p)[i]*s; const rad=Math.max(2.5,p.pitch*s*0.75);
         og.fillStyle=`rgba(${r|0},${gg|0},${b|0},${(0.14+0.55*lum)*dens})`;og.beginPath();og.arc(X,Y,rad,0,6.283);og.fill();}}
       // two blur passes: a wide soft haze and a tighter halo, both 'screen' so colour survives and nothing saturates to white
       g.save();g.globalCompositeOperation='screen';
@@ -77,7 +79,7 @@ function draw(){
       g.filter=`blur(${Math.max(2,s*0.5)}px)`;g.globalAlpha=0.6;g.drawImage(oc,0,0,W,H);g.restore();}
     for(const p of D.props){for(let i=0;i<p.n;i++){const k=row+(p.col+i)*4;let r=px[k],gg=px[k+1],b=px[k+2];
       if(gam){r=255*Math.pow(r/255,1/2.2);gg=255*Math.pow(gg/255,1/2.2);b=255*Math.pow(b/255,1/2.2);}
-      const X=ox+(p.x[i]-D.x0)*s, Y=oy-p.z[i]*s; const rad=Math.max(1.4,p.pitch*s*0.32);
+      const X=ox+(PX(p)[i]-D.x0)*s, Y=oy-PZ(p)[i]*s; const rad=Math.max(1.4,p.pitch*s*0.32);
       const lum=(r+gg+b)/765, k2=1+0.35*lum;                                  // bright bulbs get a hot core
       g.fillStyle=`rgb(${Math.min(255,r*k2)|0},${Math.min(255,gg*k2)|0},${Math.min(255,b*k2)|0})`;g.beginPath();g.arc(X,Y,rad,0,6.283);g.fill();}
       g.fillStyle='#6b7385';g.font='11px system-ui';g.textAlign='center';g.fillText(p.id,ox+(p.cx-D.x0)*s,oy+16);}}
@@ -127,9 +129,12 @@ def build_player(R, frames, t0, out_path, bright_step=6):
     zmax = max(float(p.wz.max()) for p in props)
     data = {
         "audio": audio_rel, "fps": 60, "t0": t0, "t1": t1, "frames": len(frames),
-        "x0": R.world[0] - 10, "x1": R.world[1] + 10, "z1": zmax + 6,
+        "x0": min(R.world[0], min(float((p.pl.x + p.lx).min()) for p in props)) - 10,
+        "x1": max(R.world[1], max(float((p.pl.x + p.lx).max()) for p in props)) + 10, "z1": zmax + 6,
         "props": [{"id": p.id, "n": p.n, "col": cols[p.id], "cx": p.cx, "pitch": p.pitch,
-                   "x": [round(float(v), 1) for v in p.wx], "z": [round(float(v), 1) for v in p.wz]} for p in props],
+                   "x": [round(float(v), 1) for v in p.wx], "z": [round(float(v), 1) for v in p.wz],
+                   # front-facing (rotation ignored): the prop's own plane, centred on its placement
+                   "fx": [round(float(v), 1) for v in p.pl.x + p.lx], "fz": [round(float(v), 1) for v in p.pl.z + p.ly]} for p in props],
         "songs": [{"name": s["name"], "theme": s.get("theme"), "t0": s["from"], "t1": s["to"]} for s in R.songs],
         "sections": [{"t0": s["t0"], "t1": s["t1"], "look": s["look"], "note": s["note"],
                       "intensity": None if s["intensity"] is None else round(s["intensity"] * 10)} for s in R.sections],

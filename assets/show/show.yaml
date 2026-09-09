@@ -36,6 +36,7 @@ palettes:
   jewels:      {hues: [0.12, 0.10, 0.14], accents: {emerald: 0.38, ruby: 0.99, diamond: null}, accent_density: 0.07, sat_max: 0.9,
                 flash: {hue: 0.12, sat: 0.35, level: 0.8},
                 notes: 'predominantly gold; scattered emerald, ruby, white-diamond pixels; lightning is warm gold-white'}
+  retro:       {hues: [0.09, 0.00, 0.33, 0.12], sat_max: 0.95, notes: 'incandescent: tungsten white, red, green, gold -- fallbacks only; the retro look colours each prop by what it depicts'}
   modern:      {hues: [0.00, 0.98], stripes: {colors: [white, red], width_in: 8}, notes: 'candy stripes, clean modern red/white with cool accents'}
   tacky:       {hues: [0.00, 0.17, 0.33, 0.50, 0.67, 0.83], sat_max: 1.0, notes: 'every colour, fast changes, multicolour bulbs -- deliberately over the top'}
   romantic:    {hues: [0.98, 0.92, 0.55], white_core: false, notes: 'reds and pinks; icy blue that melts away top-to-bottom to reveal warm'}
@@ -67,6 +68,7 @@ looks:
   jewels: "CALM: each prop is a gemstone (mostly gold, a rotating few emerald/ruby/diamond); smooth waves; only glints follow the music"
   drawn: "the prop as painted -- each REGION (assets/paint) in its own colour, breathing; white sparkle"
   parts: "regions take turns on the pulse, top to bottom (hat, face, coat, belt, boots), each in its painted colour"
+  retro: "1960s Times Square sign: props drawn as what they are (paint regions), flashing in/out on sign programs (params.program: walk|build|alternate|steady|finale), per-prop animations to the beat"
   finale: "song ending, big: full stack, white pops on the pulse, gusts both ways, unison stutter in the last two bars"
 
 songs:
@@ -196,55 +198,64 @@ songs:
         intensity: null
         note: "outro"
   - name: "Jingle Bells (feat. The Puppini Sisters) — Michael Bublé"
-    from: 4:48.01
-    to: 6:44.01
-    tempo_hint: "123 (SongBPM; ours 123) -- swing"
+    from: 288.01
+    to: 404.01
+    tempo_hint: 123 (SongBPM; ours 123) -- swing
     pulse_beats: 1
     bar_beats: 4
-    theme: "Jewels"
-    palette: jewels
-    theme_notes: "CALM and mature: smooth gold waves rolling along the course, fades not cuts; fixed emerald/ruby/diamond stones twinkle; only the diamonds answer the music (sleigh bells)"
+    theme: Retro Classic
+    palette: retro
+    theme_notes: "1950s-60s wholesome incandescent, Times Square sign: props drawn as what they are (Santa's suit from the paint regions, red bell with gold glitter and ribbon, red/white cane stripes marching, icy snowflake tendrils, yellow star with white flashes + chaser), whole props flashing in and out on sign programs (walk / build / alternate / steady / finale), warm pop on the downbeat, warm sweep on the phrase turn"
     sections:
-      - at: 4:48.01
-        look: jewels
+      - at: 288.01
+        look: retro
         intensity: 4
-        note: "intro -- soft gold, stones waking up"
-      - at: 5:03.63
-        look: jewels
+        params: {program: walk}
+        note: intro -- one prop at a time walks along the row, everyone on for the 4th bar
+      - at: 303.63
+        look: retro
         intensity: 6
-        note: "horns come in -- gold lifts a little"
-      - at: 5:19.29
-        look: jewels
+        params: {program: build}
+        note: "horns -- the classic sign cycle: build up one by one, hold, three flashes, out"
+      - at: 319.29
+        look: retro
         intensity: 7
-        note: "female chorus"
-      - at: 5:32.97
-        look: jewels
+        params: {program: alternate}
+        note: female chorus -- odd / even props swap on every beat
+      - at: 332.97
+        look: retro
         intensity: 4
-        note: "vocal harmony stacking solo -- dip, let the diamonds carry it"
-      - at: 5:34.97
-        look: jewels
+        params: {program: walk}
+        note: vocal harmony stack -- back to one at a time
+      - at: 334.97
+        look: retro
         intensity: 7
-        note: "song resumes"
-      - at: 5:50.40
-        look: jewels
+        params: {program: build}
+        note: song resumes -- sign cycle again
+      - at: 350.4
+        look: retro
         intensity: 8
-        note: "gent with the female chorus"
-      - at: 6:06.20
-        look: jewels
+        params: {program: steady, pop: 0.5}
+        note: gent with the female chorus -- everyone on, per-prop animations carry it, big downbeat pops
+      - at: 366.2
+        look: retro
         intensity: 5
-        note: "ladies drop out"
-      - at: 6:21.65
-        look: jewels
+        params: {program: alternate}
+        note: ladies drop out -- alternate
+      - at: 381.65
+        look: retro
         intensity: 6
-        note: "gentle chorus"
-      - at: 6:37.36
-        look: jewels
+        note: gentle chorus -- programs rotate by phrase (build, alternate, build, steady)
+      - at: 397.36
+        look: retro
         intensity: 9
-        note: "picks up -- gold at its brightest, then it settles"
-      - at: 6:43.42
+        params: {program: finale, pop: 0.6}
+        note: picks up -- all on, last two bars stutter on the 8ths
+      - at: 403.42
         look: fade
         intensity: null
-        note: "fade out"
+        note: fade out
+
   - name: "Rockin' Around the Christmas Tree — Brenda Lee"
     from: 6:44.01
     to: 8:11.19

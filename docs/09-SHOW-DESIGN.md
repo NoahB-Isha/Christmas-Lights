@@ -419,3 +419,12 @@ end):
   (current answer: no — pure time-based loops).
 - PA / audio path from the runner, and where the runner physically sits on
   the DMX chain.
+
+## Retro look family (Jingle Bells)
+
+`src/lightshow/retro.py`, look `retro`. 1950s–60s incandescent Times Square sign:
+
+- **Sign programs** (`params.program`): `walk` (one prop at a time, all on in bar 4), `build` (props come on one per beat, hold, three flashes, out), `alternate` (odd/even swap per beat), `steady`, `finale` (last two bars stutter on 8ths). Default rotates build → alternate → build → steady per 4-bar phrase. Whole props go hard on/off with a ~100 ms filament tail. Programs bucket props left→right (≤8 buckets) so they scale to the yard.
+- **Per-prop animations** by what the prop depicts (paint regions, else label): Santa (suit red on the pulse, all white trim blinking together on the beat, hands flash on the sleigh bells), bell (red body + gold glitter, gold ribbon on the off-beat, a bright band swinging across on each pulse), cane (red/white stripes marching a quarter stripe per beat), snowflakes (ice-blue tendrils growing centre→tips each pulse, tips glitter white), star (yellow, marquee chaser on 16ths, blends to white on strong hits), other (warm-white chaser).
+- **Cross-prop**: warm pop on every bar downbeat (`params.pop`), warm-white sweep along the row on the phrase turn.
+- Brightness rule is deliberately stretched here (~47% of time ≥60%): being fully OFF is the sign aesthetic.

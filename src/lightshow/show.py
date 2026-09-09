@@ -662,7 +662,7 @@ def look_fade(c):
 
 
 # Looks that are meant to be calm: no over-bright attack on section entry.
-SMOOTH_LOOKS = {"hold-breath", "fade", "jewels", "shimmer", "starfield"}
+SMOOTH_LOOKS = {"hold-breath", "fade", "jewels", "shimmer", "starfield", "retro"}   # retro: filaments do not overshoot
 
 
 # ----------------------------------------------------------------- renderer
@@ -994,3 +994,7 @@ class ShowRenderer:
                                  "ports": [pr.placement.id if pr.placement else None for pr in rig.ports]}
         json.dump(man, open(os.path.join(out_dir, "manifest.json"), "w"), indent=1)
         return man
+
+
+# look families in their own modules register themselves into LOOKS
+from . import retro  # noqa: E402,F401
