@@ -129,9 +129,8 @@ whether it duplicates port count or identifies a controller model. An 8-port
 `.moc` would distinguish them.
 
 ### Filename convention on the cards
-Observed: `Sc-01-01.rgb`, `Sc-02-01.rgb`. The units very likely index fixed
-names, so custom files should overwrite existing ones. The meaning of the
-two number groups (scene? program? slot?) is unconfirmed.
+RESOLVED 2026-09-10: `<scene>-<part>.rgb` -- the FIRST number is the scene
+(1-1.rgb, 2-1.rgb confirmed with the SCE button). See 08-CONTROL-PROTOCOL.
 
 ### Practical file size ceiling
 No size limit was found — apparent truncation turned out to be a bug in an

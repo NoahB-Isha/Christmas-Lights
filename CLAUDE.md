@@ -135,12 +135,12 @@ asymmetric prop against the vendor tool and set the flag in layout.json.
 ## The show renderer (src/lightshow/show.py)
 
 `make render SONG=1 SLUG=carol` renders song 1 of `assets/show/show.yaml`
-against the bench layout into `out/show_bench/<CTRL>/Sc-01-01-carol.rgb` plus
+against the bench layout into `out/show_bench/<CTRL>/1-1.rgb` plus
 an audio-synced `player.html`. A **look** is `LOOKS[name](ctx) -> {prop_id:
 (n,3)}`; add one function and reference it from the yaml. `ctx` has per-frame
 music features, the per-song beat grid (tempo corrected from `tempo_hint`),
 the palette, intensity 0..1, section progress, prop geometry in inches and
-prop-to-prop distances. Filenames: `Sc-01-NN-<slug>.rgb`, NN = scene.
+prop-to-prop distances. Filenames: `<scene>-1.rgb` (1-1.rgb, 2-1.rgb) -- confirmed on the GC-6004; the FIRST number is the scene, and `Sc-01-NN-<slug>` names all read as scene 1.
 
 ## Pixel regions (assets/paint/<prop>.json)
 

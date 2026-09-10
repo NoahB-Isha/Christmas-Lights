@@ -189,7 +189,7 @@ def main():
             shows[cid].frames.append(buf.tobytes())
     os.makedirs(a.out, exist_ok=True)
     man = OrderedDict(fps=FPS, frames=n_frames, seconds=total, scene=a.scene, cards=OrderedDict())
-    fname = f"{a.name}-{a.scene:02d}.rgb"
+    fname = f"{a.scene}-1.rgb"          # <scene>-<part>.rgb, confirmed on the GC-6004
     for cid, s in shows.items():
         d = os.path.join(a.out, cid); os.makedirs(d, exist_ok=True)
         path = os.path.join(d, fname); s.save(path)
