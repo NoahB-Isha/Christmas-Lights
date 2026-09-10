@@ -238,8 +238,11 @@ Controller side (GC-6004):
   silence -> P:1. A card with a gap (only Sc-01 + Sc-07) misbehaved once; keep numbering contiguous.
 
 Bench recipe: box Mode=Audio Scene, Scene<=7, Sample 160 Hz; controller Add=1; cards
-Sc-01..06 = idle, Sc-07 = show; cue channel = continuous hits (or the music itself) for the
-show's duration, silence after. `tools/make_cue_track.py --train 0.5` builds it.
+Sc-01..06 = idle, Sc-07 = show; cue channel = a CLICK TRAIN (multitone hits every 0.5 s)
+for the show's duration, silence after. `tools/make_cue_track.py --train 0.5` builds it.
+DECISION: never feed the box the music itself -- quiet passages / fade-outs / song gaps
+would drop it back to idle. The click train is the only thing it hears, and it runs to the
+last frame of the show whatever the music does.
 
 OPEN: playback speed under the box (both patterns looked slow). Measure: 10 ladder loops
 should take 60.0 s. If the box pins a low speed value, either render the show at a
