@@ -5,11 +5,12 @@ one unmistakable, so we can read which scene the audio box selects for a
 given audio level / beep.
 
 Scene N (1..62):
-  * a solid colour, hue = N/62 around the wheel (1 red, ~16 yellow-green,
-    ~31 cyan, ~47 purple, 62 back to red) at 60 %
-  * every 4 s the whole rig counts the number out: TENS as long GREEN
-    flashes, then UNITS as short WHITE flashes  (47 = 4 long green, 7 short white)
-Loop is 4 s per scene, 60 fps.
+  * a DIM solid colour (22 %), hue = N/62 around the wheel (1 red, ~16
+    yellow-green, ~31 cyan, ~47 purple, 62 back to red)
+  * every 6 s the rig counts the number out with SOFT pulses: TENS as slow
+    green swells, then UNITS as quicker warm swells (47 = 4 green, 7 warm).
+    Nothing goes above ~55 % -- comfortable to stare at.
+Loop is 6 s per scene, 60 fps.
 
     python3 tools/scene_ladder.py --layout assets/bench.json --out out/sd_ladder
 Copy A/ and B/ to the cards (replacing the show cards for the test).
@@ -27,23 +28,25 @@ from lightshow.formats.rgbfile import Show               # noqa: E402
 from lightshow.effects import hsv, to_bytes              # noqa: E402
 
 FPS = 60
-LOOP_S = 4.0
+LOOP_S = 6.0
 
 
 def level_at(t, n):
-    """-> ('base'|'tens'|'units', on) flash timeline within the 4 s loop"""
+    """-> (kind, amount 0..1): a SOFT pulse timeline (no hard flashes).
+    tens = slow green pulses, units = quicker warm pulses."""
     tens, units = divmod(n, 10)
     seq = []                                          # (start, dur, kind)
-    tt = 0.3
+    tt = 0.5
     for _ in range(tens):
-        seq.append((tt, 0.32, "tens")); tt += 0.5
-    tt += 0.25
+        seq.append((tt, 0.7, "tens")); tt += 0.9
+    tt += 0.4
     for _ in range(units):
-        seq.append((tt, 0.12, "units")); tt += 0.25
+        seq.append((tt, 0.32, "units")); tt += 0.42
     for s, d, k in seq:
         if s <= t < s + d:
-            return k
-    return "base"
+            x = (t - s) / d
+            return k, float(np.sin(np.pi * x) ** 2)  # smooth in/out
+    return "base", 0.0
 
 
 def main():
@@ -57,8 +60,8 @@ def main():
     man = OrderedDict(fps=FPS, loop_s=LOOP_S, scenes=OrderedDict())
     for n in range(1, a.scenes + 1):
         hue = (n - 1) / a.scenes
-        base = np.array(hsv(hue, 1.0, np.array([0.6]))).reshape(3)
-        colours = {"base": base, "tens": np.array([0.1, 1.0, 0.1]), "units": np.array([1.0, 1.0, 1.0])}
+        base = np.array(hsv(hue, 0.9, np.array([0.22]))).reshape(3)          # dim, easy on the eyes
+        colours = {"tens": np.array([0.1, 0.55, 0.1]), "units": np.array([0.6, 0.55, 0.45])}
         n_frames = int(LOOP_S * FPS)
         fname = f"Sc-01-{n:02d}-ladder.rgb"
         man["scenes"][n] = {"hue": round(hue, 3), "file": fname, "cards": {}}
@@ -66,8 +69,9 @@ def main():
             show = Show(rig.channels())
             px = sum(rig.channels())
             for f in range(n_frames):
-                k = level_at(f / FPS, n)
-                col = np.tile(colours[k], (px, 1))
+                k, amt = level_at(f / FPS, n)
+                c = base if k == "base" else base * (1 - amt) + colours[k] * amt
+                col = np.tile(c, (px, 1))
                 show.frames.append(to_bytes(col).reshape(-1).tobytes())
             d = os.path.join(a.out, cid); os.makedirs(d, exist_ok=True)
             path = os.path.join(d, fname); show.save(path)
