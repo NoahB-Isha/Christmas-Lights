@@ -967,17 +967,17 @@ class ShowRenderer:
 
     def write_cards(self, frames, out_dir, scene=1, slug="show", fps=FPS):
         """frames -> one .rgb per controller + manifest. Identical frame counts.
-        Files are named <scene>-1.rgb (e.g. 1-1.rgb, 2-1.rgb). CONFIRMED on the
-        bench: the FIRST number is the scene the SCE button / DMX select refers
-        to; Sc-01-NN-... did NOT work (all read as scene 1). The slug goes in
-        manifest.json, not the filename.
+        Files are named Sc-<scene>-<part>.rgb (Sc-01-01.rgb, Sc-02-01.rgb).
+        CONFIRMED on the bench: the FIRST number is the scene the SCE button /
+        DMX select refers to; Sc-01-NN-<slug> did NOT work (all read as scene
+        1). The slug goes in manifest.json, not the filename.
         select refers to, the slug is free text the controller ignores."""
         from .formats.rgbfile import Show
         import hashlib
         rigs = self.layout.controller_rigs()
         os.makedirs(out_dir, exist_ok=True)
         man = OrderedDict(fps=fps, frames=len(frames), scene=scene, cards=OrderedDict())
-        fname = f"{scene}-1.rgb"                         # CONFIRMED on the GC-6004: <scene>-<part>.rgb
+        fname = f"Sc-{scene:02d}-01.rgb"                  # CONFIRMED on the GC-6004: Sc-<scene>-<part>.rgb
         for cid, rig in rigs.items():
             sh = Show(rig.channels())
             offs = np.cumsum([0] + rig.channels()) * 3

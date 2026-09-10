@@ -63,7 +63,7 @@ def main():
         base = np.array(hsv(hue, 0.9, np.array([0.22]))).reshape(3)          # dim, easy on the eyes
         colours = {"tens": np.array([0.1, 0.55, 0.1]), "units": np.array([0.6, 0.55, 0.45])}
         n_frames = int(LOOP_S * FPS)
-        fname = f"{n}-1.rgb"
+        fname = f"Sc-{n:02d}-01.rgb"
         man["scenes"][n] = {"hue": round(hue, 3), "file": fname, "cards": {}}
         for cid, rig in rigs.items():
             show = Show(rig.channels())

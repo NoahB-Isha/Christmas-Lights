@@ -184,15 +184,16 @@ them as master and slaves".
 ## Filename convention — confirmed ON THE BENCH (2026-09-10)
 
 ```
-S-P.rgb        e.g. 1-1.rgb, 2-1.rgb
-|  |
-|  +-- part (keep 1)
-+----- SCENE number: what the SCE button and the DMX scene select refer to
+Sc-SS-PP.rgb   e.g. Sc-01-01.rgb, Sc-02-01.rgb
+   |  |
+   |  +-- part (keep 01)
+   +----- SCENE number: what the SCE button and the DMX scene select refer to
 ```
 
 Tested: with `Sc-01-01-show.rgb` + `Sc-01-02-eye_candy.rgb` the controller's
-SCE setting did nothing (both files read as scene 1). Renamed to `1-1.rgb`
-and `2-1.rgb`, SCE switched between them. The datasheet's "NAME-XX" text
+SCE setting did nothing (both files read as scene 1). Renamed to `Sc-01-01.rgb`
+and `Sc-02-01.rgb`, SCE switched between them. Whether a description suffix
+is tolerated is untested -- keep the bare form. The datasheet's "NAME-XX" text
 below is therefore misleading for the 6004: the FIRST numeric group is the
 scene. Descriptions live in manifest.json, not the filename.
 

@@ -6,11 +6,11 @@ render_show.py -- render show.yaml to per-controller cards (and a preview).
     python tools/render_show.py --layout assets/layout.json                  # the whole show
     python tools/render_show.py --layout assets/bench.json --song 1          # one song by number
 
-Output: out/show_<layout>/<CTRL>/<scene>-1.rgb + manifest.json, and a
+Output: out/show_<layout>/<CTRL>/Sc-<scene>-01.rgb + manifest.json, and a
 brightness report per song. --player also writes an audio-synced HTML preview.
 
-FILENAMES: <scene>-1.rgb (1-1.rgb, 2-1.rgb ...). Confirmed on the GC-6004:
-the first number is the scene; Sc-01-NN-<desc> names all read as scene 1.
+FILENAMES: Sc-<scene>-01.rgb (Sc-01-01.rgb, Sc-02-01.rgb ...). Confirmed on the
+GC-6004: the FIRST number is the scene; Sc-01-NN-<desc> names all read as scene 1.
 Scene 1 is the music show.
 """
 
