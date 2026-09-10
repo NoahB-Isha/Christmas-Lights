@@ -55,12 +55,24 @@ def decode(path, sr=SR):
     return np.frombuffer(raw, np.float32).astype(np.float64)
 
 
-def beep(sr, hz=80.0, ms=150.0, click=True):
+def beep(sr, hz=80.0, ms=150.0, click=True, multitone=False):
+    """One cue. multitone=True: a broadband 'drum hit' -- several tones (hz,
+    2.5x, 6x, 12x) plus a noise burst, all decaying together. The GC-102C's
+    beat detector fired on a multitone generator but ignored single sine
+    beeps, so this is the default for real cue tracks."""
     n = int(sr * ms / 1000)
     t = np.arange(n) / sr
     env = np.exp(-t / (ms / 1000 / 4.0))
     attack = np.minimum(1.0, t / 0.002)
-    y = np.sin(2 * math.pi * hz * t) * env * attack
+    if multitone:
+        rng = np.random.default_rng(7)
+        y = np.zeros(n)
+        for k, (mult, g) in enumerate(((1, 1.0), (2.5, 0.8), (6, 0.6), (12, 0.45))):
+            y += g * np.sin(2 * math.pi * hz * mult * t + k)
+        y += 0.5 * rng.standard_normal(n) * np.exp(-t / 0.02)   # noise burst on the attack
+        y = y / np.abs(y).max() * env * attack
+    else:
+        y = np.sin(2 * math.pi * hz * t) * env * attack
     if click:                                   # broadband transient helps onset detectors
         k = int(sr * 0.004)
         y[:k] += np.linspace(1.0, 0.0, k) * np.sign(np.sin(np.arange(k) * 1.7))
@@ -92,6 +104,7 @@ def main():
     ap.add_argument("--beep-hz", type=float, default=80.0)
     ap.add_argument("--beep-ms", type=float, default=150.0)
     ap.add_argument("--beep-gain-db", type=float, default=0.0)
+    ap.add_argument("--sine", action="store_true", help="plain sine beep instead of the broadband multitone hit")
     ap.add_argument("--repeat", type=int, default=1, help="beeps per cue (burst)")
     ap.add_argument("--gap-ms", type=float, default=250.0, help="gap between beeps in a burst")
     ap.add_argument("--pre-roll", type=float, default=1.0, help="silence before t=0 so the first beep is not clipped by playback start")
@@ -120,7 +133,7 @@ def main():
     # ---- build channels
     n = int(SR * (a.pre_roll + total))
     cue_ch = np.zeros(n)
-    b = beep(SR, a.beep_hz, a.beep_ms) * (10 ** (a.beep_gain_db / 20))
+    b = beep(SR, a.beep_hz, a.beep_ms, multitone=not a.sine) * (10 ** (a.beep_gain_db / 20))
     for c in cues:
         for r in range(a.repeat):
             i = int(SR * (a.pre_roll + c + r * a.gap_ms / 1000))
