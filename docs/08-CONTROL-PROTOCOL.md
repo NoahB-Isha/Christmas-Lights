@@ -211,6 +211,40 @@ card before copying, and editing filenames on a PC rather than in place.
 
 That matches the cards: `Sc-01-01.rgb`, `Sc-02-01.rgb`.
 
+
+## GC-102C audio box -- CHARACTERISED on the bench (2026-09-10)
+
+Menu: Mode (Audio Scene / Audio Bright / Audio Speed / Audio B-S / Auto / One Loop),
+Bright 0-15, Speed 0-15, Hold Time 0.2-2.5 s, Sample 63/160/400 Hz/1 kHz, Scene 1..N, Scene ID.
+
+Measured behaviour in **Audio Scene** mode:
+
+- It is the DMX master: while plugged in the controller's own SCE button is overridden,
+  and it drives brightness AND speed channels too (playback ran slow -- see below).
+- It transmits ~7 channels; with `DMX Add` > 7 the controller's brightness slot reads 0 (dark).
+- **Silence -> scene value 0 -> first file.** Falls back 1-2 s after the audio stops.
+- **Beats -> it walks scenes 7 .. max(Scene setting, 7)**, one step per accepted beat
+  (Scene=12 -> 7,8,...,12; Scene=8 -> 7,8; Scene<=7 -> always 7). The 6-scene offset is
+  almost certainly because its intended controllers have 6 built-in effects in slots 1-6.
+- It is a BPM tracker: a train of hits locks on after a few beats (instant at >= 120 BPM,
+  several beats at 30 BPM). Single sine beeps did not register; broadband "drum" hits
+  and real music do. Hold Time = minimum gap between accepted beats.
+- Start latency beat -> lights: small (unmeasured, "not much").
+
+Controller side (GC-6004):
+- The `P:` readout is the FILE POSITION on the card, not the scene number. The DMX scene
+  value indexes files in name order and CLAMPS to the last file (2 files + "scene 7" -> P:2).
+- With files Sc-01..Sc-06 (idle copies) + Sc-07 (show) it switches cleanly: music -> P:7,
+  silence -> P:1. A card with a gap (only Sc-01 + Sc-07) misbehaved once; keep numbering contiguous.
+
+Bench recipe: box Mode=Audio Scene, Scene<=7, Sample 160 Hz; controller Add=1; cards
+Sc-01..06 = idle, Sc-07 = show; cue channel = continuous hits (or the music itself) for the
+show's duration, silence after. `tools/make_cue_track.py --train 0.5` builds it.
+
+OPEN: playback speed under the box (both patterns looked slow). Measure: 10 ladder loops
+should take 60.0 s. If the box pins a low speed value, either render the show at a
+compensated frame rate or drive DMX from the laptop (USB-DMX) instead.
+
 ## The 512-byte LUT is a gamma curve
 
 The datasheet lists "up to 65536 gray level control, built-in user-defined
