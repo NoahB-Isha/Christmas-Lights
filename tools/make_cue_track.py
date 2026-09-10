@@ -94,6 +94,10 @@ def main():
     ap.add_argument("out", help="output .wav")
     ap.add_argument("--cues", help="cues.json: {\"cues\":[{\"t\":sec,...}]} or a list of times; default one cue at 0")
     ap.add_argument("--at", nargs="*", default=None, help="explicit cue times, e.g. 0 1:23.13 3:10.41")
+    ap.add_argument("--train-end", type=float, default=None, help="stop the hit train at this second (default: music end)")
+    ap.add_argument("--train", type=float, default=None,
+                    help="GC-102C mode: a hit every N seconds from the first cue to the end of the music "
+                         "(the box holds 'scene 7' while it hears beats and falls back to scene 1 in silence)")
     ap.add_argument("--test", action="store_true", help="no music; beeps every --every seconds")
     ap.add_argument("--every", type=float, default=10.0)
     ap.add_argument("--seconds", type=float, default=None, help="total length (default: music length + 2 s)")
@@ -128,6 +132,10 @@ def main():
             cues = [parse_time(c["t"] if isinstance(c, dict) else c) for c in items]
         else:
             cues = [0.0]
+    if a.train and music is not None:
+        end = float(a.train_end) if a.train_end is not None else len(music) / SR
+        first = min(cues) if cues else 0.0
+        cues = list(np.arange(first, end, a.train))
     cues = sorted(set(round(c, 3) for c in cues))
 
     # ---- build channels
