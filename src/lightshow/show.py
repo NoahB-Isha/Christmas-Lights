@@ -897,21 +897,21 @@ class ShowRenderer:
             cur = {k: v * gain for k, v in cur.items()}
         return {k: np.clip(v, 0, 1) for k, v in cur.items()}
 
-    def _advance_spark(self, t):
+    def _advance_spark(self, t, fps=FPS):
         """Stateful sparkle grains: born on high-band onsets (and some strong
         hits), decaying over ~0.3 s. Called once per rendered frame."""
         if not hasattr(self, "spark"):
             self.spark = {p.id: np.zeros(p.n) for p in self.props}
             self._spark_rng = np.random.default_rng(4)
         f = min(self.n_frames - 1, int(round(t * FPS)))
-        k = math.exp(-1.0 / (0.30 * FPS))
+        k = math.exp(-1.0 / (0.30 * fps))            # decay per RENDERED frame -> constant in seconds
         hit, hh = self.a.hit[f], self.a.hit_high[f]
         # one-prop-per-onset flashes (the "bell hits" mechanic): on a rising
         # onset the next prop in a shuffled order lights fully and decays
         if not hasattr(self, "prop_flash"):
             self.prop_flash = {p.id: 0.0 for p in self.props}; self._flash_prev = 0.0
             self._flash_order = list(np.random.default_rng(11).permutation(len(self.props))); self._flash_i = 0
-        kf = math.exp(-1.0 / (0.45 * FPS))
+        kf = math.exp(-1.0 / (0.45 * fps))
         for pid in self.prop_flash:
             self.prop_flash[pid] *= kf
         onset = max(hh, hit * 0.8)
@@ -937,7 +937,7 @@ class ShowRenderer:
         self.prop_flash = {p.id: 0.0 for p in self.props}; self._flash_prev = 0.0
         self._flash_order = list(np.random.default_rng(11).permutation(len(self.props))); self._flash_i = 0
         for f in range(n):
-            self._advance_spark(t0 + f / fps)
+            self._advance_spark(t0 + f / fps, fps)
             out.append(self.frame(t0 + f / fps))
             if progress and f % 600 == 0:
                 progress(f, n)

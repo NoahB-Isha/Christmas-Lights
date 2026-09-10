@@ -19,10 +19,12 @@ ap = argparse.ArgumentParser()
 ap.add_argument("--layout", default=os.path.join(ROOT, "assets", "bench.json"))
 ap.add_argument("--out", default=os.path.join(ROOT, "out", "sd_bench"))
 ap.add_argument("--scene", type=int, default=1)
-ap.add_argument("--level", type=float, default=0.35)
+ap.add_argument("--level", type=float, default=0.6)
+ap.add_argument("--fps", type=float, default=60, help="frames per real second (match the controller's measured rate under the box)")
 a = ap.parse_args()
 L = Layout.load(a.layout); rigs = L.controller_rigs()
 props = list(L.props); order = {p.id: k for k, p in enumerate(sorted(props, key=lambda q: q.x))}
+FPS = a.fps
 n_frames = int(LOOP * FPS)
 fname = f"Sc-{a.scene:02d}-01.rgb"
 res = {}

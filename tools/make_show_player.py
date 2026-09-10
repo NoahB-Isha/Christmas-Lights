@@ -104,7 +104,7 @@ window.addEventListener('resize',draw);requestAnimationFrame(loop);
 """
 
 
-def build_player(R, frames, t0, out_path, bright_step=6):
+def build_player(R, frames, t0, out_path, bright_step=6, fps=60):
     props = R.props
     n_px = sum(p.n for p in props)
     strip = np.zeros((len(frames), n_px, 3), np.uint8)
@@ -121,14 +121,14 @@ def build_player(R, frames, t0, out_path, bright_step=6):
             bright.append(float(np.mean([fr[p.id].max(1).mean() for p in props])))
     buf = io.BytesIO(); Image.fromarray(strip).save(buf, format="PNG", optimize=True)
     png = base64.b64encode(buf.getvalue()).decode()
-    t1 = t0 + len(frames) / 60.0
+    t1 = t0 + len(frames) / float(fps)
     # audio path relative to the html
     root = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
     audio_abs = os.path.join(root, R.spec["audio"])
     audio_rel = os.path.relpath(audio_abs, os.path.dirname(os.path.abspath(out_path))).replace(os.sep, "/")
     zmax = max(float(p.wz.max()) for p in props)
     data = {
-        "audio": audio_rel, "fps": 60, "t0": t0, "t1": t1, "frames": len(frames),
+        "audio": audio_rel, "fps": fps, "t0": t0, "t1": t1, "frames": len(frames),
         "x0": min(R.world[0], min(float((p.pl.x + p.lx).min()) for p in props)) - 10,
         "x1": max(R.world[1], max(float((p.pl.x + p.lx).max()) for p in props)) + 10, "z1": zmax + 6,
         "props": [{"id": p.id, "n": p.n, "col": cols[p.id], "cx": p.cx, "pitch": p.pitch,

@@ -34,6 +34,9 @@ def main():
     ap.add_argument("--slug", default="show")
     ap.add_argument("--player", action="store_true", help="also write an HTML preview")
     ap.add_argument("--no-cards", action="store_true", help="skip writing .rgb cards (fast preview iteration)")
+    ap.add_argument("--fps", type=float, default=FPS,
+                    help="frames per REAL second to write (default 60). Under the GC-102C the controller plays "
+                         "slower than 60 fps; render at its measured rate (e.g. 31.0) so the show runs in real time")
     a = ap.parse_args()
 
     R = ShowRenderer(a.show, a.layout)
@@ -46,22 +49,22 @@ def main():
     out = a.out or os.path.join(ROOT, "out", f"show_{lname}")
 
     print(f"{len(R.props)} props, {len(R.songs)} songs, {len(R.sections)} sections; "
-          f"rendering {t0:.1f}-{t1:.1f} s ({(t1-t0)*FPS:.0f} frames)")
+          f"rendering {t0:.1f}-{t1:.1f} s ({(t1-t0)*a.fps:.0f} frames @ {a.fps:g} fps)")
     tic = time.time()
-    frames = R.render(t0, t1, progress=lambda f, n: print(f"  {f}/{n}", end="\r"))
+    frames = R.render(t0, t1, fps=a.fps, progress=lambda f, n: print(f"  {f}/{n}", end="\r"))
     print(f"  rendered in {time.time()-tic:.1f} s          ")
     if not a.no_cards:
-        man = R.write_cards(frames, out, scene=a.scene, slug=a.slug, fps=FPS)
+        man = R.write_cards(frames, out, scene=a.scene, slug=a.slug, fps=a.fps)
         for cid, c in man["cards"].items():
             print(f"  {cid}: {c['file']}  {c['channels']}  {c['bytes']/1e6:.1f} MB")
     os.makedirs(out, exist_ok=True)
     print("\nbrightness (share of time >= 60%, non-exempt looks | mean level | all looks):")
-    for name, share, mean, share_all in R.brightness_report(frames, t0):
+    for name, share, mean, share_all in R.brightness_report(frames, t0, fps=a.fps):
         print(f"  {share:5.0f}%   {mean:.2f}   {share_all:5.0f}%   {name}")
     if a.player:
         from make_show_player import build_player
         html = os.path.join(out, "player.html")
-        build_player(R, frames, t0, html)
+        build_player(R, frames, t0, html, fps=a.fps)
         print(f"\npreview: {html}")
 
 
