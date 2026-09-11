@@ -40,6 +40,7 @@ from .layout import Layout
 from . import regions as REG
 from .effects import hsv, frost, lighten, to_bytes
 from . import music
+from .lamps import LampBank
 
 FPS = 60
 ROOT = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", ".."))
@@ -688,7 +689,8 @@ class ShowRenderer:
 
     # ---- music
     def _analysis(self, audio, cache):
-        cpath = os.path.join(ROOT, "out", "features.npz")
+        stem = os.path.splitext(os.path.basename(audio))[0]
+        cpath = os.path.join(ROOT, "out", "features.npz" if stem == "show16" else f"features_{stem}.npz")
         if cache and os.path.exists(cpath) and os.path.getmtime(cpath) > os.path.getmtime(audio):
             d = np.load(cpath)
             a = type("A", (), {})()
@@ -936,12 +938,28 @@ class ShowRenderer:
         self._spark_rng = np.random.default_rng(4)
         self.prop_flash = {p.id: 0.0 for p in self.props}; self._flash_prev = 0.0
         self._flash_order = list(np.random.default_rng(11).permutation(len(self.props))); self._flash_i = 0
+        self.lamps = LampBank(self.props, fps)
         for f in range(n):
-            self._advance_spark(t0 + f / fps, fps)
-            out.append(self.frame(t0 + f / fps))
+            t = t0 + f / fps
+            self._advance_spark(t, fps)
+            fr = self.frame(t)
+            sec = self.section_at(t)
+            fr = self.lamps.apply(fr, t, self.lamp_params(sec))
+            out.append(fr)
             if progress and f % 600 == 0:
                 progress(f, n)
         return out
+
+    def lamp_params(self, sec):
+        """defaults.lamp -> song.lamp -> section.params (lamp, twinkle_frac, tube_uniform, amber, tau_*)"""
+        d = {"lamp": self.defaults.get("lamp", "led")}
+        song = sec["song"]["spec"]
+        if song.get("lamp"):
+            d["lamp"] = song["lamp"]
+        d.update({k: v for k, v in (song.get("lamp_params") or {}).items()})
+        d.update({k: v for k, v in (sec.get("params") or {}).items()
+                  if k in ("lamp", "twinkle_frac", "tube_uniform", "amber", "tau_on", "tau_off")})
+        return d
 
     def brightness_report(self, frames, t0=0.0, fps=FPS):
         """-> list of (song name, share of frames >= target, mean level)."""

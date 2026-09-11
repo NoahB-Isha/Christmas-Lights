@@ -59,4 +59,4 @@ def main(markers_path, song, out):
 if __name__ == "__main__":
     main(sys.argv[1] if len(sys.argv) > 1 else os.path.join(ROOT, "assets", "show", "markers.json"),
          sys.argv[2] if len(sys.argv) > 2 else os.path.join(ROOT, "assets", "audio", "show16.mp3"),
-         os.path.join(ROOT, "out", "songs.json"))
+         sys.argv[3] if len(sys.argv) > 3 else os.path.join(ROOT, "out", "songs.json"))

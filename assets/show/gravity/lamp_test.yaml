@@ -1,0 +1,41 @@
+# Lamp-model test on "Gravity (Live in L.A.)" -- one song, sections cycle through
+# the lamp models so they can be compared on the real props.
+audio: assets/audio/gravity.mp3
+fps: 60
+layout: assets/bench.json
+songs_analysis: out/songs_gravity.json
+defaults:
+  transition_s: 0.0
+  lamp: incandescent
+  brightness: {floor: 0.0, target_level: 0.6, target_fraction: 0.75, dark_ok_looks: [starfield], max_ok: 1.0}
+palettes:
+  bulbs:   {hues: [0.00, 0.33, 0.62, 0.08, 0.13], sat_max: 1.0, notes: 'dyed-glass C9: red green blue orange gold'}
+  ice:     {hues: [0.58, 0.55], white_core: true}
+  retro:   {hues: [0.09, 0.00, 0.33, 0.12], sat_max: 0.95}
+looks: {}
+songs:
+  - name: "Gravity (Live in L.A.) -- John Mayer"
+    from: 0.0
+    to: 471.6
+    tempo_hint: 117.5 (8ths of a slow 12/8 -- felt pulse ~59)
+    pulse_beats: 2
+    bar_beats: 8
+    theme: lamp test
+    palette: bulbs
+    sections:
+      - {at: 0.0,   look: starfield, intensity: 3, palette: ice, params: {lamp: led},          note: "LED  -- sparkle field, no model"}
+      - {at: 30.0,  look: retro,     intensity: 5, params: {lamp: incandescent, program: walk},      note: "INCANDESCENT -- walk: watch the soft edges + amber tails"}
+      - {at: 60.0,  look: retro,     intensity: 6, params: {lamp: incandescent, program: build},     note: "INCANDESCENT -- sign build"}
+      - {at: 90.0,  look: retro,     intensity: 6, params: {lamp: neon, program: build},             note: "NEON -- same build: instant edges, ignition stutter, uniform tubes"}
+      - {at: 120.0, look: retro,     intensity: 6, params: {lamp: neon, program: alternate},         note: "NEON -- alternate"}
+      - {at: 150.0, look: parts,     intensity: 6, params: {lamp: neon},                             note: "NEON -- regions take turns as tubes (Santa parts, bell/ribbon)"}
+      - {at: 180.0, look: parts,     intensity: 6, params: {lamp: incandescent},                     note: "INCANDESCENT -- same regions, filament edges"}
+      - {at: 210.0, look: drawn,     intensity: 6, params: {lamp: twinkle, twinkle_frac: 0.2},       note: "TWINKLE -- props as painted, 20% of bulbs on bimetal cycles"}
+      - {at: 240.0, look: retro,     intensity: 7, params: {lamp: twinkle, twinkle_frac: 0.12, program: steady}, note: "TWINKLE -- steady sign + twinklers"}
+      - {at: 270.0, look: retro,     intensity: 7, params: {lamp: incandescent, program: alternate}, note: "INCANDESCENT -- alternate"}
+      - {at: 300.0, look: retro,     intensity: 8, params: {lamp: neon, program: steady, pop: 0.5},  note: "NEON -- steady, big downbeat pops"}
+      - {at: 330.0, look: hold-breath, intensity: 5, params: {lamp: incandescent},                   note: "INCANDESCENT -- one prop per onset, filament afterglow"}
+      - {at: 360.0, look: hold-breath, intensity: 5, params: {lamp: neon},                           note: "NEON -- one prop per onset, hard"}
+      - {at: 390.0, look: retro,     intensity: 8, params: {lamp: incandescent, program: finale},    note: "INCANDESCENT -- finale"}
+      - {at: 430.0, look: starfield, intensity: 3, palette: ice, params: {lamp: led},                note: "LED -- sparkle out"}
+      - {at: 460.0, look: fade,      intensity: null, params: {lamp: incandescent},                  note: "fade"}

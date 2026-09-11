@@ -123,7 +123,9 @@ def sign_levels(c):
         k = buckets[p.id]
         on = _program_state(prog, tick, nb, k, last_bars)
         was = _program_state(prog, (tick - 1) % 32, nb, k, last_bars)
-        if on:
+        if c.params.get("lamp", "led") != "led":                   # a lamp model shapes the edges: hand it hard on/off
+            lvl = 1.0 if on else 0.0
+        elif on:
             lvl = 1.0 if was else min(1.0, 0.35 + t_tick / 0.05)   # filament warms in ~50 ms
         else:
             lvl = math.exp(-t_tick / 0.11) * 0.9 if was else 0.0   # and cools out
