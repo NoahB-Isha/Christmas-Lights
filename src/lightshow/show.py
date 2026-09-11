@@ -378,26 +378,31 @@ def look_starfield(c):
 @look("outline")
 def look_outline(c):
     """LED: a bright head runs around the OUTLINE of each prop (the wire
-    order traces the shape) for one bar, then the whole prop lights in the
-    palette colour and holds a bar; two bars per cycle. params.stagger
-    (default 0.5 bar) offsets props along the row so the trace ripples."""
+    order traces the shape) over one bar, and everything it has passed FADES
+    IN behind it to the fill colour -- by the end of the bar the prop is
+    full; it holds a bar; two bars per cycle. params.stagger (default 0.5
+    bar) offsets props along the row; params.fade (default 0.35) = fraction
+    of the wire over which a passed pixel ramps up to full."""
     bars = 2.0
     ph = ((c.beat_index % (c.bar_beats * 2)) + c.beat_phase) / (c.bar_beats * bars)   # 0..1 over 2 bars
     order = sorted(c.props, key=lambda q: q.cx)
     stag = float(c.params.get("stagger", 0.5)) / (2 * len(order))
+    fade = float(c.params.get("fade", 0.35))
     out = {}
     for p in c.props:
         k = order.index(p)
         u = (ph - k * stag) % 1.0
+        fill = c.palette.color(np.ones(p.n), k=p.idx % 2, variation=c.variation)
         if u < 0.5:                                          # trace: head at wire position u/0.5
             head = (u / 0.5) * p.n
-            d = head - p.i
-            tail = max(8, p.n // 4)
-            v = np.where((d >= 0) & (d < tail), 1 - d / tail, 0.0) ** 0.7
-            fr = lighten(c.palette.color(v, k=p.idx % 2, variation=c.variation, sat=0.2),
-                         c.palette.color(np.full(p.n, 0.06), k=p.idx % 2, variation=c.variation))
-        else:                                                # fill and hold
-            fr = c.palette.color(np.full(p.n, 1.0), k=p.idx % 2, variation=c.variation)
+            d = head - p.i                                    # >0 behind the head
+            behind = np.clip(d / (fade * p.n), 0, 1) ** 0.8   # passed pixels ramp up to full fill
+            behind[d < 0] = 0.0
+            hd = np.exp(-(np.abs(d) / max(2.0, p.n * 0.02)) ** 2)   # the bright white head
+            fr = fill * behind[:, None]
+            fr = lighten(fr, np.full((p.n, 3), 1.0) * hd[:, None])
+        else:                                                # full, hold
+            fr = fill
         out[p.id] = fr
     return out
 
