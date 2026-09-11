@@ -112,11 +112,14 @@ def sign_levels(c):
     if not prog:
         prog = ["build", "alternate", "build", "steady"][phrase_i % 4]
     buckets, nb = _buckets(c)
-    bi = c.beat_index % (c.bar_beats * 4)
-    half = c.beat_phase >= 0.5
+    sb = max(1, int(c.params.get("step_beats", 1)))            # beats per program step (2 = half speed)
+    sbeat = c.beat_index // sb
+    sphase = ((c.beat_index % sb) + c.beat_phase) / sb
+    bi = sbeat % (c.bar_beats * 4)
+    half = sphase >= 0.5
     tick = bi * 2 + (1 if half else 0)
-    beat_s = 60.0 / c.bpm
-    t_tick = (c.beat_phase - (0.5 if half else 0.0)) * beat_s
+    beat_s = 60.0 / c.bpm * sb
+    t_tick = (sphase - (0.5 if half else 0.0)) * beat_s
     last_bars = (c.song["to"] - c.t) < 2 * beat_s * c.bar_beats
     out = {}
     for p in c.props:
@@ -190,11 +193,18 @@ def anim_cane(c, p):
 
 
 def anim_snowflake(c, p):
-    grow = np.clip((c.pulse_phase * 1.25 - p.r01) / 0.18, 0, 1)   # front travels centre -> tips
-    front = np.exp(-((p.r01 - c.pulse_phase * 1.25) / 0.10) ** 2)
-    base = ICE[None, :] * (0.45 + 0.5 * grow[:, None]) * (0.9 + 0.1 * c.pulse)
+    """Icy: steady ice-blue body, the tendrils grow centre -> tips once per
+    BAR (not per pulse -- at fast walks that was too busy), tips glitter
+    slowly. Under a lamp model: just the steady ice with slow tip glitter."""
+    if c.params.get("lamp", "led") != "led" or c.params.get("calm"):
+        base = ICE[None, :] * 0.85 * np.ones((p.n, 1))
+        tips = c.grains(p, 2, 1.8, seed_extra=7) * (p.r01 > 0.75)
+        return lighten(base, WHITE[None, :] * tips[:, None] * 0.8)
+    grow = np.clip((c.bar_phase * 1.25 - p.r01) / 0.18, 0, 1)      # front travels centre -> tips over a bar
+    front = np.exp(-((p.r01 - c.bar_phase * 1.25) / 0.10) ** 2)
+    base = ICE[None, :] * (0.45 + 0.5 * grow[:, None])
     fr = lighten(base, WHITE[None, :] * front[:, None] * 0.9)
-    tips = c.grains(p, 4 + 20 * c.hit_high, 0.5, seed_extra=7) * (p.r01 > 0.7)
+    tips = c.grains(p, 3, 1.2, seed_extra=7) * (p.r01 > 0.7)
     return lighten(fr, WHITE[None, :] * tips[:, None])
 
 
@@ -221,7 +231,7 @@ ANIM = {"santa": anim_santa, "bell": anim_bell, "cane": anim_cane,
 @look("retro")
 def look_retro(c):
     levels = sign_levels(c)
-    pop_lvl = float(c.params.get("pop", 0.35))
+    pop_lvl = float(c.params.get("pop", 0.0 if c.params.get("lamp") == "twinkle" else 0.35))   # no white pops under twinkle
     bar_s = 60.0 / c.bpm * c.bar_beats
     bar_pop = pop_lvl * c.pulse ** 2 if (c.beat_index % c.bar_beats == 0) else 0.0
     out = {}
@@ -233,4 +243,59 @@ def look_retro(c):
             sw = gust(c, p, period=bar_s, width_in=45)
             fr = lighten(fr, WARM[None, :] * sw[:, None] * 0.5 * c.unison)
         out[p.id] = np.clip(fr * levels[p.id] * (0.9 + 0.1 * c.intensity), 0, 1)
+    return out
+
+
+
+# ------------------------------------------------------- animated neon sign
+def sign_tubes(p, max_frames=5):
+    """The 'frames' of an animated neon sign, in a FIXED order: painted
+    regions top->bottom; unpainted props are split into 3 horizontal bands,
+    bottom->top."""
+    if p.region_names:
+        names = sorted(p.region_names, key=lambda k: -float(p.ly[p.regions[k]].mean()))
+        if len(names) > max_frames:                          # too many regions (Santa has 12): merge
+            groups, cur, cnt = [], [], 0                     # neighbours top->bottom into <= max_frames tubes
+            per = p.n / max_frames
+            for k in names:
+                cur.append(k); cnt += int(p.regions[k].sum())
+                if cnt >= per and len(groups) < max_frames - 1:
+                    groups.append(cur); cur, cnt = [], 0
+            if cur:
+                groups.append(cur)
+            return [("+".join(g), np.any([p.regions[k] for k in g], axis=0)) for g in groups]
+        return [(k, p.regions[k]) for k in names]
+    bands = []
+    radial = prop_kind(p) in ("snowflake", "star")           # snowflakes / stars: rings centre -> tips
+    key = p.r01 if radial else p.y01
+    for i, (a, b) in enumerate(((0.0, 1 / 3), (1 / 3, 2 / 3), (2 / 3, 1.01))):
+        bands.append((f"{'ring' if radial else 'band'}{i}", (key >= a) & (key < b)))
+    return bands
+
+
+@look("neon-sign")
+def look_neon_sign(c):
+    """Like a 1950s animated neon sign: one tube per frame, cycled in order,
+    one step per `step_beats` beats (default 1); after the last frame all
+    tubes light together for `all_steps` steps (default 2), then it repeats.
+    Order never changes. params.accumulate: true keeps earlier frames lit
+    (the "arrow filling in" kind). Tube colours come from the palette by
+    frame index. Meant to run with lamp: neon."""
+    step_beats = int(c.params.get("step_beats", 1))
+    all_steps = int(c.params.get("all_steps", 2))
+    accumulate = bool(c.params.get("accumulate", False))
+    step = c.beat_index // step_beats
+    pal = c.palette
+    out = {}
+    for p in c.props:
+        tubes = sign_tubes(p, int(c.params.get("max_frames", 5)))
+        n = len(tubes)
+        cyc = n + all_steps
+        k = step % cyc
+        fr = np.zeros((p.n, 3))
+        for i, (name, m) in enumerate(tubes):
+            lit = (k >= n) or (i == k) or (accumulate and i < k)
+            if lit:
+                fr[m] = pal.color(np.ones(int(m.sum())), k=i, variation=c.variation)
+        out[p.id] = fr
     return out

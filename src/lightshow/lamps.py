@@ -20,9 +20,10 @@ INCANDESCENT
   * dyed-glass palette: red, green, blue, orange, gold, white -- saturated.
 
 NEON
-  * instant on / instant off: no lag at all.
-  * cold-start stutter: for ~300 ms after a tube ignites it drops out for
-    a frame or two, at random, then holds solid.
+  * instant on / instant off: no lag at all, and NO flicker in normal use.
+  * cold start (params.cold_start: true, for big moments): a tube that has
+    been dark for > 3 s ignites with a dramatic ~0.9 s sequence -- flash,
+    dark, flash, dark, a dim struggling glow, flash, then solid.
   * a tube is UNIFORM along its length: every pixel of a segment (a prop
     region, or the whole prop) shows the segment's colour at the segment's
     level -- a line of light, not points.
@@ -32,7 +33,11 @@ TWINKLE
     their own irregular 0.8-2.2 s cycle (bimetal strip), unsynchronised.
 
 Section params:  lamp, twinkle_frac (default 0.18), tube_uniform (default
-true for neon), amber (default 1.0 = full amber shift), tau_on / tau_off.
+true for neon), cold_start (neon, default false), amber (default 1.0 = full
+amber shift), tau_on / tau_off.
+
+Neon colours of the era (palette `neon` in show.yaml): neon-gas red-orange,
+ruby, argon-mercury blue, turquoise, green, pink/magenta, gold, warm white.
 """
 
 import math
@@ -123,8 +128,17 @@ class LampBank:
         return chroma * per[:, None]
 
     # -------------------------------------------------------------- neon
+    # Dramatic COLD-START sequence, relative to ignition (seconds): a flash,
+    # dark, a flash, dark, a dim struggling glow, a flash, dark, then solid.
+    COLD = [(0.00, 0.08, 1.0), (0.08, 0.22, 0.0), (0.22, 0.27, 1.0), (0.27, 0.46, 0.0),
+            (0.46, 0.74, 0.18), (0.74, 0.80, 1.0), (0.80, 0.90, 0.0), (0.90, 9.0, 1.0)]
+
     def _neon(self, p, fr, t, params):
+        """Instant on/off, tubes uniform. No flicker at all unless
+        params.cold_start is true -- then a tube that has been dark for
+        > 3 s (or never lit) ignites with the dramatic COLD sequence."""
         uniform = bool(params.get("tube_uniform", True))
+        cold_start = bool(params.get("cold_start", False))
         out = fr.copy()
         lvl = fr.max(1)
         for k, m in enumerate(self.tubes[p.id]):
@@ -133,19 +147,20 @@ class LampBank:
                 continue
             on = seg.max() > 0.08
             if on and self.on_since[p.id][k] < -1e8:
-                cold = (t - self.off_since[p.id][k]) > 1.5              # off for > 1.5 s -> cold start
-                self.on_since[p.id][k] = t if cold else t - 1.0         # warm: pretend it ignited long ago
+                cold = (t - self.off_since[p.id][k]) > 3.0
+                self.on_since[p.id][k] = t if (cold and cold_start) else t - 10.0
             if not on:
                 if self.on_since[p.id][k] > -1e8:
                     self.off_since[p.id][k] = t
                 self.on_since[p.id][k] = -1e9
                 continue
             if uniform:
-                j = int(np.argmax(seg)); col = fr[m][j]
-                out[m] = col                                          # the whole tube at the brightest pixel's colour
+                j = int(np.argmax(seg)); out[m] = fr[m][j]
             age = t - self.on_since[p.id][k]
-            if age < 0.30:                                            # cold start: random dropouts, denser at first
-                r = np.random.default_rng(int(t * self.fps) * 7919 + k * 131 + p.idx)
-                if r.random() < 0.55 * (1 - age / 0.30):
-                    out[m] *= 0.15
+            if age < 0.9:
+                g = next(gain for a, b, gain in self.COLD if a <= age < b)
+                if 0 < g < 1:                                           # struggling glow: jitter it
+                    r = np.random.default_rng(int(t * self.fps) * 7919 + k * 131 + p.idx)
+                    g *= 0.6 + 0.8 * r.random()
+                out[m] *= g
         return out

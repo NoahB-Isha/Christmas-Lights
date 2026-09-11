@@ -356,11 +356,83 @@ def look_changeup(c):
 
 @look("starfield")
 def look_starfield(c):
+    """Sparkle field. params.ambient (default true): time-driven grains only,
+    NOT the onset-driven sparkle -- calm, an intro/ambient texture. Set
+    ambient: false for the old music-reactive version."""
+    if c.params.get("ambient", True):
+        out = {}
+        for p in c.props:
+            g = c.grains(p, 5 + 3 * c.intensity, 1.6, seed_extra=11) + 0.5 * c.grains(p, 3, 2.6, seed_extra=13)
+            whole = 0.5 + 0.5 * math.sin(2 * math.pi * (c.t / (9 + p.idx % 3) + p.idx * 0.37))
+            base = c.palette.color(np.full(p.n, 0.12 + 0.18 * whole ** 2), k=1, variation=c.variation)
+            out[p.id] = lighten(base, c.palette.color(np.clip(g, 0, 1), k=0, variation=c.variation, sat=0.35))
+        return out
     m = mix_for(c); m.update(wash=0.12, ring=0.0, hits=0.0, melody=0.0, shimmer=0.9, sparkle=1.0)
     out = stack_all(c, m)
     for p in c.props:                                   # whole props fading in and out
         whole = 0.5 + 0.5 * math.sin(2 * math.pi * (c.t / (7 + p.idx % 3) + p.idx * 0.37))
         out[p.id] = lighten(out[p.id], c.palette.color(np.full(p.n, 0.2 * whole ** 3), k=1, variation=c.variation))
+    return out
+
+
+@look("outline")
+def look_outline(c):
+    """LED: a bright head runs around the OUTLINE of each prop (the wire
+    order traces the shape) for one bar, then the whole prop lights in the
+    palette colour and holds a bar; two bars per cycle. params.stagger
+    (default 0.5 bar) offsets props along the row so the trace ripples."""
+    bars = 2.0
+    ph = ((c.beat_index % (c.bar_beats * 2)) + c.beat_phase) / (c.bar_beats * bars)   # 0..1 over 2 bars
+    order = sorted(c.props, key=lambda q: q.cx)
+    stag = float(c.params.get("stagger", 0.5)) / (2 * len(order))
+    out = {}
+    for p in c.props:
+        k = order.index(p)
+        u = (ph - k * stag) % 1.0
+        if u < 0.5:                                          # trace: head at wire position u/0.5
+            head = (u / 0.5) * p.n
+            d = head - p.i
+            tail = max(8, p.n // 4)
+            v = np.where((d >= 0) & (d < tail), 1 - d / tail, 0.0) ** 0.7
+            fr = lighten(c.palette.color(v, k=p.idx % 2, variation=c.variation, sat=0.2),
+                         c.palette.color(np.full(p.n, 0.06), k=p.idx % 2, variation=c.variation))
+        else:                                                # fill and hold
+            fr = c.palette.color(np.full(p.n, 1.0), k=p.idx % 2, variation=c.variation)
+        out[p.id] = fr
+    return out
+
+
+@look("icebuild")
+def look_icebuild(c):
+    """LED: the prop freezes up from the bottom in ice-white, colour floods in,
+    then it melts away top-down (the reverse). 6 bars per cycle: 2 freeze,
+    1 flood, 1 hold, 2 melt. params.stagger offsets props along the row."""
+    cyc = 6 * c.bar_beats
+    ph = ((c.beat_index % cyc) + c.beat_phase) / cyc
+    order = sorted(c.props, key=lambda q: q.cx)
+    stag = float(c.params.get("stagger", 0.35)) / len(order)
+    ice = np.array([0.70, 0.86, 1.00])
+    out = {}
+    for p in c.props:
+        u = (ph - order.index(p) * stag) % 1.0
+        col = c.palette.color(np.ones(p.n), k=p.idx % 2, variation=c.variation)
+        if u < 2 / 6:                                        # freeze up from the bottom
+            lvl = u / (2 / 6)
+            frozen = p.y01 <= lvl
+            edge = np.exp(-((p.y01 - lvl) / 0.05) ** 2)
+            fr = np.where(frozen[:, None], ice[None, :] * 0.85, 0.0) + edge[:, None] * 0.6
+        elif u < 3 / 6:                                      # colour floods in, bottom up
+            lvl = (u - 2 / 6) / (1 / 6)
+            coloured = p.y01 <= lvl
+            fr = np.where(coloured[:, None], col, ice[None, :] * 0.85)
+        elif u < 4 / 6:                                      # hold, gentle glitter
+            fr = lighten(col, np.full((p.n, 3), 1.0) * c.grains(p, 3, 1.2, seed_extra=5)[:, None] * 0.5)
+        else:                                                # melt from the top: drips
+            lvl = 1 - (u - 4 / 6) / (2 / 6)
+            alive = p.y01 <= lvl
+            drip = np.exp(-((p.y01 - lvl) / 0.06) ** 2)
+            fr = np.where(alive[:, None], col, 0.0) + (ice[None, :] * drip[:, None] * 0.8)
+        out[p.id] = np.clip(fr, 0, 1)
     return out
 
 
@@ -615,7 +687,7 @@ def look_drawn(c):
                 fr[m] = col * lvl
         else:
             fr = pal.color(np.full(p.n, lvl), k=p.idx % 2, variation=c.variation)
-        g = c.R.spark[p.id]
+        g = c.R.spark[p.id] if c.params.get("sparkle", c.params.get("lamp", "led") == "led") else 0.0
         out[p.id] = lighten(fr, hsv(0.0, 0.0, g * 0.45))
     return out
 
@@ -663,7 +735,7 @@ def look_fade(c):
 
 
 # Looks that are meant to be calm: no over-bright attack on section entry.
-SMOOTH_LOOKS = {"hold-breath", "fade", "jewels", "shimmer", "starfield", "retro"}   # retro: filaments do not overshoot
+SMOOTH_LOOKS = {"hold-breath", "fade", "jewels", "shimmer", "starfield", "retro", "neon-sign", "outline", "icebuild"}   # retro: filaments do not overshoot
 
 
 # ----------------------------------------------------------------- renderer
