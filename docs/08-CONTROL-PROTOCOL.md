@@ -251,6 +251,16 @@ MEASURED (video, audio- and light-correlated against the render, 2026-09-11):
 - Start latency first click -> first frame: **0.56 s** -> cue track built with
   `--music-delay-ms 560`.
 - Proper fix: a USB-DMX interface driven by the laptop (sets speed, scene, brightness itself).
+- Rate is CONSTANT (30.30 fps in silence, with clicks, with the loud cue; 4K clock video, ±10 ms) and the
+  same on both bench controllers. Don't measure from re-encoded/downscaled phone video (a 480p export
+  re-timed frames and read 29.77).
+- SD CARDS MATTER: a controller that drifted late over a 52 MB show file (but not on a 7 MB clock file)
+  was cured by reformatting the card (FAT32) and copying the files fresh. Reformat before every
+  full-show copy; big files on a fragmented card stall.
+- CUE SIGNAL MUST NOT CONTAIN SILENCE: the 0.5 s click train with ~400 ms gaps let the box drop to
+  scene 1 and re-trigger (file restarts from frame 0, looks like "playing slow"). Candidates: a
+  continuous low noise bed under the hits, or hits every 0.25 s (tools: out/boxtest/cue_bed_hits,
+  cue_hits_fast).
 
 ## The 512-byte LUT is a gamma curve
 
