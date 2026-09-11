@@ -12,7 +12,6 @@ palettes:
   bulbs:   {hues: [0.00, 0.33, 0.62, 0.08, 0.13], sat_max: 1.0, notes: 'dyed-glass C9: red green blue orange gold'}
   ice:     {hues: [0.58, 0.55], white_core: true}
   retro:   {hues: [0.09, 0.00, 0.33, 0.12], sat_max: 0.95}
-  neon:    {hues: [0.03, 0.50, 0.90, 0.36, 0.13, 0.62, 0.97], sat_max: 0.92, notes: 'era neon: neon-gas red-orange, turquoise, pink, green, gold, argon blue, ruby'}
   candy:   {hues: [0.98, 0.55, 0.13], sat_max: 0.95, notes: 'red, ice blue, gold -- for the LED looks'}
 looks: {}
 songs:
@@ -28,15 +27,15 @@ songs:
       - {at: 0.0,   look: starfield, intensity: 3, palette: ice, params: {lamp: led},                                   note: "LED ambient sparkle (time-driven, not reactive)"}
       - {at: 30.0,  look: retro,     intensity: 5, params: {lamp: incandescent, program: walk, step_beats: 2},        note: "INCANDESCENT walk, half speed; snowflakes calm"}
       - {at: 60.0,  look: retro,     intensity: 6, params: {lamp: incandescent, program: build, step_beats: 2},       note: "INCANDESCENT sign build, half speed"}
-      - {at: 90.0,  look: neon-sign, intensity: 6, palette: neon, params: {lamp: neon, step_beats: 1, all_steps: 2},   note: "NEON animated sign: tubes cycle in fixed order, then all-on; clean, no flicker"}
-      - {at: 120.0, look: neon-sign, intensity: 6, palette: neon, params: {lamp: neon, step_beats: 2, accumulate: true, cold_start: true}, note: "NEON accumulate; DRAMATIC cold start on first ignition"}
+      - {at: 90.0,  look: parts,     intensity: 6, params: {lamp: incandescent},                                        note: "INCANDESCENT regions take turns"}
+      - {at: 120.0, look: retro,     intensity: 6, params: {lamp: twinkle, twinkle_frac: 0.15, program: steady},        note: "TWINKLE steady sign"}
       - {at: 150.0, look: outline,   intensity: 6, palette: candy, params: {lamp: led, stagger: 0.5},                  note: "LED outline trace -> fill, rippling along the row"}
-      - {at: 180.0, look: icebuild,  intensity: 6, palette: candy, params: {lamp: led, stagger: 0.35},                 note: "LED ice build: freeze up, colour floods, melt down"}
+      - {at: 180.0, look: icebuild,  intensity: 6, palette: candy, params: {lamp: led, stagger: 0.35},                 note: "LED ice build: freeze up, hold, melt down"}
       - {at: 210.0, look: drawn,     intensity: 6, params: {lamp: twinkle, twinkle_frac: 0.25},                        note: "TWINKLE over the painted props -- bulbs drop out only, no white"}
       - {at: 240.0, look: retro,     intensity: 7, params: {lamp: incandescent, program: alternate},                   note: "INCANDESCENT alternate (kept as-is)"}
       - {at: 270.0, look: hold-breath, intensity: 5, params: {lamp: incandescent},                                     note: "INCANDESCENT one prop per onset"}
-      - {at: 300.0, look: retro,     intensity: 8, palette: neon, params: {lamp: neon, program: steady, cold_start: true, pop: 0.0}, note: "NEON steady, cold-start ignition (a big-moment entrance)"}
-      - {at: 330.0, look: hold-breath, intensity: 6, palette: neon, params: {lamp: neon, cold_start: false},           note: "NEON one prop per onset, clean (use sparingly)"}
+      - {at: 300.0, look: retro,     intensity: 8, params: {lamp: incandescent, program: steady, pop: 0.0},             note: "INCANDESCENT steady"}
+      - {at: 330.0, look: hold-breath, intensity: 6, params: {lamp: led},                                              note: "LED one prop per onset, hard edges (sparingly, big moments)"}
       - {at: 360.0, look: outline,   intensity: 7, palette: candy, params: {lamp: led, stagger: 0.0},                  note: "LED outline, all props together"}
       - {at: 390.0, look: icebuild,  intensity: 7, palette: candy, params: {lamp: led, stagger: 0.0},                  note: "LED ice build, together"}
       - {at: 420.0, look: retro,     intensity: 8, params: {lamp: incandescent, program: finale},                      note: "INCANDESCENT finale"}

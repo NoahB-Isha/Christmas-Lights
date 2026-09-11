@@ -5,7 +5,6 @@ are imitating. Applied per frame AFTER the look, stateful per pixel.
 
     lamp: led            what the LEDs do by themselves (no model)
     lamp: incandescent   C7/C9 filament bulbs (1950s-60s Christmas strings)
-    lamp: neon           gas-discharge tubes (Times Square signs)
     lamp: twinkle        incandescent + a fraction of bimetal "twinkle" bulbs
 
 Physics we mimic (see docs/09):
@@ -19,25 +18,16 @@ INCANDESCENT
     barely for saturated dyed-glass colours (a red bulb stays red).
   * dyed-glass palette: red, green, blue, orange, gold, white -- saturated.
 
-NEON
-  * instant on / instant off: no lag at all, and NO flicker in normal use.
-  * cold start (params.cold_start: true, for big moments): a tube that has
-    been dark for > 3 s ignites with a dramatic ~0.9 s sequence -- flash,
-    dark, flash, dark, a dim struggling glow, flash, then solid.
-  * a tube is UNIFORM along its length: every pixel of a segment (a prop
-    region, or the whole prop) shows the segment's colour at the segment's
-    level -- a line of light, not points.
-
 TWINKLE
   * incandescent, plus a fixed random subset of bulbs that each blink on
     their own irregular 0.8-2.2 s cycle (bimetal strip), unsynchronised.
 
-Section params:  lamp, twinkle_frac (default 0.18), tube_uniform (default
-true for neon), cold_start (neon, default false), amber (default 1.0 = full
-amber shift), tau_on / tau_off.
+Section params:  lamp, twinkle_frac (default 0.18), amber (default 1.0 =
+full amber shift), tau_on / tau_off.
 
-Neon colours of the era (palette `neon` in show.yaml): neon-gas red-orange,
-ruby, argon-mercury blue, turquoise, green, pink/magenta, gold, warm white.
+(A neon model -- instant tubes, cold-start flicker, animated-sign cycling --
+was built and tested on the bench 2026-09-11 and DROPPED: it read as
+unpleasant flicker on the props. Incandescent + LED looks carry the show.)
 """
 
 import math
@@ -62,21 +52,11 @@ class LampBank:
         self.dt = 1.0 / fps
         self.L = {p.id: np.zeros(p.n) for p in props}              # lagged linear level per pixel
         self.dir = {p.id: np.ones((p.n, 3)) for p in props}        # last chroma direction
-        self.tubes = {p.id: self._tubes(p) for p in props}
-        self.on_since = {p.id: np.full(len(self.tubes[p.id]), -1e9) for p in props}
-        self.off_since = {p.id: np.full(len(self.tubes[p.id]), -1e9) for p in props}   # a warm tube re-ignites without stutter
         self.rng = np.random.default_rng(97)
         # twinkle bulbs: fixed subset, own period and phase
         self.tw_period = {p.id: self.rng.uniform(0.8, 2.2, p.n) for p in props}
         self.tw_phase = {p.id: self.rng.uniform(0, 1, p.n) for p in props}
         self.tw_rank = {p.id: self.rng.permutation(p.n) / p.n for p in props}   # 0..1, pick < frac
-
-    @staticmethod
-    def _tubes(p):
-        """segments that behave as one neon tube: regions if painted, else the whole prop"""
-        if p.region_names:
-            return [p.regions[k] for k in p.regions]              # includes 'rest'
-        return [np.ones(p.n, bool)]
 
     # ---------------------------------------------------------------- apply
     def apply(self, frames, t, params):
@@ -94,8 +74,6 @@ class LampBank:
             fr = frames[p.id]
             if model in ("incandescent", "twinkle"):
                 out[p.id] = self._incandescent(p, fr, t, params, twinkle=(model == "twinkle"))
-            elif model == "neon":
-                out[p.id] = self._neon(p, fr, t, params)
             else:
                 out[p.id] = fr
         return out
@@ -126,41 +104,3 @@ class LampBank:
         chroma = d * (1 - w) + AMBER[None, :] * w
         per = _per(L)
         return chroma * per[:, None]
-
-    # -------------------------------------------------------------- neon
-    # Dramatic COLD-START sequence, relative to ignition (seconds): a flash,
-    # dark, a flash, dark, a dim struggling glow, a flash, dark, then solid.
-    COLD = [(0.00, 0.08, 1.0), (0.08, 0.22, 0.0), (0.22, 0.27, 1.0), (0.27, 0.46, 0.0),
-            (0.46, 0.74, 0.18), (0.74, 0.80, 1.0), (0.80, 0.90, 0.0), (0.90, 9.0, 1.0)]
-
-    def _neon(self, p, fr, t, params):
-        """Instant on/off, tubes uniform. No flicker at all unless
-        params.cold_start is true -- then a tube that has been dark for
-        > 3 s (or never lit) ignites with the dramatic COLD sequence."""
-        uniform = bool(params.get("tube_uniform", True))
-        cold_start = bool(params.get("cold_start", False))
-        out = fr.copy()
-        lvl = fr.max(1)
-        for k, m in enumerate(self.tubes[p.id]):
-            seg = lvl[m]
-            if seg.size == 0:
-                continue
-            on = seg.max() > 0.08
-            if on and self.on_since[p.id][k] < -1e8:
-                cold = (t - self.off_since[p.id][k]) > 3.0
-                self.on_since[p.id][k] = t if (cold and cold_start) else t - 10.0
-            if not on:
-                if self.on_since[p.id][k] > -1e8:
-                    self.off_since[p.id][k] = t
-                self.on_since[p.id][k] = -1e9
-                continue
-            if uniform:
-                j = int(np.argmax(seg)); out[m] = fr[m][j]
-            age = t - self.on_since[p.id][k]
-            if age < 0.9:
-                g = next(gain for a, b, gain in self.COLD if a <= age < b)
-                if 0 < g < 1:                                           # struggling glow: jitter it
-                    r = np.random.default_rng(int(t * self.fps) * 7919 + k * 131 + p.idx)
-                    g *= 0.6 + 0.8 * r.random()
-                out[m] *= g
-        return out

@@ -404,10 +404,10 @@ def look_outline(c):
 
 @look("icebuild")
 def look_icebuild(c):
-    """LED: the prop freezes up from the bottom in ice-white, colour floods in,
-    then it melts away top-down (the reverse). 6 bars per cycle: 2 freeze,
-    1 flood, 1 hold, 2 melt. params.stagger offsets props along the row."""
-    cyc = 6 * c.bar_beats
+    """LED: the prop freezes up from the bottom in ice-white, holds with a
+    little glitter, then melts away top-down. 5 bars per cycle: 2 freeze,
+    1 hold, 2 melt. params.stagger offsets props along the row."""
+    cyc = 5 * c.bar_beats
     ph = ((c.beat_index % cyc) + c.beat_phase) / cyc
     order = sorted(c.props, key=lambda q: q.cx)
     stag = float(c.params.get("stagger", 0.35)) / len(order)
@@ -415,23 +415,19 @@ def look_icebuild(c):
     out = {}
     for p in c.props:
         u = (ph - order.index(p) * stag) % 1.0
-        col = c.palette.color(np.ones(p.n), k=p.idx % 2, variation=c.variation)
-        if u < 2 / 6:                                        # freeze up from the bottom
-            lvl = u / (2 / 6)
+        body = ice[None, :] * 0.85 * np.ones((p.n, 1))
+        if u < 2 / 5:                                        # freeze up from the bottom
+            lvl = u / (2 / 5)
             frozen = p.y01 <= lvl
             edge = np.exp(-((p.y01 - lvl) / 0.05) ** 2)
-            fr = np.where(frozen[:, None], ice[None, :] * 0.85, 0.0) + edge[:, None] * 0.6
-        elif u < 3 / 6:                                      # colour floods in, bottom up
-            lvl = (u - 2 / 6) / (1 / 6)
-            coloured = p.y01 <= lvl
-            fr = np.where(coloured[:, None], col, ice[None, :] * 0.85)
-        elif u < 4 / 6:                                      # hold, gentle glitter
-            fr = lighten(col, np.full((p.n, 3), 1.0) * c.grains(p, 3, 1.2, seed_extra=5)[:, None] * 0.5)
+            fr = np.where(frozen[:, None], body, 0.0) + edge[:, None] * 0.6
+        elif u < 3 / 5:                                      # hold: ice with a little glitter
+            fr = lighten(body, np.full((p.n, 3), 1.0) * c.grains(p, 3, 1.4, seed_extra=5)[:, None] * 0.5)
         else:                                                # melt from the top: drips
-            lvl = 1 - (u - 4 / 6) / (2 / 6)
+            lvl = 1 - (u - 3 / 5) / (2 / 5)
             alive = p.y01 <= lvl
             drip = np.exp(-((p.y01 - lvl) / 0.06) ** 2)
-            fr = np.where(alive[:, None], col, 0.0) + (ice[None, :] * drip[:, None] * 0.8)
+            fr = np.where(alive[:, None], body, 0.0) + (np.ones(3)[None, :] * drip[:, None] * 0.7)
         out[p.id] = np.clip(fr, 0, 1)
     return out
 
@@ -735,7 +731,7 @@ def look_fade(c):
 
 
 # Looks that are meant to be calm: no over-bright attack on section entry.
-SMOOTH_LOOKS = {"hold-breath", "fade", "jewels", "shimmer", "starfield", "retro", "neon-sign", "outline", "icebuild"}   # retro: filaments do not overshoot
+SMOOTH_LOOKS = {"hold-breath", "fade", "jewels", "shimmer", "starfield", "retro", "outline", "icebuild"}   # retro: filaments do not overshoot
 
 
 # ----------------------------------------------------------------- renderer
