@@ -244,9 +244,13 @@ DECISION: never feed the box the music itself -- quiet passages / fade-outs / so
 would drop it back to idle. The click train is the only thing it hears, and it runs to the
 last frame of the show whatever the music does.
 
-OPEN: playback speed under the box (both patterns looked slow). Measure: 10 ladder loops
-should take 60.0 s. If the box pins a low speed value, either render the show at a
-compensated frame rate or drive DMX from the laptop (USB-DMX) instead.
+MEASURED (video, audio- and light-correlated against the render, 2026-09-11):
+- Controller playback under the box, box Speed=15: **30.30 fps** (Speed 0 is far slower; the
+  box cannot reach native 60). Bench cards are therefore rendered with `--fps 30.3` and only
+  run in real time WITH the box as DMX master.
+- Start latency first click -> first frame: **0.56 s** -> cue track built with
+  `--music-delay-ms 560`.
+- Proper fix: a USB-DMX interface driven by the laptop (sets speed, scene, brightness itself).
 
 ## The 512-byte LUT is a gamma curve
 
