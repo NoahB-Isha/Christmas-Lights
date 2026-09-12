@@ -1,3 +1,5 @@
+> **New session? Read `docs/10-HANDOFF.md` first** — state, measured hardware facts, design verdicts, and the next project (linear timeline editor).
+
 # CLAUDE.md
 
 Read this before doing anything. It is the condensed result of a long
