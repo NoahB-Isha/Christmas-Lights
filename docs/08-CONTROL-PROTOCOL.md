@@ -111,23 +111,76 @@ If a beep *advances* rather than selects, scene order on the card is the
 show order, and a "reset to scene 1" needs its own procedure (power cycle, or
 N beeps to wrap around). Note it here once known.
 
-## Channel map
+## Channel map — **bench-confirmed on the GC-6004 (revision 2, 2026-10)**
 
-Thirteen channels from a user-set base address (`Add`):
+The datasheet's "Add+1 = brightness" wording is one too high: **the base address
+itself is the brightness channel.** Confirmed by bisection on the bench — with
+DMX Add = 1, setting channel 1 = 255 lights the props. Thirteen channels from
+the base address `Add` (the table on the GC-6612Pro datasheet, re-based):
 
-| Channel | Function |
+| Offset | Channel when Add = 1 | Function |
+|---|---|---|
+| `Add+0` | 1 | **brightness** |
+| `Add+1` | 2 | red adjust |
+| `Add+2` | 3 | green adjust |
+| `Add+3` | 4 | blue adjust |
+| `Add+4` | 5 | white adjust (RGBW fixtures only) |
+| `Add+5` | 6 | **SCENE** — value = (n−1)·4 + 1 |
+| `Add+6` | 7 | speed — 255 = native |
+| `Add+7` | 8 | strobe — 0 = off |
+| `Add+8..11` | 9–12 | mix mode, mix red / green / blue |
+| `Add+12` | 13 | grouping — per-port open/close patterns |
+
+**The R/G/B/W adjust channels are not optional:** at 0 they mute the output. Set them to 255
+(or the desired trim) or nothing lights, whatever brightness and scene say. Working universe,
+verified: `1=255 2=255 3=255 4=255 6=25 7=255` (scene 7, full, native speed).
+
+`tools/dmx_scene.py` already builds packets this way (`slot = addr + offset − 1`
+with its 1-based constants), so its output is correct; only the prose in revision 1
+of this document was off by one.
+
+**Frame rate under DMX:** with a scene-select signal present on DMX IN the unit plays
+at **30.3 fps** — the hard ceiling for anything triggered over DMX. Render show and
+idle cards at 30.3; 60 fps only applies to a unit playing on its own with no DMX.
+
+## DMX wiring — ENTTEC DMX USB Pro → GC-6004 (bench-confirmed)
+
+- **Interface:** ENTTEC DMX USB Pro, 5-pin XLR; OUT is female, IN is male. A 3-pin
+  adapter needs a 5-pin-male → 3-pin-female turnaround. DMX uses pins 1/2/3 only;
+  4/5 stay open.
+- **Interface params, confirmed good:** break 181 µs, MaB 43 µs, 40 packets/s
+  (spec minimums 92 µs / 12 µs).
+- **Adapter wiring, XLR → RJ45** (into the controller's **DMX IN** jack — IN and OUT
+  have identical pinouts, easy to get wrong):
+
+| XLR | Signal | RJ45 (T568B colour) |
+|---|---|---|
+| 1 | GND / common | **7** (white/brown) |
+| 2 | Data − | **2** (orange) |
+| 3 | Data + | **1** (white/orange) |
+| 4, 5 | — | open |
+
+  D+/D− ride RJ45 1+2 = the orange pair = properly twisted. Don't split them.
+
+- **Gotcha that cost a day:** generic Chinese XLR→RJ45 adapters are often wired to a
+  non-standard pinout. Ours shipped with Data+ on RJ45 pins 4 and 6 — pins the
+  controller leaves unconnected. Nothing worked, and every symptom looked like a
+  channel-mapping or addressing fault. **Multimeter every adapter before use.**
+- **Verification, shell closed:**
+
+| Check | Expect |
 |---|---|
-| `Add+1` | Total brightness |
-| `Add+2` | Red adjust |
-| `Add+3` | Green adjust |
-| `Add+4` | Blue adjust |
-| `Add+5` | White adjust (RGBW fixtures only) |
-| `Add+6` | **Scene selection** — 4 DMX values per scene, up to 64 scenes |
-| `Add+7` | Play speed (0 = slowest) |
-| `Add+8` | Strobe (0 = off) |
-| `Add+9` | Mix/background mode |
-| `Add+10..12` | Mix red / green / blue |
-| `Add+13` | Grouping — per-port open/close patterns |
+| XLR 1 → RJ45 7 | continuity |
+| XLR 2 → RJ45 2 | continuity |
+| XLR 3 → RJ45 1 | continuity |
+| XLR 2 ↔ XLR 3 | **open** |
+| XLR 2 or 3 → shell | open |
+
+  The 2↔3 check matters most — a solder bridge or a stray copper whisker there is a
+  dead bus and looks identical to a wiring fault.
+- **If nothing responds:** swap XLR 2 and 3. Non-destructive, and it covers the case
+  where the controller's silkscreen lies about D+/D−. Pin 7 for ground is the
+  reliable part.
 
 **Scene selection is quantised to 4 DMX values per scene:**
 

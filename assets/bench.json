@@ -9,37 +9,25 @@
    "palette": "classic",
    "color": "#e8b04b"
   },
-  "snowflakes": {
-   "label": "Snowflakes",
-   "prefix": "SF",
-   "palette": "frost",
-   "color": "#5fb8ff"
-  },
-  "stars": {
-   "label": "Stars",
-   "prefix": "ST",
-   "palette": "gold",
-   "color": "#ff6b5f"
-  },
-  "yule": {
-   "label": "Yule",
-   "prefix": "YU",
+  "example": {
+   "label": "Example",
+   "prefix": "EX",
    "palette": "classic",
-   "color": "#c77dff"
+   "color": "hsl(135.2761681244728,70%,60%)"
   }
  },
  "controllers": {
   "A": {
    "model": "GC-6004",
    "dmx_addr": 1,
-   "x": 154.8,
-   "y": -30
+   "x": 156,
+   "y": -42
   },
   "B": {
    "model": "GC-6004",
    "dmx_addr": 1,
-   "x": 37.8,
-   "y": -30
+   "x": 45,
+   "y": -36
   }
  },
  "props": [
@@ -48,10 +36,10 @@
    "mod": "1号.mod",
    "label": "bell",
    "group": "workshop",
-   "x": 198,
-   "y": -18,
-   "z": 0,
-   "rot": 0,
+   "x": 198.0,
+   "y": -18.0,
+   "z": 0.0,
+   "rot": 0.0,
    "mirror": false,
    "controller": "A",
    "port": 1
@@ -60,37 +48,24 @@
    "id": "4",
    "mod": "4号.mod",
    "label": "candy cane",
-   "group": "stars",
-   "x": 180,
-   "y": 0,
-   "z": 0,
-   "rot": 270,
+   "group": "workshop",
+   "x": 180.0,
+   "y": 0.0,
+   "z": 0.0,
+   "rot": 270.0,
    "mirror": false,
    "controller": "A",
    "port": 2
   },
   {
-   "id": "27",
-   "mod": "27号.mod",
-   "label": "snowflake",
-   "group": "snowflakes",
-   "x": 144,
-   "y": 0,
-   "z": 0,
-   "rot": 0,
-   "mirror": false,
-   "controller": "A",
-   "port": 3
-  },
-  {
    "id": "47",
    "mod": "47号.mod",
    "label": "cross snowflake",
-   "group": "stars",
-   "x": 108,
-   "y": -30,
-   "z": 0,
-   "rot": 0,
+   "group": "workshop",
+   "x": 108.0,
+   "y": -30.0,
+   "z": 0.0,
+   "rot": 0.0,
    "mirror": false,
    "controller": "A",
    "port": 4
@@ -99,27 +74,40 @@
    "id": "19",
    "mod": "19号.mod",
    "label": "snowflake",
-   "group": "snowflakes",
-   "x": 55.5,
-   "y": 0,
-   "z": 0,
-   "rot": 0,
+   "group": "workshop",
+   "x": 60.0,
+   "y": 0.0,
+   "z": 0.0,
+   "rot": 0.0,
    "mirror": false,
    "controller": "B",
-   "port": 1
+   "port": 2
   },
   {
    "id": "61",
    "mod": "61号.mod",
    "label": "santa waving",
    "group": "workshop",
-   "x": 30,
-   "y": 0,
-   "z": 0,
-   "rot": 0,
+   "x": 30.0,
+   "y": 0.0,
+   "z": 0.0,
+   "rot": 0.0,
    "mirror": false,
    "controller": "B",
-   "port": 2
+   "port": 3
+  },
+  {
+   "id": "57",
+   "mod": "57号.mod",
+   "label": "57号",
+   "group": "workshop",
+   "x": 150.0,
+   "y": -12.0,
+   "z": 0.0,
+   "rot": 0.0,
+   "mirror": false,
+   "controller": "A",
+   "port": 3
   }
  ]
 }

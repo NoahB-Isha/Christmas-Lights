@@ -53,7 +53,27 @@ choreographed by measures like a dance; props come in and out entirely.
 1 Carol (ice storm — keep sparkle opening + drop, strip flicker) · 2 Rudolph (needs full rework) · 3 Sugar Plum (keep sparkle +
 drops, strip flicker) · 4 Jingle Bells (retro sign — approved) · 5–9 drafts only.
 
-## NEXT PROJECT (owner's decision, 2026-09-12): a linear timeline editor
+## Lightshow Studio (built 2026-09-12, Phase 1) — `docs/11-STUDIO.md`
+
+The linear timeline editor exists: `make studio` (HTML front end + FastAPI backend, `src/lightshow/studio/`).
+Prop-group tool (drag/drop groups, grid placement, paint, controllers/SD labels), Premiere-style timeline
+(audio lane with tempo map per song, bar-aware section detection, per-group animation/transition/modifier
+lanes, snap, trim, undo), live preview streamed from the Python engine, 3 default palettes + generator +
+custom, full first effect library (5 transitions, 5 incandescent, lava lamp, starfield, 4 classic LED,
+3 modifiers), fps choice 60/30.3 with the measured explanation, card table + render + printable sheet.
+Tests: `tests/test_studio.py`. The old yaml/looks pipeline still works untouched.
+
+**Round 2 (2026-09-12, after owner feedback):** transitions blend two LIVE animations (no frozen frame) with
+per-transition controls + duration; Static pack; new packs Fire, Ice & Snow, Ibiza, Techno, Music driven
+(Carol looks + EQ visualiser on 8 cached bands); +4 slow incandescent, +3 smooth LED, smoothing sliders;
+prop silhouettes on the grid and in lists, names in the distance readout, add-props library (used props greyed);
+paint follows the prop list and autosaves; ⌘C/⌘V/⌘T; placement PDF (page per group); AI round-trip
+(digest + project.json export, validated import with backup). Analysis cache is now `out/studio/<stem>.v2.npz`.
+
+**Next:** owner bench-tests round 2; SD-card format/copy/rename from the tool; audio transitions in the cue
+track; 3D preview; range render in the UI; tune section detection against the owner's markers.
+
+## Original brief for the timeline editor (2026-09-12) — kept for reference
 
 Replace the yaml/looks workflow with a **linear video-editor-style tool** (HTML front end + Python backend):
 - all effects rendered dynamically for the prop group in play, aware of the array of props (positions, regions)

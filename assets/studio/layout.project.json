@@ -1,0 +1,694 @@
+{
+ "layout": "assets/layout.json",
+ "version": 1,
+ "name": "Yard show",
+ "fps": 30.3,
+ "audio": [
+  {
+   "id": "a_d13c886f",
+   "file": "assets/audio/show16.mp3",
+   "name": "show16.mp3",
+   "start": 0,
+   "offset": 0,
+   "duration": 881.7110204081632,
+   "bpm": null,
+   "beats_per_bar": 4,
+   "beat_offset": null,
+   "songs": [
+    {
+     "name": "Carol of the Bells",
+     "from": 0.41,
+     "to": 83.13,
+     "bpm": 84,
+     "beats_per_bar": 3,
+     "beat_offset": null
+    },
+    {
+     "name": "Run Rudolph Run — Chuck Berry",
+     "from": 83.13,
+     "to": 190.41,
+     "bpm": 152,
+     "beats_per_bar": 4,
+     "beat_offset": null
+    },
+    {
+     "name": "Dance of the Sugar Plum Fairy (Remix) — Trap Music Now",
+     "from": 190.41,
+     "to": 288.01,
+     "bpm": 64.6,
+     "beats_per_bar": 4,
+     "beat_offset": null
+    },
+    {
+     "name": "Jingle Bells (feat. The Puppini Sisters) — Michael Bublé",
+     "from": 288.01,
+     "to": 404.01,
+     "bpm": 123,
+     "beats_per_bar": 4,
+     "beat_offset": null
+    },
+    {
+     "name": "Rockin' Around the Christmas Tree — Brenda Lee",
+     "from": 404.01,
+     "to": 491.19,
+     "bpm": 142,
+     "beats_per_bar": 4,
+     "beat_offset": null
+    },
+    {
+     "name": "Winter Wonderland — Brooks & Dunn",
+     "from": 491.19,
+     "to": 621.02,
+     "bpm": 130,
+     "beats_per_bar": 4,
+     "beat_offset": null
+    },
+    {
+     "name": "Snowman — Sia",
+     "from": 621.02,
+     "to": 672.73,
+     "bpm": 105,
+     "beats_per_bar": 4,
+     "beat_offset": null
+    },
+    {
+     "name": "Feliz Navidad — José Feliciano",
+     "from": 672.73,
+     "to": 763.43,
+     "bpm": 149,
+     "beats_per_bar": 4,
+     "beat_offset": null
+    },
+    {
+     "name": "God Rest Ye Merry Gentlemen — Pentatonix",
+     "from": 763.43,
+     "to": 881.71,
+     "bpm": 136,
+     "beats_per_bar": 4,
+     "beat_offset": null
+    }
+   ],
+   "transition": {
+    "type": "crossfade",
+    "dur": 1
+   }
+  }
+ ],
+ "sections": [
+  {
+   "id": "s_b928f8d6",
+   "t0": 0.41,
+   "t1": 17.48,
+   "label": "♪ Chorus of the bells- start of music, piccato violin plucks",
+   "audio": "a_d13c886f"
+  },
+  {
+   "id": "s_9e0c0ea1",
+   "t0": 17.48,
+   "t1": 26.04,
+   "label": "beat comes in, as well as a melody",
+   "audio": "a_d13c886f"
+  },
+  {
+   "id": "s_86e3699e",
+   "t0": 26.04,
+   "t1": 43.37,
+   "label": "beat builds up, violin comes in",
+   "audio": "a_d13c886f"
+  },
+  {
+   "id": "s_23d8f97e",
+   "t0": 43.37,
+   "t1": 45.35,
+   "label": "many instruments stop for a dramatic pause before a beat dro",
+   "audio": "a_d13c886f"
+  },
+  {
+   "id": "s_6d83bf11",
+   "t0": 45.35,
+   "t1": 47.49,
+   "label": "violin builds up to beat drop",
+   "audio": "a_d13c886f"
+  },
+  {
+   "id": "s_af038857",
+   "t0": 47.49,
+   "t1": 64.81,
+   "label": "Beat Drop!!",
+   "audio": "a_d13c886f"
+  },
+  {
+   "id": "s_532fa40b",
+   "t0": 64.81,
+   "t1": 81.68,
+   "label": "Beat drop section finishes",
+   "audio": "a_d13c886f"
+  },
+  {
+   "id": "s_8510a477",
+   "t0": 81.68,
+   "t1": 83.13,
+   "label": "music fades out here",
+   "audio": "a_d13c886f"
+  },
+  {
+   "id": "s_b71573d7",
+   "t0": 83.13,
+   "t1": 86.03,
+   "label": "♪ Song 2 (starts with a little spoken \"alright aliright\")",
+   "audio": "a_d13c886f"
+  },
+  {
+   "id": "s_8260153a",
+   "t0": 86.03,
+   "t1": 92.46,
+   "label": "Song starts with a drum fill",
+   "audio": "a_d13c886f"
+  },
+  {
+   "id": "s_9e7c34af",
+   "t0": 92.46,
+   "t1": 104.98,
+   "label": "goes into the main part of the song",
+   "audio": "a_d13c886f"
+  },
+  {
+   "id": "s_1530b294",
+   "t0": 104.98,
+   "t1": 137.04,
+   "label": "vocals come in",
+   "audio": "a_d13c886f"
+  },
+  {
+   "id": "s_3bce4e7f",
+   "t0": 137.04,
+   "t1": 156.27,
+   "label": "honkey tonk piano comes in",
+   "audio": "a_d13c886f"
+  },
+  {
+   "id": "s_da685cd9",
+   "t0": 156.27,
+   "t1": 175.18,
+   "label": "piano stops",
+   "audio": "a_d13c886f"
+  },
+  {
+   "id": "s_cc2ebfe8",
+   "t0": 175.18,
+   "t1": 187.33,
+   "label": "electric guitar solo",
+   "audio": "a_d13c886f"
+  },
+  {
+   "id": "s_0726c7a7",
+   "t0": 187.33,
+   "t1": 190.41,
+   "label": "song fades out",
+   "audio": "a_d13c886f"
+  },
+  {
+   "id": "s_e2ad8c5c",
+   "t0": 190.41,
+   "t1": 205.04,
+   "label": "♪ Sugarplum fairy remix starts",
+   "audio": "a_d13c886f"
+  },
+  {
+   "id": "s_0e70cf50",
+   "t0": 205.04,
+   "t1": 235.52,
+   "label": "first drum hit",
+   "audio": "a_d13c886f"
+  },
+  {
+   "id": "s_10580107",
+   "t0": 235.52,
+   "t1": 249.17,
+   "label": "",
+   "audio": "a_d13c886f"
+  },
+  {
+   "id": "s_c32342bd",
+   "t0": 249.17,
+   "t1": 279.16,
+   "label": "",
+   "audio": "a_d13c886f"
+  },
+  {
+   "id": "s_43e41038",
+   "t0": 279.16,
+   "t1": 288.01,
+   "label": "outro",
+   "audio": "a_d13c886f"
+  },
+  {
+   "id": "s_9da2e1b6",
+   "t0": 288.01,
+   "t1": 303.63,
+   "label": "♪ JIngle bells starts",
+   "audio": "a_d13c886f"
+  },
+  {
+   "id": "s_edbfe8fd",
+   "t0": 303.63,
+   "t1": 319.29,
+   "label": "horns come in (Dashing through the snow)",
+   "audio": "a_d13c886f"
+  },
+  {
+   "id": "s_235aeb93",
+   "t0": 319.29,
+   "t1": 332.97,
+   "label": "female chorus comes in (jingle bells)",
+   "audio": "a_d13c886f"
+  },
+  {
+   "id": "s_83c59d73",
+   "t0": 332.97,
+   "t1": 334.97,
+   "label": "fun vocal harmony stacking solo",
+   "audio": "a_d13c886f"
+  },
+  {
+   "id": "s_52e3b755",
+   "t0": 334.97,
+   "t1": 350.4,
+   "label": "song resumes",
+   "audio": "a_d13c886f"
+  },
+  {
+   "id": "s_82327383",
+   "t0": 350.4,
+   "t1": 366.2,
+   "label": "gent comes back with female chorus)",
+   "audio": "a_d13c886f"
+  },
+  {
+   "id": "s_8f9f7dd6",
+   "t0": 366.2,
+   "t1": 381.65,
+   "label": "ladies drop out",
+   "audio": "a_d13c886f"
+  },
+  {
+   "id": "s_22a4bb8b",
+   "t0": 381.65,
+   "t1": 397.36,
+   "label": "gentle chorus with gents and ladies",
+   "audio": "a_d13c886f"
+  },
+  {
+   "id": "s_68b8b51d",
+   "t0": 397.36,
+   "t1": 403.42,
+   "label": "music picks up, and then starts to fade",
+   "audio": "a_d13c886f"
+  },
+  {
+   "id": "s_ec56cae8",
+   "t0": 403.42,
+   "t1": 404.01,
+   "label": "fade out",
+   "audio": "a_d13c886f"
+  },
+  {
+   "id": "s_90a03b30",
+   "t0": 404.01,
+   "t1": 443.24,
+   "label": "♪ Rockin around the christmas tree starts",
+   "audio": "a_d13c886f"
+  },
+  {
+   "id": "s_746ae419",
+   "t0": 443.24,
+   "t1": 446.82,
+   "label": "first \"deck the halls w...\"",
+   "audio": "a_d13c886f"
+  },
+  {
+   "id": "s_2822b4bf",
+   "t0": 446.82,
+   "t1": 459.11,
+   "label": "deck the halls section ends, song resumes as before",
+   "audio": "a_d13c886f"
+  },
+  {
+   "id": "s_7daf4cc5",
+   "t0": 459.11,
+   "t1": 487.76,
+   "label": "Solo horn comes in",
+   "audio": "a_d13c886f"
+  },
+  {
+   "id": "s_21eb99ef",
+   "t0": 487.76,
+   "t1": 491.19,
+   "label": "song fades out",
+   "audio": "a_d13c886f"
+  },
+  {
+   "id": "s_ee05a97b",
+   "t0": 491.19,
+   "t1": 499.22,
+   "label": "♪ Song 6",
+   "audio": "a_d13c886f"
+  },
+  {
+   "id": "s_9a7c182d",
+   "t0": 499.22,
+   "t1": 530.25,
+   "label": "",
+   "audio": "a_d13c886f"
+  },
+  {
+   "id": "s_f90c50dc",
+   "t0": 530.25,
+   "t1": 560.47,
+   "label": "",
+   "audio": "a_d13c886f"
+  },
+  {
+   "id": "s_b1b9e77e",
+   "t0": 560.47,
+   "t1": 575.22,
+   "label": "horn solo",
+   "audio": "a_d13c886f"
+  },
+  {
+   "id": "s_09f2461e",
+   "t0": 575.22,
+   "t1": 589.79,
+   "label": "guitar solo",
+   "audio": "a_d13c886f"
+  },
+  {
+   "id": "s_d0eff226",
+   "t0": 589.79,
+   "t1": 606.42,
+   "label": "solo end",
+   "audio": "a_d13c886f"
+  },
+  {
+   "id": "s_e9ff97ec",
+   "t0": 606.42,
+   "t1": 620.19,
+   "label": "",
+   "audio": "a_d13c886f"
+  },
+  {
+   "id": "s_3d7efb61",
+   "t0": 620.19,
+   "t1": 621.02,
+   "label": "fades out",
+   "audio": "a_d13c886f"
+  },
+  {
+   "id": "s_b30aed07",
+   "t0": 621.02,
+   "t1": 668.37,
+   "label": "♪ Snowman by sia starts- a little romantic",
+   "audio": "a_d13c886f"
+  },
+  {
+   "id": "s_511bdf6e",
+   "t0": 668.37,
+   "t1": 672.73,
+   "label": "fades out",
+   "audio": "a_d13c886f"
+  },
+  {
+   "id": "s_a1ef7d3b",
+   "t0": 672.73,
+   "t1": 685.56,
+   "label": "♪ Feliz navidad starts",
+   "audio": "a_d13c886f"
+  },
+  {
+   "id": "s_d185972d",
+   "t0": 685.56,
+   "t1": 699.98,
+   "label": "",
+   "audio": "a_d13c886f"
+  },
+  {
+   "id": "s_5a2a2661",
+   "t0": 699.98,
+   "t1": 724.6,
+   "label": "",
+   "audio": "a_d13c886f"
+  },
+  {
+   "id": "s_6080829f",
+   "t0": 724.6,
+   "t1": 762.93,
+   "label": "",
+   "audio": "a_d13c886f"
+  },
+  {
+   "id": "s_03fafd42",
+   "t0": 762.93,
+   "t1": 763.43,
+   "label": "fades out",
+   "audio": "a_d13c886f"
+  },
+  {
+   "id": "s_3793369b",
+   "t0": 763.43,
+   "t1": 770.43,
+   "label": "♪ Cool accapela song starts",
+   "audio": "a_d13c886f"
+  },
+  {
+   "id": "s_5ca730fa",
+   "t0": 770.43,
+   "t1": 786.81,
+   "label": "Words start",
+   "audio": "a_d13c886f"
+  },
+  {
+   "id": "s_aaad43ff",
+   "t0": 786.81,
+   "t1": 793.4,
+   "label": "",
+   "audio": "a_d13c886f"
+  },
+  {
+   "id": "s_7a60b173",
+   "t0": 793.4,
+   "t1": 809.64,
+   "label": "",
+   "audio": "a_d13c886f"
+  },
+  {
+   "id": "s_81623530",
+   "t0": 809.64,
+   "t1": 816.64,
+   "label": "",
+   "audio": "a_d13c886f"
+  },
+  {
+   "id": "s_629b5810",
+   "t0": 816.64,
+   "t1": 833.1,
+   "label": "",
+   "audio": "a_d13c886f"
+  },
+  {
+   "id": "s_7c200eb4",
+   "t0": 833.1,
+   "t1": 839.19,
+   "label": "",
+   "audio": "a_d13c886f"
+  },
+  {
+   "id": "s_ac580c29",
+   "t0": 839.19,
+   "t1": 856.5,
+   "label": "",
+   "audio": "a_d13c886f"
+  },
+  {
+   "id": "s_ad9bb138",
+   "t0": 856.5,
+   "t1": 874.79,
+   "label": "",
+   "audio": "a_d13c886f"
+  },
+  {
+   "id": "s_30f39b56",
+   "t0": 874.79,
+   "t1": 884.79,
+   "label": "",
+   "audio": "a_d13c886f"
+  }
+ ],
+ "tracks": [
+  {
+   "id": "t_ac429f30",
+   "group": "workshop",
+   "clips": [
+    {
+     "id": "c_c8a30eb6",
+     "kind": "anim",
+     "effect": "static_picture",
+     "t0": 17.48,
+     "t1": 145.038,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_4b117e41",
+     "kind": "anim",
+     "effect": "starfield",
+     "t0": 0,
+     "t1": 17.48,
+     "params": {},
+     "palette": "classic"
+    }
+   ]
+  },
+  {
+   "id": "t_42ff7307",
+   "group": "snowflakes",
+   "clips": [
+    {
+     "id": "c_75ecd839",
+     "kind": "anim",
+     "effect": "static_picture",
+     "t0": 0,
+     "t1": 113.459,
+     "params": {},
+     "palette": "frost"
+    }
+   ]
+  },
+  {
+   "id": "t_2a9a1950",
+   "group": "stars",
+   "clips": []
+  },
+  {
+   "id": "t_faaf7fd4",
+   "group": "yule",
+   "clips": []
+  }
+ ],
+ "palettes": {},
+ "cards": {
+  "ST01": {
+   "sd_label": "ST01",
+   "formatted": null,
+   "written": null,
+   "notes": ""
+  },
+  "ST02": {
+   "sd_label": "ST02",
+   "formatted": null,
+   "written": null,
+   "notes": ""
+  },
+  "ST03": {
+   "sd_label": "ST03",
+   "formatted": null,
+   "written": null,
+   "notes": ""
+  },
+  "ST04": {
+   "sd_label": "ST04",
+   "formatted": null,
+   "written": null,
+   "notes": ""
+  },
+  "ST05": {
+   "sd_label": "ST05",
+   "formatted": null,
+   "written": null,
+   "notes": ""
+  },
+  "SF01": {
+   "sd_label": "SF01",
+   "formatted": null,
+   "written": null,
+   "notes": ""
+  },
+  "SF02": {
+   "sd_label": "SF02",
+   "formatted": null,
+   "written": null,
+   "notes": ""
+  },
+  "SF03": {
+   "sd_label": "SF03",
+   "formatted": null,
+   "written": null,
+   "notes": ""
+  },
+  "SF04": {
+   "sd_label": "SF04",
+   "formatted": null,
+   "written": null,
+   "notes": ""
+  },
+  "SF05": {
+   "sd_label": "SF05",
+   "formatted": null,
+   "written": null,
+   "notes": ""
+  },
+  "SF06": {
+   "sd_label": "SF06",
+   "formatted": null,
+   "written": null,
+   "notes": ""
+  },
+  "SF07": {
+   "sd_label": "SF07",
+   "formatted": null,
+   "written": null,
+   "notes": ""
+  },
+  "WS01": {
+   "sd_label": "WS01",
+   "formatted": null,
+   "written": null,
+   "notes": ""
+  },
+  "WS02": {
+   "sd_label": "WS02",
+   "formatted": null,
+   "written": null,
+   "notes": ""
+  },
+  "WS03": {
+   "sd_label": "WS03",
+   "formatted": null,
+   "written": null,
+   "notes": ""
+  },
+  "WS04": {
+   "sd_label": "WS04",
+   "formatted": null,
+   "written": null,
+   "notes": ""
+  },
+  "YU01": {
+   "sd_label": "YU01",
+   "formatted": null,
+   "written": null,
+   "notes": ""
+  },
+  "YU02": {
+   "sd_label": "YU02",
+   "formatted": null,
+   "written": null,
+   "notes": ""
+  },
+  "YU03": {
+   "sd_label": "YU03",
+   "formatted": null,
+   "written": null,
+   "notes": ""
+  }
+ }
+}

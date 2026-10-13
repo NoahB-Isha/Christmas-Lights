@@ -3,7 +3,13 @@
 # `python -m lightshow.preview ...` from anywhere.
 PY := PYTHONPATH=src python3
 
-.PHONY: test props show player fps chain preview twoprop showcase clean editor cards markers layout
+.PHONY: studio studio-bench test props show player fps chain preview twoprop showcase clean editor cards markers layout
+
+studio:          ## the timeline editor -> http://127.0.0.1:8765 (LAYOUT=assets/layout.json)
+	$(PY) -m lightshow.studio --layout $(or $(LAYOUT),assets/layout.json)
+
+studio-bench:    ## the timeline editor on the 6-prop bench layout
+	$(PY) -m lightshow.studio --layout assets/bench.json
 
 test:            ## run the test suite
 	$(PY) -m pytest tests/ -q

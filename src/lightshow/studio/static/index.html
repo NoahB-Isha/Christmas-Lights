@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Lightshow Studio</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="/static/app.css">
+</head>
+<body>
+<div id="app">
+  <header id="top">
+    <b class="brand">Lightshow Studio</b>
+    <nav id="modes">
+      <button data-mode="props" class="on">Props &amp; groups</button>
+      <button data-mode="timeline">Timeline</button>
+      <button data-mode="render">Render &amp; cards</button>
+    </nav>
+    <div id="transport">
+      <button id="tHome" title="Go to start (Home)">⏮</button>
+      <button id="tPlay" title="Play / pause (Space)">▶</button>
+      <span id="tTime" class="mono">0:00.0</span>
+      <label class="small">preview <select id="previewGroup"><option value="">all groups</option></select></label>
+      <label class="small">view <select id="previewView"><option value="front">front (1)</option><option value="top">top-down (2)</option><option value="threeq">¾ (3)</option><option value="drive">drive-by (4)</option><option value="car">🚗 car (5)</option></select></label>
+
+      <label class="small"><input type="checkbox" id="previewGlow" checked> glow</label>
+    </div>
+    <span id="status" class="small dim"></span>
+    <span id="layoutName" class="small dim mono"></span>
+  </header>
+
+  <!-- ============================== PROPS MODE ============================== -->
+  <section id="mode-props" class="mode">
+    <aside id="groupsPanel" class="panel">
+      <div class="panelHead"><h2>Groups</h2><span><a class="small" href="/sort" target="_blank" title="drag-and-drop board to sort props into groups by theme" style="margin-right:8px">sort by theme ↗</a><button id="bNewGroup" class="small">+ group</button></span></div>
+      <div class="hint">Drag a prop onto another group to move it. A prop's controller is cleared when it changes group (controllers never span groups).</div>
+      <div id="groups"></div>
+      <div class="panelHead"><h2>Library</h2><button id="bAddProp" class="small">+ add prop from .mod</button></div>
+    </aside>
+    <div id="propsStage">
+      <div id="gridWrap" class="stage">
+        <canvas id="grid"></canvas>
+        <div class="hud" id="gridHud">drag prop = move (snap 6 in, shift = free; its controllers follow a whole block) · drag controller box = move it · drag empty = select box · shift-click = add to selection · wheel = zoom · hold H (or ✋) + drag = pan · double-click = paint</div>
+        <div class="stageTools">
+          <button id="bHand" class="small" title="hand tool: drag to pan (or hold H / Space while dragging)">✋ hand</button>
+          <button id="bFit" class="small" title="zoom to the props">fit props</button>
+          <label class="small"><input type="checkbox" id="onlyGroup"> only selected group</label>
+          <label class="small"><input type="checkbox" id="showCtrl" checked> controllers</label>
+          <span class="sep"></span>
+          <label class="small" title="site-plan backdrop">map <select id="mapSel"><option value="">none</option></select></label>
+          <input type="range" id="mapOpacity" min="0" max="1" step="0.05" value="0.45" style="width:70px" title="map opacity">
+          <button id="bMapMove" class="small" title="drag the map to line it up with the props (M)">move map</button>
+          <button id="bMapCal" class="small" title="click two points on the map, then type the real distance between them">calibrate</button>
+          <button id="bMapCentre" class="small" title="slide the map so its middle sits under the props">centre on props</button>
+          <button id="bMapFit" class="small" title="zoom to the whole map">fit map</button>
+          <button id="bMapUpload" class="small" title="upload a PNG/JPG or PDF site plan">upload…</button>
+          <span class="sep"></span>
+          <button id="bRoute" class="small" title="draw the cars' route: click points along the road in driving order; Enter / Esc to finish; drag a point to move it, double-click a point to delete it">🚗 route</button>
+          <button id="bRouteClear" class="small" title="delete the route">clear</button>
+          <input type="file" id="mapFile" accept=".png,.jpg,.jpeg,.webp,.pdf" hidden>
+        </div>
+      </div>
+      <div id="paintWrap" class="stage" hidden>
+        <canvas id="paint"></canvas>
+        <div class="hud" id="paintHud"></div>
+        <div class="stageTools">
+          <button id="bPaintBack" class="small">← back to grid</button>
+          <span id="paintTitle" class="small"></span>
+          <button id="bPaintWire" class="small" title="colour by wire order">wire</button>
+          <button id="bPaintExist" class="small on" title="show existing regions (E)">regions</button>
+        </div>
+      </div>
+    </div>
+    <aside id="propInspector" class="panel">
+      <div id="propDetails"></div>
+      <div id="paintPanel" hidden>
+        <h2>Selection <span class="dim" id="selcount"></span></h2>
+        <div class="row"><input id="rname" placeholder="region name (hat, coat, ribbon…)" style="flex:1"><input type="color" id="rcolor" value="#d0232a"></div>
+        <div class="row"><button id="badd">Add region (Enter)</button><button id="bclear">Clear</button><button id="bwr">Wire range (W)</button></div>
+        <div class="hint">click toggles · drag = lasso · shift+click = flood one feature · W then two clicks = wire range · 1–9 = move selection into region N</div>
+        <h2>Regions</h2>
+        <div id="regions"></div>
+        <div class="row"><button id="bdel">Delete region</button><button id="bsuggest">Auto-suggest</button></div>
+        <div class="row"><button id="bPaintSave" class="small">Save now</button><span id="paintSaved" class="dim small"></span></div>
+        <div class="hint">Click another prop in the group list on the left to paint it; changes save automatically and the preview picks them up at once.</div>
+        <div class="hint">Pixels in no region are the implicit region <b>rest</b>. The Incandescent pack draws each region in its painted colour.</div>
+      </div>
+      <div id="ctrlPanel"></div>
+    </aside>
+  </section>
+
+  <!-- ============================ TIMELINE MODE ============================ -->
+  <section id="mode-timeline" class="mode" hidden>
+    <aside id="fxBrowser" class="panel">
+      <h2>Effects <span id="fxCount" class="dim"></span></h2>
+      <div id="fxPreviewWrap"><canvas id="fxPreview"></canvas><div id="fxPreviewName" class="small dim">hover an effect to preview it</div></div>
+      <div id="fxTools">
+        <input id="fxSearch" type="search" placeholder="search effects…" autocomplete="off">
+        <div class="chips" id="fxKinds">
+          <button class="chip2 on" data-kind="anim">Animations</button>
+          <button class="chip2 on" data-kind="trans">Transitions</button>
+          <button class="chip2 on" data-kind="mod">Modifiers</button>
+        </div>
+        <div class="chips" id="fxTags">
+          <button class="chip2" data-tag="music" title="reacts to the track">♪ music</button>
+          <button class="chip2" data-tag="slow" title="calm / ambient / verse">slow</button>
+          <button class="chip2" data-tag="regions" title="uses painted regions">painted</button>
+          <button class="chip2" data-tag="incandescent" title="filament lamp model">bulbs</button>
+          <button class="chip2" data-tag="geometry" title="uses the real distances between props">multi-prop</button>
+          <button class="chip2" data-tag="fav" title="your starred effects">★ favourites</button>
+        </div>
+      </div>
+      <div class="hint">Drag onto a lane; hover to preview, click to pin, ★ to favourite. Animations go on the wide lane, transitions on the thin lane between them, modifiers on the bottom lane.</div>
+      <div id="fxList"></div>
+    </aside>
+    <div id="tlMain">
+      <div id="previewWrap" class="stage">
+        <canvas id="preview"></canvas>
+        <div class="hud" id="previewHud"></div>
+        <div id="carTools" class="stageTools small" hidden>🚗 <input type="range" id="carPos" min="0" max="1000" value="0" step="1" style="width:110px" title="where the car is on the route (scrub)"><input type="number" id="carMph" value="5" min="1" max="30" step="0.5" style="width:44px" title="speed, mph"> mph <input type="number" id="carEye" value="48" min="24" max="120" step="2" style="width:48px" title="eye height, inches"> in</div>
+      </div>
+      <div id="timeline">
+        <div id="tlGroups" class="chips" title="which group's lanes the timeline shows (the preview follows)"></div>
+        <div id="tlTools">
+          <button id="bZoomOut" class="small">−</button><input type="range" id="zoom" min="2" max="200" value="20" step="1" style="width:110px"><button id="bZoomIn" class="small">+</button>
+          <button id="bZoomFit" class="small">fit</button>
+          <label class="small"><input type="checkbox" id="snap" checked> snap to beats</label>
+          <span class="dim small">⌘/ctrl+wheel = zoom · click ruler = seek · drag edges = trim · shift-click / shift-drag = multi-select · ⌘A all · ⌘C ⌘V copy/paste · S (⌘T) split · ⌘D repeat · Delete · ⌘Z undo</span>
+          <span style="flex:1"></span>
+          <button id="bAddAudio" class="small">+ audio</button>
+          <button id="bSections" class="small" title="re-detect sections from BPM and measures">detect sections</button>
+        </div>
+        <div id="tlBody">
+          <div id="tlHeaders"></div>
+          <div id="tlScroll"><canvas id="tl"></canvas></div>
+        </div>
+      </div>
+    </div>
+    <aside id="tlInspector" class="panel"><div id="clipInspector"><div class="hint">Select a clip, the audio, or a section.</div></div></aside>
+  </section>
+
+  <!-- ============================= RENDER MODE ============================= -->
+  <section id="mode-render" class="mode" hidden>
+    <div id="renderMain" class="panel wide">
+      <h2>Frame rate</h2>
+      <div id="fpsChoice"></div>
+      <h2>Cards</h2>
+      <div class="hint">One SD card per controller. Every card gets the identical frame count; empty ports are 32-px stubs. Files are <span class="mono">Sc-01-01.rgb</span> in <span class="mono">out/studio/cards/&lt;controller&gt;/</span>. Reformat a card before every big copy (a fragmented card made controller B drift on the bench).</div>
+      <div class="row"><button id="bRender" class="primary">Render all cards</button><span id="renderStatus" class="small dim"></span><span style="flex:1"></span>
+        <a class="button small" id="bPlacementPdf" href="/api/print/placement.pdf" target="_blank">Placement PDF (one page per group)</a>
+        <button id="bPrintSheet" class="small">Print prop / card sheet</button></div>
+      <div id="cardsTable"></div>
+      <h2>One scene per song</h2>
+      <div class="hint">Cuts the show at the tempo map's song boundaries and renders one scene file per song (<span class="mono">Sc-NN-01.rgb</span> from the first scene number up). The runner selects the next scene over DMX at each boundary, which restarts every controller from frame 0 together — a free re-sync per song — and no card file is longer than one song. <span class="mono">out/studio/cards/cues.json</span> lists scene, DMX value and times for the runner.</div>
+      <div class="row"><label>first scene</label><input type="number" id="songFirstScene" value="1" min="1" max="62" style="width:60px"><button id="bRenderSongs" class="primary">Render one scene per song</button><span id="renderSongsStatus" class="small dim"></span></div>
+      <div id="songPlan"></div>
+      <h2>AI final pass</h2>
+      <div class="hint">Export a readable digest of the whole show plus <span class="mono">project.json</span>, give both to Claude ("here is my show, tighten the transitions / vary the Snowflakes / fix song 5…"), then import the <span class="mono">project.json</span> it returns. The import validates every clip (unknown effects and out-of-range values are fixed or dropped, with a report) and keeps a backup of the previous project.</div>
+      <div class="row">
+        <a class="button small" href="/api/export/digest.md" download="show_digest.md">⬇ show_digest.md</a>
+        <a class="button small" href="/api/export/project.json" download="project.json">⬇ project.json</a>
+        <button id="bImport" class="small primary">⬆ Import project.json…</button>
+        <input type="file" id="importFile" accept=".json,application/json" hidden>
+      </div>
+      <div id="importReport" class="small"></div>
+    </div>
+  </section>
+</div>
+<input type="file" id="audioFile" accept="audio/*" hidden>
+<script src="/static/app.js"></script>
+<script src="/static/props.js"></script>
+<script src="/static/preview.js"></script>
+<script src="/static/timeline.js"></script>
+<script src="/static/render.js"></script>
+<script>App.boot();</script>
+</body>
+</html>

@@ -87,7 +87,7 @@ def test_round_trip_json():
     L = Layout.load(LAYOUT)
     d = L.to_json()
     L2 = Layout(d["groups"], [Placement(**{k: v for k, v in p.items() if k in Placement.FIELDS})
-                              for p in d["props"]], d["controllers"], meta={"notes": d["notes"]})
+                              for p in d["props"]], d["controllers"], meta={"notes": d["notes"], "map": d.get("map"), "route": d.get("route")})
     assert L2.to_json() == d
 
 

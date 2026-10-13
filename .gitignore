@@ -4,6 +4,7 @@ out/
 *.rgb
 !assets/factory/*.rgb
 *.html
+!src/lightshow/studio/static/*.html
 *.npy
 
 # audio: keep your own music files out of version control
@@ -23,3 +24,11 @@ venv/
 .DS_Store
 *.wav
 out/features.npz
+
+# studio autosave backups, sync scratch, runner state
+assets/studio/*.bak-*
+.sync_*
+*.log
+showplay.json
+# the show track IS part of the project (17 MB) -- everything else audio stays out
+!assets/audio/show16.mp3

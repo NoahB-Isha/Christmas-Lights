@@ -1,0 +1,3788 @@
+{
+ "layout": "assets/bench.json",
+ "version": 1,
+ "name": "Yard show",
+ "fps": 30.3,
+ "audio": [
+  {
+   "id": "a_b7c70f2f",
+   "file": "assets/audio/show16.mp3",
+   "name": "show16.mp3",
+   "start": 0,
+   "offset": 0,
+   "duration": 881.7110204081632,
+   "bpm": null,
+   "beats_per_bar": 4,
+   "beat_offset": null,
+   "songs": [
+    {
+     "name": "Carol of the Bells",
+     "from": 0.41,
+     "to": 83.13,
+     "bpm": 84,
+     "beats_per_bar": 3,
+     "beat_offset": null
+    },
+    {
+     "name": "Run Rudolph Run — Chuck Berry",
+     "from": 83.13,
+     "to": 190.41,
+     "bpm": 152,
+     "beats_per_bar": 4,
+     "beat_offset": null
+    },
+    {
+     "name": "Dance of the Sugar Plum Fairy (Remix) — Trap Music Now",
+     "from": 190.41,
+     "to": 288.01,
+     "bpm": 64.6,
+     "beats_per_bar": 4,
+     "beat_offset": null
+    },
+    {
+     "name": "Jingle Bells (feat. The Puppini Sisters) — Michael Bublé",
+     "from": 288.01,
+     "to": 404.01,
+     "bpm": 123,
+     "beats_per_bar": 4,
+     "beat_offset": null
+    },
+    {
+     "name": "Rockin' Around the Christmas Tree — Brenda Lee",
+     "from": 404.01,
+     "to": 491.19,
+     "bpm": 142,
+     "beats_per_bar": 4,
+     "beat_offset": null
+    },
+    {
+     "name": "Winter Wonderland — Brooks & Dunn",
+     "from": 491.19,
+     "to": 621.02,
+     "bpm": 130,
+     "beats_per_bar": 4,
+     "beat_offset": null
+    },
+    {
+     "name": "Snowman — Sia",
+     "from": 621.02,
+     "to": 672.73,
+     "bpm": 105,
+     "beats_per_bar": 4,
+     "beat_offset": null
+    },
+    {
+     "name": "Feliz Navidad — José Feliciano",
+     "from": 672.73,
+     "to": 763.43,
+     "bpm": 149,
+     "beats_per_bar": 4,
+     "beat_offset": null
+    },
+    {
+     "name": "God Rest Ye Merry Gentlemen — Pentatonix",
+     "from": 763.43,
+     "to": 856.5,
+     "bpm": 136,
+     "beats_per_bar": 4,
+     "beat_offset": null
+    },
+    {
+     "name": "God Rest Ye — accelerando (sign walk)",
+     "from": 856.5,
+     "to": 874.79,
+     "bpm": 110,
+     "bpm_end": 164,
+     "beats_per_bar": 4,
+     "beat_offset": null
+    },
+    {
+     "name": "God Rest Ye — finale",
+     "from": 874.79,
+     "to": 881.71,
+     "bpm": 156,
+     "beats_per_bar": 4,
+     "beat_offset": null
+    }
+   ],
+   "transition": {
+    "type": "crossfade",
+    "dur": 1
+   }
+  }
+ ],
+ "sections": [
+  {
+   "id": "s_a2772ba9",
+   "t0": 0.41,
+   "t1": 17.48,
+   "label": "♪ Chorus of the bells- start of music, piccato violin plucks",
+   "audio": "a_b7c70f2f"
+  },
+  {
+   "id": "s_ea2b9154",
+   "t0": 17.48,
+   "t1": 26.04,
+   "label": "beat comes in, as well as a melody",
+   "audio": "a_b7c70f2f"
+  },
+  {
+   "id": "s_ce1e0cf2",
+   "t0": 26.04,
+   "t1": 43.37,
+   "label": "beat builds up, violin comes in",
+   "audio": "a_b7c70f2f"
+  },
+  {
+   "id": "s_943861a6",
+   "t0": 43.37,
+   "t1": 45.35,
+   "label": "many instruments stop for a dramatic pause before a beat dro",
+   "audio": "a_b7c70f2f"
+  },
+  {
+   "id": "s_f75add70",
+   "t0": 45.35,
+   "t1": 47.49,
+   "label": "violin builds up to beat drop",
+   "audio": "a_b7c70f2f"
+  },
+  {
+   "id": "s_945ce5c8",
+   "t0": 47.49,
+   "t1": 64.81,
+   "label": "Beat Drop!!",
+   "audio": "a_b7c70f2f"
+  },
+  {
+   "id": "s_a804dede",
+   "t0": 64.81,
+   "t1": 81.68,
+   "label": "Beat drop section finishes",
+   "audio": "a_b7c70f2f"
+  },
+  {
+   "id": "s_bb945002",
+   "t0": 81.68,
+   "t1": 83.13,
+   "label": "music fades out here",
+   "audio": "a_b7c70f2f"
+  },
+  {
+   "id": "s_848f5764",
+   "t0": 83.13,
+   "t1": 86.03,
+   "label": "♪ Song 2 (starts with a little spoken \"alright aliright\")",
+   "audio": "a_b7c70f2f"
+  },
+  {
+   "id": "s_665ce3c7",
+   "t0": 86.03,
+   "t1": 92.46,
+   "label": "Song starts with a drum fill",
+   "audio": "a_b7c70f2f"
+  },
+  {
+   "id": "s_c4c836b2",
+   "t0": 92.46,
+   "t1": 104.98,
+   "label": "goes into the main part of the song",
+   "audio": "a_b7c70f2f"
+  },
+  {
+   "id": "s_59e644f0",
+   "t0": 104.98,
+   "t1": 137.04,
+   "label": "vocals come in",
+   "audio": "a_b7c70f2f"
+  },
+  {
+   "id": "s_4284e266",
+   "t0": 137.04,
+   "t1": 156.27,
+   "label": "honkey tonk piano comes in",
+   "audio": "a_b7c70f2f"
+  },
+  {
+   "id": "s_c2d3cebf",
+   "t0": 156.27,
+   "t1": 175.18,
+   "label": "piano stops",
+   "audio": "a_b7c70f2f"
+  },
+  {
+   "id": "s_75a7482e",
+   "t0": 175.18,
+   "t1": 187.33,
+   "label": "electric guitar solo",
+   "audio": "a_b7c70f2f"
+  },
+  {
+   "id": "s_04e69148",
+   "t0": 187.33,
+   "t1": 190.41,
+   "label": "song fades out",
+   "audio": "a_b7c70f2f"
+  },
+  {
+   "id": "s_8b265b7d",
+   "t0": 190.41,
+   "t1": 205.04,
+   "label": "♪ Sugarplum fairy remix starts",
+   "audio": "a_b7c70f2f"
+  },
+  {
+   "id": "s_a920fb86",
+   "t0": 205.04,
+   "t1": 235.52,
+   "label": "first drum hit",
+   "audio": "a_b7c70f2f"
+  },
+  {
+   "id": "s_0041cfa8",
+   "t0": 235.52,
+   "t1": 249.17,
+   "label": "",
+   "audio": "a_b7c70f2f"
+  },
+  {
+   "id": "s_4ecda1c6",
+   "t0": 249.17,
+   "t1": 279.16,
+   "label": "",
+   "audio": "a_b7c70f2f"
+  },
+  {
+   "id": "s_6decac40",
+   "t0": 279.16,
+   "t1": 288.01,
+   "label": "outro",
+   "audio": "a_b7c70f2f"
+  },
+  {
+   "id": "s_c02eac24",
+   "t0": 288.01,
+   "t1": 303.63,
+   "label": "♪ JIngle bells starts",
+   "audio": "a_b7c70f2f"
+  },
+  {
+   "id": "s_f96f313e",
+   "t0": 303.63,
+   "t1": 319.29,
+   "label": "horns come in (Dashing through the snow)",
+   "audio": "a_b7c70f2f"
+  },
+  {
+   "id": "s_06beea7b",
+   "t0": 319.29,
+   "t1": 332.97,
+   "label": "female chorus comes in (jingle bells)",
+   "audio": "a_b7c70f2f"
+  },
+  {
+   "id": "s_04853782",
+   "t0": 332.97,
+   "t1": 334.97,
+   "label": "fun vocal harmony stacking solo",
+   "audio": "a_b7c70f2f"
+  },
+  {
+   "id": "s_9be19e54",
+   "t0": 334.97,
+   "t1": 350.4,
+   "label": "song resumes",
+   "audio": "a_b7c70f2f"
+  },
+  {
+   "id": "s_a58aa606",
+   "t0": 350.4,
+   "t1": 366.2,
+   "label": "gent comes back with female chorus)",
+   "audio": "a_b7c70f2f"
+  },
+  {
+   "id": "s_5d4449ac",
+   "t0": 366.2,
+   "t1": 381.65,
+   "label": "ladies drop out",
+   "audio": "a_b7c70f2f"
+  },
+  {
+   "id": "s_4a18b71c",
+   "t0": 381.65,
+   "t1": 397.36,
+   "label": "gentle chorus with gents and ladies",
+   "audio": "a_b7c70f2f"
+  },
+  {
+   "id": "s_c61d10b6",
+   "t0": 397.36,
+   "t1": 403.42,
+   "label": "music picks up, and then starts to fade",
+   "audio": "a_b7c70f2f"
+  },
+  {
+   "id": "s_2a6c0150",
+   "t0": 403.42,
+   "t1": 404.01,
+   "label": "fade out",
+   "audio": "a_b7c70f2f"
+  },
+  {
+   "id": "s_377bf31a",
+   "t0": 404.01,
+   "t1": 443.24,
+   "label": "♪ Rockin around the christmas tree starts",
+   "audio": "a_b7c70f2f"
+  },
+  {
+   "id": "s_f9799099",
+   "t0": 443.24,
+   "t1": 446.82,
+   "label": "first \"deck the halls w...\"",
+   "audio": "a_b7c70f2f"
+  },
+  {
+   "id": "s_7fe6130c",
+   "t0": 446.82,
+   "t1": 459.11,
+   "label": "deck the halls section ends, song resumes as before",
+   "audio": "a_b7c70f2f"
+  },
+  {
+   "id": "s_c6110f32",
+   "t0": 459.11,
+   "t1": 487.76,
+   "label": "Solo horn comes in",
+   "audio": "a_b7c70f2f"
+  },
+  {
+   "id": "s_c8dbb9cd",
+   "t0": 487.76,
+   "t1": 491.19,
+   "label": "song fades out",
+   "audio": "a_b7c70f2f"
+  },
+  {
+   "id": "s_ee5341b4",
+   "t0": 491.19,
+   "t1": 499.22,
+   "label": "♪ Song 6",
+   "audio": "a_b7c70f2f"
+  },
+  {
+   "id": "s_f8e0c8f3",
+   "t0": 499.22,
+   "t1": 530.25,
+   "label": "",
+   "audio": "a_b7c70f2f"
+  },
+  {
+   "id": "s_0204e7e8",
+   "t0": 530.25,
+   "t1": 560.47,
+   "label": "",
+   "audio": "a_b7c70f2f"
+  },
+  {
+   "id": "s_a5562f43",
+   "t0": 560.47,
+   "t1": 575.22,
+   "label": "horn solo",
+   "audio": "a_b7c70f2f"
+  },
+  {
+   "id": "s_f5b4b88a",
+   "t0": 575.22,
+   "t1": 589.79,
+   "label": "guitar solo",
+   "audio": "a_b7c70f2f"
+  },
+  {
+   "id": "s_617b754b",
+   "t0": 589.79,
+   "t1": 606.42,
+   "label": "solo end",
+   "audio": "a_b7c70f2f"
+  },
+  {
+   "id": "s_c669b6ca",
+   "t0": 606.42,
+   "t1": 620.19,
+   "label": "",
+   "audio": "a_b7c70f2f"
+  },
+  {
+   "id": "s_599ab26b",
+   "t0": 620.19,
+   "t1": 621.02,
+   "label": "fades out",
+   "audio": "a_b7c70f2f"
+  },
+  {
+   "id": "s_d8af1889",
+   "t0": 621.02,
+   "t1": 668.37,
+   "label": "♪ Snowman by sia starts- a little romantic",
+   "audio": "a_b7c70f2f"
+  },
+  {
+   "id": "s_bc12ac2c",
+   "t0": 668.37,
+   "t1": 672.73,
+   "label": "fades out",
+   "audio": "a_b7c70f2f"
+  },
+  {
+   "id": "s_b592fe30",
+   "t0": 672.73,
+   "t1": 685.56,
+   "label": "♪ Feliz navidad starts",
+   "audio": "a_b7c70f2f"
+  },
+  {
+   "id": "s_1b72f636",
+   "t0": 685.56,
+   "t1": 699.98,
+   "label": "",
+   "audio": "a_b7c70f2f"
+  },
+  {
+   "id": "s_50d3f99d",
+   "t0": 699.98,
+   "t1": 724.6,
+   "label": "",
+   "audio": "a_b7c70f2f"
+  },
+  {
+   "id": "s_38d6f779",
+   "t0": 724.6,
+   "t1": 762.93,
+   "label": "",
+   "audio": "a_b7c70f2f"
+  },
+  {
+   "id": "s_9f6998f9",
+   "t0": 762.93,
+   "t1": 763.43,
+   "label": "fades out",
+   "audio": "a_b7c70f2f"
+  },
+  {
+   "id": "s_9f5567fc",
+   "t0": 763.43,
+   "t1": 770.43,
+   "label": "♪ Cool accapela song starts",
+   "audio": "a_b7c70f2f"
+  },
+  {
+   "id": "s_ead2d778",
+   "t0": 770.43,
+   "t1": 786.81,
+   "label": "Words start",
+   "audio": "a_b7c70f2f"
+  },
+  {
+   "id": "s_957c901f",
+   "t0": 786.81,
+   "t1": 793.4,
+   "label": "",
+   "audio": "a_b7c70f2f"
+  },
+  {
+   "id": "s_cfe7bf59",
+   "t0": 793.4,
+   "t1": 809.64,
+   "label": "",
+   "audio": "a_b7c70f2f"
+  },
+  {
+   "id": "s_17705518",
+   "t0": 809.64,
+   "t1": 816.64,
+   "label": "",
+   "audio": "a_b7c70f2f"
+  },
+  {
+   "id": "s_c6ff8dc0",
+   "t0": 816.64,
+   "t1": 833.1,
+   "label": "",
+   "audio": "a_b7c70f2f"
+  },
+  {
+   "id": "s_31ade628",
+   "t0": 833.1,
+   "t1": 839.19,
+   "label": "",
+   "audio": "a_b7c70f2f"
+  },
+  {
+   "id": "s_eecca24d",
+   "t0": 839.19,
+   "t1": 856.5,
+   "label": "",
+   "audio": "a_b7c70f2f"
+  },
+  {
+   "id": "s_8286d99f",
+   "t0": 856.5,
+   "t1": 874.79,
+   "label": "",
+   "audio": "a_b7c70f2f"
+  },
+  {
+   "id": "s_5678864d",
+   "t0": 874.79,
+   "t1": 884.79,
+   "label": "",
+   "audio": "a_b7c70f2f"
+  }
+ ],
+ "tracks": [
+  {
+   "id": "t_8e15e870",
+   "group": "workshop",
+   "clips": [
+    {
+     "id": "c_fd5cd33a",
+     "kind": "anim",
+     "effect": "starfield",
+     "t0": 0,
+     "t1": 4.623970700631589,
+     "params": {
+      "breathe": false,
+      "glow": 0
+     },
+     "palette": "classic"
+    },
+    {
+     "id": "c_26ce27e7",
+     "kind": "anim",
+     "effect": "starfield",
+     "t0": 4.623970700631589,
+     "t1": 8.985910573305159,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_a413bc38",
+     "kind": "anim",
+     "effect": "starfield",
+     "t0": 8.985910573305159,
+     "t1": 16.462095941798434,
+     "params": {
+      "stars": 13,
+      "glow": 0.29
+     },
+     "palette": "classic"
+    },
+    {
+     "id": "c_7f08ba99",
+     "kind": "anim",
+     "effect": "lavalamp",
+     "t0": 17.48,
+     "t1": 19.027688,
+     "params": {
+      "bubbles": 19,
+      "speed": 2,
+      "goop_level": 0.75
+     },
+     "palette": "frost"
+    },
+    {
+     "id": "c_14c4d110",
+     "kind": "anim",
+     "effect": "led_rainbow",
+     "t0": 19.027688,
+     "t1": 21.768506,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_10b7bc68",
+     "kind": "anim",
+     "effect": "static_picture",
+     "t0": 21.768506,
+     "t1": 25.21147031848419,
+     "params": {
+      "breathe": 0.1,
+      "breathe_s": 14,
+      "lamp": "incandescent"
+     },
+     "palette": "frost"
+    },
+    {
+     "id": "c_b2d38944",
+     "kind": "anim",
+     "effect": "led_gradient_flow",
+     "t0": 25.21147031848419,
+     "t1": 31.704267185691624,
+     "params": {
+      "bars": 7
+     },
+     "palette": "pal_3660d798"
+    },
+    {
+     "id": "c_7a97686c",
+     "kind": "anim",
+     "effect": "inc_build",
+     "t0": 31.704267185691624,
+     "t1": 39.309,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_e3b3b2f9",
+     "kind": "anim",
+     "effect": "inc_marquee",
+     "t0": 39.309,
+     "t1": 42.56780416134739,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_74708045",
+     "kind": "anim",
+     "effect": "music_hold",
+     "t0": 45.35,
+     "t1": 47.166,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_034e01b9",
+     "kind": "anim",
+     "effect": "static_picture",
+     "t0": 47.49,
+     "t1": 49.309,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_c5d8aa50",
+     "kind": "anim",
+     "effect": "music_drop",
+     "t0": 49.309,
+     "t1": 51.781561,
+     "params": {
+      "threshold": 0.5,
+      "quiet_glow": 0.2,
+      "flood_s": 0.8
+     },
+     "palette": "frost"
+    },
+    {
+     "id": "c_7ac7f9f4",
+     "kind": "anim",
+     "effect": "led_meteor",
+     "t0": 51.781561,
+     "t1": 54.68416714280698,
+     "params": {},
+     "palette": "pal_3660d798"
+    },
+    {
+     "id": "c_aa84beb6",
+     "kind": "anim",
+     "effect": "static_picture",
+     "t0": 54.68416714280698,
+     "t1": 58.126391,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_605336c2",
+     "kind": "anim",
+     "effect": "led_rainbow",
+     "t0": 58.126391,
+     "t1": 64.20765257843526,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_b5c54390",
+     "kind": "anim",
+     "effect": "aurora",
+     "t0": 64.20765257843526,
+     "t1": 70.43408543779313,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_58df4d8f",
+     "kind": "anim",
+     "effect": "frost_breath",
+     "t0": 70.43408543779313,
+     "t1": 79.02980557351748,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_8b5915ea",
+     "kind": "anim",
+     "effect": "starfield",
+     "t0": 79.02980557351748,
+     "t1": 82.84193956941486,
+     "params": {
+      "glow": 0
+     },
+     "palette": "classic"
+    },
+    {
+     "id": "c_634d2a92",
+     "kind": "anim",
+     "effect": "inc_drawn",
+     "t0": 86.03,
+     "t1": 87.012,
+     "params": {
+      "trim_twinkle": false
+     },
+     "palette": "classic"
+    },
+    {
+     "id": "c_b959bb29",
+     "kind": "anim",
+     "effect": "inc_drawn",
+     "t0": 87.012,
+     "t1": 88.029586,
+     "params": {
+      "trim_twinkle": false,
+      "colours": "palette per prop"
+     },
+     "palette": "frost"
+    },
+    {
+     "id": "c_9f693e1b",
+     "kind": "anim",
+     "effect": "inc_drawn",
+     "t0": 88.029586,
+     "t1": 89.26880084634931,
+     "params": {
+      "trim_twinkle": false,
+      "colours": "palette per prop"
+     },
+     "palette": "jewel"
+    },
+    {
+     "id": "c_52e08c62",
+     "kind": "anim",
+     "effect": "inc_drawn",
+     "t0": 89.26880084634931,
+     "t1": 89.717423,
+     "params": {
+      "trim_twinkle": false
+     },
+     "palette": "classic"
+    },
+    {
+     "id": "c_a1b55642",
+     "kind": "anim",
+     "effect": "inc_drawn",
+     "t0": 90.0563693403894,
+     "t1": 90.50499149404008,
+     "params": {
+      "trim_twinkle": false
+     },
+     "palette": "classic"
+    },
+    {
+     "id": "c_81e4584f",
+     "kind": "anim",
+     "effect": "inc_drawn",
+     "t0": 90.79588639961725,
+     "t1": 91.24450855326793,
+     "params": {
+      "trim_twinkle": false
+     },
+     "palette": "classic"
+    },
+    {
+     "id": "c_a8b8859c",
+     "kind": "anim",
+     "effect": "inc_alternate",
+     "t0": 91.24450855326793,
+     "t1": 98.459,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_0d689dd3",
+     "kind": "anim",
+     "effect": "led_blocks",
+     "t0": 98.459,
+     "t1": 104.98,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_156c6d61",
+     "kind": "anim",
+     "effect": "inc_marquee",
+     "t0": 104.98,
+     "t1": 108.396197,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_aa6ac3d5",
+     "kind": "anim",
+     "effect": "inc_build",
+     "t0": 108.396197,
+     "t1": 111.24474181243423,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_a66ebb2c",
+     "kind": "anim",
+     "effect": "inc_alternate",
+     "t0": 111.24474181243423,
+     "t1": 117.738497,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_e7a14702",
+     "kind": "anim",
+     "effect": "led_breathe",
+     "t0": 117.738497,
+     "t1": 133.842912,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_ed4e5530",
+     "kind": "anim",
+     "effect": "inc_alternate",
+     "t0": 133.842912,
+     "t1": 137.04,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_861d4a03",
+     "kind": "anim",
+     "effect": "inc_marquee",
+     "t0": 137.04,
+     "t1": 156.27,
+     "params": {
+      "rate": "8ths"
+     },
+     "palette": "classic"
+    },
+    {
+     "id": "c_79d677a6",
+     "kind": "anim",
+     "effect": "inc_alternate",
+     "t0": 156.27,
+     "t1": 168.31412,
+     "params": {
+      "swap_beats": 2
+     },
+     "palette": "classic"
+    },
+    {
+     "id": "c_6fd7e0de",
+     "kind": "anim",
+     "effect": "inc_twinkle_bulbs",
+     "t0": 168.31412,
+     "t1": 179.775,
+     "params": {
+      "twinkle_frac": 0.35,
+      "level": 1
+     },
+     "palette": "classic"
+    },
+    {
+     "id": "c_c47618fa",
+     "kind": "anim",
+     "effect": "inc_slow_wave",
+     "t0": 179.775,
+     "t1": 187.669,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_ae32e921",
+     "kind": "anim",
+     "effect": "music_hold",
+     "t0": 190.41,
+     "t1": 205.04,
+     "params": {
+      "colours": "palette per prop"
+     },
+     "palette": "pal_02a7f75a"
+    },
+    {
+     "id": "c_2561eefa",
+     "kind": "anim",
+     "effect": "led_gradient_flow",
+     "t0": 205.04,
+     "t1": 212.504274,
+     "params": {},
+     "palette": "pal_02a7f75a"
+    },
+    {
+     "id": "c_b9fac45f",
+     "kind": "anim",
+     "effect": "ice_crystal",
+     "t0": 212.504274,
+     "t1": 215.987437,
+     "params": {
+      "bars": 1,
+      "color": "palette"
+     },
+     "palette": "pal_02a7f75a"
+    },
+    {
+     "id": "c_fa4845ff",
+     "kind": "anim",
+     "effect": "fire_flames",
+     "t0": 215.987437,
+     "t1": 218.24011340429897,
+     "params": {
+      "heat": "palette"
+     },
+     "palette": "pal_02a7f75a"
+    },
+    {
+     "id": "c_5d816cb4",
+     "kind": "anim",
+     "effect": "led_gradient_flow",
+     "t0": 218.24011340429897,
+     "t1": 219.77617385008688,
+     "params": {},
+     "palette": "pal_02a7f75a"
+    },
+    {
+     "id": "c_4efbb2b7",
+     "kind": "anim",
+     "effect": "inc_alternate",
+     "t0": 219.77617385008688,
+     "t1": 233.39126837886954,
+     "params": {
+      "colours": "palette per region"
+     },
+     "palette": "pal_02a7f75a"
+    },
+    {
+     "id": "c_e28703aa",
+     "kind": "anim",
+     "effect": "ibiza_waves",
+     "t0": 233.39126837886954,
+     "t1": 235.07673662130776,
+     "params": {
+      "colours": "palette",
+      "foam": 0.75,
+      "bars": 1,
+      "wave_in": 130
+     },
+     "palette": "pal_02a7f75a"
+    },
+    {
+     "id": "c_6c1c4388",
+     "kind": "anim",
+     "effect": "led_gradient_flow",
+     "t0": 235.07673662130776,
+     "t1": 241.828825,
+     "params": {},
+     "palette": "pal_02a7f75a"
+    },
+    {
+     "id": "c_b1703051",
+     "kind": "anim",
+     "effect": "music_trace",
+     "t0": 241.828825,
+     "t1": 249.17,
+     "params": {
+      "color": "palette"
+     },
+     "palette": "pal_02a7f75a"
+    },
+    {
+     "id": "c_7cd10712",
+     "kind": "anim",
+     "effect": "led_gradient_flow",
+     "t0": 249.17,
+     "t1": 250.82695423677802,
+     "params": {},
+     "palette": "pal_02a7f75a"
+    },
+    {
+     "id": "c_de4a1b19",
+     "kind": "anim",
+     "effect": "led_gradient_flow",
+     "t0": 251.559794,
+     "t1": 252.95825532572465,
+     "params": {},
+     "palette": "pal_02a7f75a"
+    },
+    {
+     "id": "c_81613780",
+     "kind": "anim",
+     "effect": "led_gradient_flow",
+     "t0": 252.95825532572465,
+     "t1": 254.3567166514493,
+     "params": {},
+     "palette": "jewel"
+    },
+    {
+     "id": "c_280707f0",
+     "kind": "anim",
+     "effect": "led_gradient_flow",
+     "t0": 255.038,
+     "t1": 256.69121162037465,
+     "params": {},
+     "palette": "pal_b916f267"
+    },
+    {
+     "id": "c_4b026dd1",
+     "kind": "anim",
+     "effect": "music_eq",
+     "t0": 256.69121162037465,
+     "t1": 264.162904,
+     "params": {
+      "assign": "centre = bass"
+     },
+     "palette": "pal_568cfdfa"
+    },
+    {
+     "id": "c_035e9b4f",
+     "kind": "anim",
+     "effect": "starfield",
+     "t0": 264.162904,
+     "t1": 267.130761,
+     "params": {
+      "color": "palette"
+     },
+     "palette": "pal_02a7f75a"
+    },
+    {
+     "id": "c_c9247e21",
+     "kind": "anim",
+     "effect": "techno_grid",
+     "t0": 267.130761,
+     "t1": 269.70411,
+     "params": {},
+     "palette": "pal_02a7f75a"
+    },
+    {
+     "id": "c_8c0ecc4d",
+     "kind": "anim",
+     "effect": "lavalamp",
+     "t0": 269.70411,
+     "t1": 275.069286707386,
+     "params": {
+      "goop": "palette 3"
+     },
+     "palette": "pal_3660d798"
+    },
+    {
+     "id": "c_39293171",
+     "kind": "anim",
+     "effect": "lavalamp",
+     "t0": 275.069286707386,
+     "t1": 279.16,
+     "params": {
+      "goop": "palette 3"
+     },
+     "palette": "pal_02a7f75a"
+    },
+    {
+     "id": "c_d859bf74",
+     "kind": "anim",
+     "effect": "starfield",
+     "t0": 279.16,
+     "t1": 288.152,
+     "params": {
+      "color": "palette"
+     },
+     "palette": "pal_02a7f75a"
+    },
+    {
+     "id": "c_761f8775",
+     "kind": "anim",
+     "effect": "inc_build",
+     "t0": 288.152,
+     "t1": 292.055,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_316377a4",
+     "kind": "anim",
+     "effect": "static_picture",
+     "t0": 292.055,
+     "t1": 294.845737530948,
+     "params": {
+      "colours": "palette per prop"
+     },
+     "palette": "classic"
+    },
+    {
+     "id": "c_d4ea2982",
+     "kind": "anim",
+     "effect": "static_picture",
+     "t0": 294.845737530948,
+     "t1": 295.963052,
+     "params": {
+      "colours": "painted"
+     },
+     "palette": "classic"
+    },
+    {
+     "id": "c_c864efe5",
+     "kind": "anim",
+     "effect": "inc_build",
+     "t0": 295.963052,
+     "t1": 299.86,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_14c79e34",
+     "kind": "anim",
+     "effect": "inc_alternate",
+     "t0": 299.86,
+     "t1": 302.299,
+     "params": {
+      "swap_beats": 1,
+      "split": "halves"
+     },
+     "palette": "classic"
+    },
+    {
+     "id": "c_1e618c3d",
+     "kind": "anim",
+     "effect": "static_picture",
+     "t0": 302.299,
+     "t1": 303.63,
+     "params": {
+      "colours": "painted"
+     },
+     "palette": "classic"
+    },
+    {
+     "id": "c_1a273290",
+     "kind": "anim",
+     "effect": "snowfall",
+     "t0": 303.63,
+     "t1": 306.201,
+     "params": {
+      "flakes": 39,
+      "size_in": 5.5,
+      "wind": 0.6,
+      "sky": 0.3,
+      "color": "frost"
+     },
+     "palette": "classic"
+    },
+    {
+     "id": "c_1a6dc5d7",
+     "kind": "anim",
+     "effect": "frost_breath",
+     "t0": 306.201,
+     "t1": 317.06612912404916,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_aca727d5",
+     "kind": "anim",
+     "effect": "static_picture",
+     "t0": 317.06612912404916,
+     "t1": 319.25464589953083,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_60ab88c3",
+     "kind": "anim",
+     "effect": "music_hold",
+     "t0": 319.25464589953083,
+     "t1": 326.748957,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_bb0ae0ad",
+     "kind": "anim",
+     "effect": "inc_slow_wave",
+     "t0": 326.748957,
+     "t1": 332.543,
+     "params": {
+      "floor": 0.5,
+      "direction": "bounce"
+     },
+     "palette": "classic"
+    },
+    {
+     "id": "c_555f3017",
+     "kind": "anim",
+     "effect": "music_hold",
+     "t0": 332.97,
+     "t1": 334.2974484593021,
+     "params": {
+      "sensitivity": 2,
+      "order": "shuffled"
+     },
+     "palette": "classic"
+    },
+    {
+     "id": "c_bf8ee6f0",
+     "kind": "anim",
+     "effect": "static_picture",
+     "t0": 334.2974484593021,
+     "t1": 334.982,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_eeaf74eb",
+     "kind": "anim",
+     "effect": "inc_drawn",
+     "t0": 334.982,
+     "t1": 349.4653039191593,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_9d522f76",
+     "kind": "anim",
+     "effect": "ice_freeze",
+     "t0": 349.4653039191593,
+     "t1": 366.2,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_29d305a0",
+     "kind": "anim",
+     "effect": "static_picture",
+     "t0": 366.201,
+     "t1": 370.045049,
+     "params": {
+      "colours": "palette per prop"
+     },
+     "palette": "frost"
+    },
+    {
+     "id": "c_caa2bb3a",
+     "kind": "anim",
+     "effect": "static_picture",
+     "t0": 370.045049,
+     "t1": 375.173239469266,
+     "params": {
+      "colours": "palette per region"
+     },
+     "palette": "pal_36fca884"
+    },
+    {
+     "id": "c_910f010f",
+     "kind": "anim",
+     "effect": "inc_marquee",
+     "t0": 375.173239469266,
+     "t1": 381.816118,
+     "params": {
+      "rate": "quarter notes",
+      "every": 5,
+      "outline_only": false,
+      "reverse": false
+     },
+     "palette": "classic"
+    },
+    {
+     "id": "c_efb6e851",
+     "kind": "anim",
+     "effect": "inc_build",
+     "t0": 381.816118,
+     "t1": 401.8903380003889,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_b466934f",
+     "kind": "anim",
+     "effect": "fairy_lights",
+     "t0": 403.42,
+     "t1": 412.99236634456975,
+     "params": {
+      "behind": "dark tree"
+     },
+     "palette": "classic"
+    },
+    {
+     "id": "c_985dcd80",
+     "kind": "anim",
+     "effect": "ornaments",
+     "t0": 412.99236634456975,
+     "t1": 416.087,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_9a45cd2f",
+     "kind": "anim",
+     "effect": "ribbon",
+     "t0": 416.087,
+     "t1": 419.788114,
+     "params": {
+      "colours": "random per prop",
+      "cross": false,
+      "bow": 0,
+      "pattern": "polka dots",
+      "reshuffle_bars": 0,
+      "bars": 1.5
+     },
+     "palette": "classic"
+    },
+    {
+     "id": "c_80a15ba5",
+     "kind": "anim",
+     "effect": "ornaments",
+     "t0": 419.788114,
+     "t1": 422.848,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_0f5c0431",
+     "kind": "anim",
+     "effect": "inc_twinkle_bulbs",
+     "t0": 422.848,
+     "t1": 425.74787243315524,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_852565c5",
+     "kind": "anim",
+     "effect": "inc_twinkle_bulbs",
+     "t0": 425.74787243315524,
+     "t1": 428.64774486631046,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_5759a793",
+     "kind": "anim",
+     "effect": "snowfall",
+     "t0": 428.64774486631046,
+     "t1": 443.24,
+     "params": {
+      "flakes": 21,
+      "speed": 28,
+      "size_in": 6,
+      "sky": 0.28
+     },
+     "palette": "classic"
+    },
+    {
+     "id": "c_cf38f2bb",
+     "kind": "anim",
+     "effect": "garland",
+     "t0": 443.24,
+     "t1": 446.64775,
+     "params": {
+      "drift": 2.25
+     },
+     "palette": "classic"
+    },
+    {
+     "id": "c_7448211d",
+     "kind": "anim",
+     "effect": "inc_drawn",
+     "t0": 446.64775,
+     "t1": 453.05673488415835,
+     "params": {
+      "blink_beats": 2,
+      "blink": 1,
+      "amber": 1,
+      "brightness": 1,
+      "trim_twinkle": false
+     },
+     "palette": "classic"
+    },
+    {
+     "id": "c_a1617a7d",
+     "kind": "anim",
+     "effect": "inc_alternate",
+     "t0": 453.05673488415835,
+     "t1": 460.31677553128173,
+     "params": {
+      "split": "halves",
+      "swap_beats": 2
+     },
+     "palette": "classic"
+    },
+    {
+     "id": "c_8e3e8d5a",
+     "kind": "anim",
+     "effect": "ice_freeze",
+     "t0": 460.31677553128173,
+     "t1": 467.2142991162142,
+     "params": {
+      "trace": 0.5,
+      "freeze": 0.2
+     },
+     "palette": "classic"
+    },
+    {
+     "id": "c_615d8d42",
+     "kind": "anim",
+     "effect": "ibiza_beams",
+     "t0": 467.2142991162142,
+     "t1": 469.8038951870977,
+     "params": {
+      "floor": 0.18,
+      "width_in": 44,
+      "beams": 4,
+      "beat_kick": true,
+      "crossing": true,
+      "bars": 4.5
+     },
+     "palette": "classic"
+    },
+    {
+     "id": "c_312cddeb",
+     "kind": "anim",
+     "effect": "frost_breath",
+     "t0": 469.8038951870977,
+     "t1": 472.8862193614619,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_6364c00a",
+     "kind": "anim",
+     "effect": "ornaments",
+     "t0": 472.8862193614619,
+     "t1": 486.3294893339166,
+     "params": {
+      "colours": "gold / red / blue / silver",
+      "density": 15,
+      "greens": "forest mix",
+      "garland": true
+     },
+     "palette": "classic"
+    },
+    {
+     "id": "c_6aefff29",
+     "kind": "anim",
+     "effect": "fairy_lights",
+     "t0": 486.3294893339166,
+     "t1": 491.19,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_27767a4c",
+     "kind": "anim",
+     "effect": "scatter",
+     "t0": 491.19,
+     "t1": 499.22,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_426c41e8",
+     "kind": "anim",
+     "effect": "candy_stripes",
+     "t0": 499.22,
+     "t1": 510.230972,
+     "params": {
+      "beats": 2,
+      "beat_pop": false
+     },
+     "palette": "classic"
+    },
+    {
+     "id": "c_34e3f99b",
+     "kind": "anim",
+     "effect": "frost_breath",
+     "t0": 510.230972,
+     "t1": 515.492768,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_ef41f3de",
+     "kind": "anim",
+     "effect": "garland",
+     "t0": 515.492768,
+     "t1": 519.8749912119632,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_aff6554c",
+     "kind": "anim",
+     "effect": "ornaments",
+     "t0": 519.8749912119632,
+     "t1": 522.363,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_f677cfd4",
+     "kind": "anim",
+     "effect": "kaleidoscope",
+     "t0": 522.363,
+     "t1": 527.6252471956496,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_ac567051",
+     "kind": "anim",
+     "effect": "frost_breath",
+     "t0": 527.6252471956496,
+     "t1": 530.25,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_49fa9f77",
+     "kind": "anim",
+     "effect": "inc_walk",
+     "t0": 530.25,
+     "t1": 542.0855947961971,
+     "params": {
+      "colours": "palette per prop",
+      "all_on_last_bar": false,
+      "trail": true
+     },
+     "palette": "frost"
+    },
+    {
+     "id": "c_38e2d818",
+     "kind": "anim",
+     "effect": "static_picture",
+     "t0": 542.0855947961971,
+     "t1": 546.1562609331376,
+     "params": {
+      "colours": "palette per prop"
+     },
+     "palette": "frost"
+    },
+    {
+     "id": "c_db000441",
+     "kind": "anim",
+     "effect": "fire_reignite",
+     "t0": 546.1562609331376,
+     "t1": 556.243591,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_9ab5cd78",
+     "kind": "anim",
+     "effect": "snowfall",
+     "t0": 556.243591,
+     "t1": 561.594,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_115dc22f",
+     "kind": "anim",
+     "effect": "fairy_lights",
+     "t0": 561.594,
+     "t1": 568.978,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_7ba62fde",
+     "kind": "anim",
+     "effect": "led_gradient_flow",
+     "t0": 568.978,
+     "t1": 575.22,
+     "params": {},
+     "palette": "frost"
+    },
+    {
+     "id": "c_2499e071",
+     "kind": "anim",
+     "effect": "toy_train",
+     "t0": 575.22,
+     "t1": 590.7013869359613,
+     "params": {
+      "car_px": 6,
+      "bars": 4,
+      "smoke": 0.8,
+      "track": 0.16
+     },
+     "palette": "classic"
+    },
+    {
+     "id": "c_45847cea",
+     "kind": "anim",
+     "effect": "frost_breath",
+     "t0": 590.7013869359613,
+     "t1": 604.368142,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_2825e050",
+     "kind": "anim",
+     "effect": "starfield",
+     "t0": 604.368142,
+     "t1": 607.644052,
+     "params": {
+      "color": "frost"
+     },
+     "palette": "classic"
+    },
+    {
+     "id": "c_f2ca6875",
+     "kind": "anim",
+     "effect": "snowfall",
+     "t0": 607.644052,
+     "t1": 620.19,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_b221acbb",
+     "kind": "anim",
+     "effect": "music_hold",
+     "t0": 621.02,
+     "t1": 621.950725772568,
+     "params": {
+      "colours": "palette per prop"
+     },
+     "palette": "pal_02a7f75a"
+    },
+    {
+     "id": "c_e3c4edc0",
+     "kind": "anim",
+     "effect": "frost_breath",
+     "t0": 621.950725772568,
+     "t1": 623.736068,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_fdc9fa76",
+     "kind": "anim",
+     "effect": "led_gradient_flow",
+     "t0": 623.736068,
+     "t1": 626.234,
+     "params": {},
+     "palette": "pal_568cfdfa"
+    },
+    {
+     "id": "c_5894eb94",
+     "kind": "anim",
+     "effect": "lavalamp",
+     "t0": 626.234,
+     "t1": 629.379165,
+     "params": {},
+     "palette": "frost"
+    },
+    {
+     "id": "c_4e3387a1",
+     "kind": "anim",
+     "effect": "ice_crystal",
+     "t0": 629.379165,
+     "t1": 632.83399,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_8591bcc5",
+     "kind": "anim",
+     "effect": "frost_breath",
+     "t0": 632.83399,
+     "t1": 634.0313177571899,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_81eed1d3",
+     "kind": "anim",
+     "effect": "starfield",
+     "t0": 634.0313177571899,
+     "t1": 636.4402481477698,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_61956732",
+     "kind": "anim",
+     "effect": "led_gradient_flow",
+     "t0": 636.4402481477698,
+     "t1": 640.229906,
+     "params": {},
+     "palette": "pal_a22c92a0"
+    },
+    {
+     "id": "c_257f0e90",
+     "kind": "anim",
+     "effect": "led_gradient_flow",
+     "t0": 640.229906,
+     "t1": 646.234,
+     "params": {
+      "cycles": 1.5,
+      "bars": 3.5,
+      "axis": "across"
+     },
+     "palette": "pal_7605fc42"
+    },
+    {
+     "id": "c_5d2569e7",
+     "kind": "anim",
+     "effect": "static_picture",
+     "t0": 646.234,
+     "t1": 649.2940940940839,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_84323057",
+     "kind": "anim",
+     "effect": "starfield",
+     "t0": 649.2940940940839,
+     "t1": 650.29207,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_6e595f49",
+     "kind": "anim",
+     "effect": "frost_breath",
+     "t0": 650.29207,
+     "t1": 670.5871013509712,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_cb4da272",
+     "kind": "anim",
+     "effect": "strum",
+     "t0": 672.73,
+     "t1": 685.616,
+     "params": {
+      "pattern": "down / up",
+      "chord": "every bar"
+     },
+     "palette": "pal_7605fc42"
+    },
+    {
+     "id": "c_b6d6b902",
+     "kind": "anim",
+     "effect": "papel_picado",
+     "t0": 685.616,
+     "t1": 695.28,
+     "params": {
+      "step": "every beat"
+     },
+     "palette": "classic"
+    },
+    {
+     "id": "c_f5201897",
+     "kind": "anim",
+     "effect": "confetti",
+     "t0": 695.28,
+     "t1": 698.502,
+     "params": {
+      "burst": "once, at the start",
+      "burst_s": 1.6,
+      "rain": 0.8,
+      "floor": 0.25
+     },
+     "palette": "classic"
+    },
+    {
+     "id": "c_f3a1d0a8",
+     "kind": "anim",
+     "effect": "poinsettia",
+     "t0": 698.502,
+     "t1": 708.166,
+     "params": {
+      "bars": 2
+     },
+     "palette": "classic"
+    },
+    {
+     "id": "c_cf1f0240",
+     "kind": "anim",
+     "effect": "corazon",
+     "t0": 708.166,
+     "t1": 711.388,
+     "params": {
+      "bars": 2,
+      "rise": 0.65
+     },
+     "palette": "pal_7605fc42"
+    },
+    {
+     "id": "c_1dd21e65",
+     "kind": "anim",
+     "effect": "inc_drawn",
+     "t0": 711.388,
+     "t1": 721.052,
+     "params": {
+      "blink_beats": 2,
+      "blink": 0.5,
+      "trim_twinkle": false
+     },
+     "palette": "classic"
+    },
+    {
+     "id": "c_634daff0",
+     "kind": "anim",
+     "effect": "corazon",
+     "t0": 721.052,
+     "t1": 724.274,
+     "params": {
+      "bars": 2,
+      "rise": 0.6,
+      "size": 0.9
+     },
+     "palette": "pal_7605fc42"
+    },
+    {
+     "id": "c_a77fac99",
+     "kind": "anim",
+     "effect": "strum",
+     "t0": 724.274,
+     "t1": 737.16,
+     "params": {
+      "pattern": "rumba (d d-u u-d-u)",
+      "chord": "every 2 beats",
+      "ring_s": 1.2
+     },
+     "palette": "pal_6b6cb318"
+    },
+    {
+     "id": "c_00937312",
+     "kind": "anim",
+     "effect": "papel_picado",
+     "t0": 737.16,
+     "t1": 746.824,
+     "params": {
+      "step": "every 2 beats",
+      "shape": "pennant"
+     },
+     "palette": "pal_7605fc42"
+    },
+    {
+     "id": "c_8c631b9b",
+     "kind": "anim",
+     "effect": "confetti",
+     "t0": 746.824,
+     "t1": 750.045,
+     "params": {
+      "burst": "once, at the start",
+      "burst_s": 1.6,
+      "rain": 0.8,
+      "floor": 0.25
+     },
+     "palette": "classic"
+    },
+    {
+     "id": "c_f2a6f09d",
+     "kind": "anim",
+     "effect": "poinsettia",
+     "t0": 750.045,
+     "t1": 759.71,
+     "params": {
+      "bars": 1,
+      "spin": 8
+     },
+     "palette": "classic"
+    },
+    {
+     "id": "c_aa3108bb",
+     "kind": "anim",
+     "effect": "corazon",
+     "t0": 759.71,
+     "t1": 763.43,
+     "params": {
+      "bars": 2,
+      "rise": 0.6,
+      "size": 0.95,
+      "burst": 1
+     },
+     "palette": "pal_7605fc42"
+    },
+    {
+     "id": "c_7c42bcba",
+     "kind": "anim",
+     "effect": "music_hold",
+     "t0": 763.43,
+     "t1": 766.6584837211138,
+     "params": {
+      "colours": "palette per prop"
+     },
+     "palette": "frost"
+    },
+    {
+     "id": "c_c1fb093e",
+     "kind": "anim",
+     "effect": "music_hold",
+     "t0": 766.6584837211138,
+     "t1": 769.3076751065855,
+     "params": {
+      "colours": "painted"
+     },
+     "palette": "frost"
+    },
+    {
+     "id": "c_3dfd7f9c",
+     "kind": "anim",
+     "effect": "static_picture",
+     "t0": 769.3743375532928,
+     "t1": 769.6050522219978,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_215f1175",
+     "kind": "anim",
+     "effect": "static_picture",
+     "t0": 769.8076434568899,
+     "t1": 770.0383581255949,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_ab2b8a6f",
+     "kind": "anim",
+     "effect": "music_hold",
+     "t0": 786.81,
+     "t1": 790.0372868797554,
+     "params": {
+      "colours": "palette per prop"
+     },
+     "palette": "frost"
+    },
+    {
+     "id": "c_78b122be",
+     "kind": "anim",
+     "effect": "music_hold",
+     "t0": 790.0372868797554,
+     "t1": 792.3361447511008,
+     "params": {
+      "colours": "painted"
+     },
+     "palette": "frost"
+    },
+    {
+     "id": "c_a52b49db",
+     "kind": "anim",
+     "effect": "static_picture",
+     "t0": 792.3361447511008,
+     "t1": 792.5668594198058,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_89c5143e",
+     "kind": "anim",
+     "effect": "static_picture",
+     "t0": 792.769450654698,
+     "t1": 793.0001653234029,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_354d3728",
+     "kind": "anim",
+     "effect": "fire_flames",
+     "t0": 793.4,
+     "t1": 799,
+     "params": {
+      "heat": "gas",
+      "scale_in": 12,
+      "flicker": 1,
+      "music": false,
+      "turbulence": 0.8,
+      "height": 1.05
+     },
+     "palette": "classic"
+    },
+    {
+     "id": "c_962a633f",
+     "kind": "anim",
+     "effect": "starfield",
+     "t0": 799,
+     "t1": 801.5752552188933,
+     "params": {
+      "speed": 1,
+      "stars": 15,
+      "glow": 0.25
+     },
+     "palette": "classic"
+    },
+    {
+     "id": "c_171ca2d6",
+     "kind": "anim",
+     "effect": "snowfall",
+     "t0": 801.5752552188933,
+     "t1": 809.6358086397012,
+     "params": {
+      "gusts": 0.65,
+      "color": "frost",
+      "speed": 28,
+      "flakes": 22,
+      "size_in": 3.5
+     },
+     "palette": "classic"
+    },
+    {
+     "id": "c_561e12f8",
+     "kind": "anim",
+     "effect": "music_hold",
+     "t0": 809.6358086397012,
+     "t1": 812.864292360815,
+     "params": {
+      "colours": "palette per prop"
+     },
+     "palette": "frost"
+    },
+    {
+     "id": "c_169bfc41",
+     "kind": "anim",
+     "effect": "music_hold",
+     "t0": 812.864292360815,
+     "t1": 815.1631502321605,
+     "params": {
+      "colours": "painted"
+     },
+     "palette": "frost"
+    },
+    {
+     "id": "c_1f40d30c",
+     "kind": "anim",
+     "effect": "static_picture",
+     "t0": 815.1631502321605,
+     "t1": 815.3938649008655,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_6560221f",
+     "kind": "anim",
+     "effect": "static_picture",
+     "t0": 815.5964561357576,
+     "t1": 815.8271708044626,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_58642477",
+     "kind": "anim",
+     "effect": "ice_sculpture",
+     "t0": 815.978123,
+     "t1": 823.4919385451275,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_48c0b193",
+     "kind": "anim",
+     "effect": "explosion",
+     "t0": 823.4919385451275,
+     "t1": 826.171981,
+     "params": {
+      "trigger": "every N bars",
+      "prop": "27",
+      "feature": "specific prop",
+      "fireball": 0.9,
+      "every_bars": 1,
+      "bars": 2,
+      "reassemble": false,
+      "fly_s": 2,
+      "throw": 0.65
+     },
+     "palette": "frost"
+    },
+    {
+     "id": "c_bb6c0d5b",
+     "kind": "anim",
+     "effect": "starfield",
+     "t0": 826.171981,
+     "t1": 828.485632,
+     "params": {
+      "color": "gold"
+     },
+     "palette": "classic"
+    },
+    {
+     "id": "c_1ee668a6",
+     "kind": "anim",
+     "effect": "fairy_lights",
+     "t0": 828.485632,
+     "t1": 833.033082218453,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_aad43780",
+     "kind": "anim",
+     "effect": "music_hold",
+     "t0": 833.033082218453,
+     "t1": 835.8772807211138,
+     "params": {
+      "colours": "palette per prop"
+     },
+     "palette": "frost"
+    },
+    {
+     "id": "c_f5118880",
+     "kind": "anim",
+     "effect": "music_hold",
+     "t0": 835.8772807211138,
+     "t1": 838.1761385924593,
+     "params": {
+      "colours": "painted"
+     },
+     "palette": "frost"
+    },
+    {
+     "id": "c_89ad9ce5",
+     "kind": "anim",
+     "effect": "static_picture",
+     "t0": 838.1761385924593,
+     "t1": 838.5371197460809,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_54de670d",
+     "kind": "anim",
+     "effect": "static_picture",
+     "t0": 838.6094444960564,
+     "t1": 839.19,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_edb858e5",
+     "kind": "anim",
+     "effect": "led_rainbow",
+     "t0": 839.4294980810229,
+     "t1": 840.4051304934361,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_0f3919d7",
+     "kind": "anim",
+     "effect": "bokeh",
+     "t0": 840.4051304934361,
+     "t1": 843.083332,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_095b6d81",
+     "kind": "anim",
+     "effect": "led_gradient_flow",
+     "t0": 843.083332,
+     "t1": 843.9473278832485,
+     "params": {},
+     "palette": "pal_3660d798"
+    },
+    {
+     "id": "c_532a1c05",
+     "kind": "anim",
+     "effect": "ice_crystal",
+     "t0": 843.9473278832485,
+     "t1": 846.647,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_052c71d1",
+     "kind": "anim",
+     "effect": "music_eq",
+     "t0": 846.647,
+     "t1": 856.5,
+     "params": {
+      "release_s": 1.25
+     },
+     "palette": "pal_02a7f75a"
+    },
+    {
+     "id": "c_ebf3cb5a",
+     "kind": "anim",
+     "effect": "inc_walk",
+     "t0": 856.5,
+     "t1": 874.9555321892539,
+     "params": {
+      "trail": false,
+      "step_beats": 1,
+      "all_on_last_bar": false
+     },
+     "palette": "classic"
+    },
+    {
+     "id": "c_4bbbb9fa",
+     "kind": "anim",
+     "effect": "music_hold",
+     "t0": 874.9555321892539,
+     "t1": 877.9005235274758,
+     "params": {
+      "colours": "palette per prop"
+     },
+     "palette": "frost"
+    },
+    {
+     "id": "c_ccdc6c98",
+     "kind": "anim",
+     "effect": "music_hold",
+     "t0": 877.9005235274758,
+     "t1": 879.5636112052821,
+     "params": {
+      "colours": "painted"
+     },
+     "palette": "frost"
+    },
+    {
+     "id": "c_7c695ced",
+     "kind": "anim",
+     "effect": "static_picture",
+     "t0": 879.5636112052821,
+     "t1": 879.735,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_5c86358e",
+     "kind": "anim",
+     "effect": "static_picture",
+     "t0": 879.902861,
+     "t1": 880.176,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_d6c33ffd",
+     "kind": "trans",
+     "effect": "crossfade",
+     "t0": 3.804603918700776,
+     "t1": 5.267857142857142,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_cedf60b8",
+     "kind": "trans",
+     "effect": "crossfade",
+     "t0": 8.347850445978725,
+     "t1": 9.811103670135092,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_c911667a",
+     "kind": "trans",
+     "effect": "crossfade",
+     "t0": 13.595,
+     "t1": 17.261276698001563,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_943a2700",
+     "kind": "trans",
+     "effect": "flash_in",
+     "t0": 17.48,
+     "t1": 18.38319610581605,
+     "params": {
+      "fall": 0.55
+     },
+     "palette": "classic"
+    },
+    {
+     "id": "c_71b80973",
+     "kind": "trans",
+     "effect": "crossfade",
+     "t0": 18.38319610581605,
+     "t1": 20.62357654866713,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_d80171f4",
+     "kind": "trans",
+     "effect": "crossfade",
+     "t0": 20.974537228077647,
+     "t1": 22.86395699151821,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_7ed0a3c8",
+     "kind": "trans",
+     "effect": "crossfade",
+     "t0": 24.34952765579484,
+     "t1": 26.452,
+     "params": {},
+     "palette": "pal_02a7f75a"
+    },
+    {
+     "id": "c_4de761bc",
+     "kind": "trans",
+     "effect": "crossfade",
+     "t0": 30.910244096253095,
+     "t1": 33.012716440458256,
+     "params": {},
+     "palette": "pal_02a7f75a"
+    },
+    {
+     "id": "c_a2dc7f76",
+     "kind": "trans",
+     "effect": "crossfade",
+     "t0": 38.312748972341836,
+     "t1": 40.415221316547,
+     "params": {},
+     "palette": "pal_02a7f75a"
+    },
+    {
+     "id": "c_6b95538a",
+     "kind": "trans",
+     "effect": "twinkle_burst",
+     "t0": 41.50247930081449,
+     "t1": 44.47240169852629,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_1d73d3de",
+     "kind": "trans",
+     "effect": "flash_in",
+     "t0": 47.49,
+     "t1": 49.21298186898319,
+     "params": {
+      "fall": 0.7
+     },
+     "palette": "classic"
+    },
+    {
+     "id": "c_22aeb512",
+     "kind": "trans",
+     "effect": "ice",
+     "t0": 50.877813380930746,
+     "t1": 53.077963905301,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_f7634bc1",
+     "kind": "trans",
+     "effect": "ice",
+     "t0": 54.083163917247575,
+     "t1": 56.283314441617826,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_87ce9eb4",
+     "kind": "trans",
+     "effect": "ice",
+     "t0": 57.405295,
+     "t1": 60.06956785719302,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_c29b8429",
+     "kind": "trans",
+     "effect": "crossfade",
+     "t0": 69.4599755336402,
+     "t1": 73.14065569238109,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_2142f65b",
+     "kind": "trans",
+     "effect": "crossfade",
+     "t0": 77.88,
+     "t1": 80.023,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_3c68bf1a",
+     "kind": "trans",
+     "effect": "crossfade",
+     "t0": 81.68,
+     "t1": 84.309,
+     "params": {
+      "dip": true
+     },
+     "palette": "classic"
+    },
+    {
+     "id": "c_e101d5b4",
+     "kind": "trans",
+     "effect": "wipe",
+     "t0": 117.04205357894737,
+     "t1": 118.79433723395974,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_2f15f0ee",
+     "kind": "trans",
+     "effect": "crossfade",
+     "t0": 186.09,
+     "t1": 188.45627684759467,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_487d4b69",
+     "kind": "trans",
+     "effect": "flash_in",
+     "t0": 205.04,
+     "t1": 209.8692182425237,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_8faa4fd9",
+     "kind": "trans",
+     "effect": "twinkle_burst",
+     "t0": 212.0398777151703,
+     "t1": 212.96867028482973,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_858e222f",
+     "kind": "trans",
+     "effect": "twinkle_burst",
+     "t0": 215.52304071517028,
+     "t1": 216.45183328482972,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_5a2141ec",
+     "kind": "trans",
+     "effect": "twinkle_burst",
+     "t0": 217.764158,
+     "t1": 218.69295056965944,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_70c59f4b",
+     "kind": "trans",
+     "effect": "twinkle_burst",
+     "t0": 230.96153662045288,
+     "t1": 238.76758370228805,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_57a5566a",
+     "kind": "trans",
+     "effect": "crossfade",
+     "t0": 240.73762816219423,
+     "t1": 243.21972244702394,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_ccc61314",
+     "kind": "trans",
+     "effect": "flash_in",
+     "t0": 249.17,
+     "t1": 250.09879256965942,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_f2454fcd",
+     "kind": "trans",
+     "effect": "twinkle_burst",
+     "t0": 263.4527393645753,
+     "t1": 264.3815319342347,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_8bf7b354",
+     "kind": "trans",
+     "effect": "crossfade",
+     "t0": 265.255,
+     "t1": 268.5163582115459,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_b413fc9c",
+     "kind": "trans",
+     "effect": "crossfade",
+     "t0": 268.5163582115459,
+     "t1": 271.77771642309176,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_d8d1afc8",
+     "kind": "trans",
+     "effect": "crossfade",
+     "t0": 273.676276146628,
+     "t1": 276.9376343581739,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_db001ea8",
+     "kind": "trans",
+     "effect": "crossfade",
+     "t0": 277.634569357102,
+     "t1": 280.8959275686479,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_377c726d",
+     "kind": "trans",
+     "effect": "crossfade",
+     "t0": 291.11590725928437,
+     "t1": 292.88231523527674,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_de45856d",
+     "kind": "trans",
+     "effect": "crossfade",
+     "t0": 294.006,
+     "t1": 295.77240797599234,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_9108ecf4",
+     "kind": "trans",
+     "effect": "wipe",
+     "t0": 302.1137851348232,
+     "t1": 304.44068757384764,
+     "params": {
+      "edge_glow": 0,
+      "soft_in": 19,
+      "edge_color": "none"
+     },
+     "palette": "classic"
+    },
+    {
+     "id": "c_ef886f74",
+     "kind": "trans",
+     "effect": "ice",
+     "t0": 304.44068757384764,
+     "t1": 310.56765481786874,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_28af62a7",
+     "kind": "trans",
+     "effect": "crossfade",
+     "t0": 314.8171183177793,
+     "t1": 319.25464589953083,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_7a9c6315",
+     "kind": "trans",
+     "effect": "crossfade",
+     "t0": 319.29,
+     "t1": 328.95879888270514,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_5e2f37a9",
+     "kind": "trans",
+     "effect": "crossfade",
+     "t0": 334.1012375863453,
+     "t1": 334.5890424643941,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_330e5635",
+     "kind": "trans",
+     "effect": "twinkle_burst",
+     "t0": 348.09869279913215,
+     "t1": 352.09160798033366,
+     "params": {
+      "grain_s": 0.6,
+      "dissolve": 1.7,
+      "curve": "ease out"
+     },
+     "palette": "classic"
+    },
+    {
+     "id": "c_c51b3168",
+     "kind": "trans",
+     "effect": "crossfade",
+     "t0": 365.59260464064863,
+     "t1": 366.9372142594681,
+     "params": {
+      "dip": true
+     },
+     "palette": "classic"
+    },
+    {
+     "id": "c_5c9890f0",
+     "kind": "trans",
+     "effect": "crossfade",
+     "t0": 369.35735274403487,
+     "t1": 370.7019623628543,
+     "params": {
+      "dip": false
+     },
+     "palette": "classic"
+    },
+    {
+     "id": "c_5f5a3984",
+     "kind": "trans",
+     "effect": "crossfade",
+     "t0": 373.0961370673977,
+     "t1": 375.957,
+     "params": {
+      "dip": false
+     },
+     "palette": "classic"
+    },
+    {
+     "id": "c_3562a89d",
+     "kind": "trans",
+     "effect": "spiral",
+     "t0": 403.274,
+     "t1": 407.40598478336597,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_3d7aa99b",
+     "kind": "trans",
+     "effect": "crossfade",
+     "t0": 412.11127612881614,
+     "t1": 414.397,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_9a7b7d7f",
+     "kind": "trans",
+     "effect": "prop_dissolve",
+     "t0": 414.9497910089793,
+     "t1": 418.746247515665,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_1ccbfa13",
+     "kind": "trans",
+     "effect": "crossfade",
+     "t0": 418.746247515665,
+     "t1": 420.7494011212988,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_4abd7574",
+     "kind": "trans",
+     "effect": "crossfade",
+     "t0": 420.7494011212988,
+     "t1": 424.7878724609339,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_a7d79745",
+     "kind": "trans",
+     "effect": "crossfade",
+     "t0": 424.7878724609339,
+     "t1": 427.36313449880413,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_97b90aec",
+     "kind": "trans",
+     "effect": "crossfade",
+     "t0": 427.36313449880413,
+     "t1": 429.93839653667436,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_06ad3649",
+     "kind": "trans",
+     "effect": "flash_in",
+     "t0": 443.24,
+     "t1": 445.4532676056338,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_7dfa6b51",
+     "kind": "trans",
+     "effect": "twinkle_burst",
+     "t0": 446.2987323943662,
+     "t1": 446.82,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_71c04f79",
+     "kind": "trans",
+     "effect": "flash_in",
+     "t0": 459.8197323943662,
+     "t1": 462.30353387572285,
+     "params": {
+      "attack": 0.1,
+      "fall": 0.95
+     },
+     "palette": "classic"
+    },
+    {
+     "id": "c_9c06f44c",
+     "kind": "trans",
+     "effect": "spiral",
+     "t0": 465.9531513496782,
+     "t1": 468.7116066157987,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_26f18441",
+     "kind": "trans",
+     "effect": "spiral",
+     "t0": 468.7116066157987,
+     "t1": 471.4700618819192,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_9dfcca65",
+     "kind": "trans",
+     "effect": "crossfade",
+     "t0": 471.862,
+     "t1": 474.1810940219188,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_72b7ca8f",
+     "kind": "trans",
+     "effect": "crossfade",
+     "t0": 485.383,
+     "t1": 487.70209402191875,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_19c2209e",
+     "kind": "trans",
+     "effect": "twinkle_burst",
+     "t0": 496.978,
+     "t1": 500.96584496597774,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_30f7792c",
+     "kind": "trans",
+     "effect": "prop_dissolve",
+     "t0": 509.44,
+     "t1": 511.286,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_a3aab24e",
+     "kind": "trans",
+     "effect": "crossfade",
+     "t0": 514.1417896014217,
+     "t1": 516.6993292375465,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_7d2ebdf6",
+     "kind": "trans",
+     "effect": "crossfade",
+     "t0": 519.0596127692307,
+     "t1": 521.6171524053556,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_84bb5610",
+     "kind": "trans",
+     "effect": "crossfade",
+     "t0": 521.902,
+     "t1": 524.4595396361249,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_0fb59404",
+     "kind": "trans",
+     "effect": "prop_dissolve",
+     "t0": 526.874913350532,
+     "t1": 529.0275406839248,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_e6ed828d",
+     "kind": "trans",
+     "effect": "crossfade",
+     "t0": 541.286,
+     "t1": 542.7370303616051,
+     "params": {
+      "dip": true
+     },
+     "palette": "classic"
+    },
+    {
+     "id": "c_6a542a18",
+     "kind": "trans",
+     "effect": "spiral",
+     "t0": 545.4930367692307,
+     "t1": 547.748,
+     "params": {
+      "direction": "clockwise",
+      "turns": 2.75
+     },
+     "palette": "classic"
+    },
+    {
+     "id": "c_835a90bc",
+     "kind": "trans",
+     "effect": "crossfade",
+     "t0": 555.4442395521412,
+     "t1": 558.9312153746987,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_ff6ce09a",
+     "kind": "trans",
+     "effect": "crossfade",
+     "t0": 560.2493459490538,
+     "t1": 563.7363217716113,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_efa8b9ec",
+     "kind": "trans",
+     "effect": "crossfade",
+     "t0": 566.4253133947393,
+     "t1": 573.8521305188548,
+     "params": {},
+     "palette": "frost"
+    },
+    {
+     "id": "c_a4fdae91",
+     "kind": "trans",
+     "effect": "flash_in",
+     "t0": 574.517,
+     "t1": 576.4033351260731,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_a0d1ebfe",
+     "kind": "trans",
+     "effect": "ice",
+     "t0": 589.9308594675283,
+     "t1": 592.835316,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_3b741cff",
+     "kind": "trans",
+     "effect": "shatter",
+     "t0": 602.7939143013576,
+     "t1": 605.0352608173844,
+     "params": {
+      "flash": 0,
+      "curve": "ease out"
+     },
+     "palette": "classic"
+    },
+    {
+     "id": "c_69b99100",
+     "kind": "trans",
+     "effect": "crossfade",
+     "t0": 606.6500126634467,
+     "t1": 608.7497251291471,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_adfd322e",
+     "kind": "trans",
+     "effect": "flash_in",
+     "t0": 621.950725772568,
+     "t1": 623.736068,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_c31201df",
+     "kind": "trans",
+     "effect": "melt",
+     "t0": 623.0912857142856,
+     "t1": 626.234,
+     "params": {
+      "glow": 0.6,
+      "ragged": 0.09,
+      "drips": 0.75
+     },
+     "palette": "classic"
+    },
+    {
+     "id": "c_9f20af38",
+     "kind": "trans",
+     "effect": "prop_dissolve",
+     "t0": 626.0445876759954,
+     "t1": 628.9449027495883,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_64a06c22",
+     "kind": "trans",
+     "effect": "crossfade",
+     "t0": 628.9449027495883,
+     "t1": 630.5128894845851,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_a47f223c",
+     "kind": "trans",
+     "effect": "crossfade",
+     "t0": 631.949,
+     "t1": 633.5169867349967,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_c3853982",
+     "kind": "trans",
+     "effect": "crossfade",
+     "t0": 633.5169867349967,
+     "t1": 635.0849734699935,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_70def9ef",
+     "kind": "trans",
+     "effect": "flash_in",
+     "t0": 636.3311133469862,
+     "t1": 639.377,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_22016af4",
+     "kind": "trans",
+     "effect": "crossfade",
+     "t0": 639.377,
+     "t1": 641.1392832932854,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_bf657b25",
+     "kind": "trans",
+     "effect": "crossfade",
+     "t0": 644.8906404520359,
+     "t1": 648.4261041476174,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_7dcd5321",
+     "kind": "trans",
+     "effect": "crossfade",
+     "t0": 648.4261041476174,
+     "t1": 650.1883874409028,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_3e44a52e",
+     "kind": "trans",
+     "effect": "flash_in",
+     "t0": 650.29207,
+     "t1": 652.077412227432,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_7f4db857",
+     "kind": "trans",
+     "effect": "flash_in",
+     "t0": 672.73,
+     "t1": 673.63,
+     "params": {
+      "fall": 0.6
+     },
+     "palette": "classic"
+    },
+    {
+     "id": "c_f5349ae6",
+     "kind": "trans",
+     "effect": "prop_dissolve",
+     "t0": 685.016,
+     "t1": 687.016,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_2277c8cd",
+     "kind": "trans",
+     "effect": "flash_in",
+     "t0": 695.28,
+     "t1": 696.08,
+     "params": {
+      "fall": 0.5
+     },
+     "palette": "classic"
+    },
+    {
+     "id": "c_c3c72f0a",
+     "kind": "trans",
+     "effect": "twinkle_burst",
+     "t0": 698.002,
+     "t1": 699.202,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_9086d8da",
+     "kind": "trans",
+     "effect": "crossfade",
+     "t0": 707.866,
+     "t1": 708.566,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_c340a63c",
+     "kind": "trans",
+     "effect": "spiral",
+     "t0": 711.088,
+     "t1": 712.988,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_0e98a36a",
+     "kind": "trans",
+     "effect": "crossfade",
+     "t0": 720.752,
+     "t1": 721.452,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_f254f2cd",
+     "kind": "trans",
+     "effect": "crossfade",
+     "t0": 723.874,
+     "t1": 725.474,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_e0a25baa",
+     "kind": "trans",
+     "effect": "prop_dissolve",
+     "t0": 736.56,
+     "t1": 738.36,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_41fd50be",
+     "kind": "trans",
+     "effect": "flash_in",
+     "t0": 746.824,
+     "t1": 747.624,
+     "params": {
+      "fall": 0.5
+     },
+     "palette": "classic"
+    },
+    {
+     "id": "c_ae103c3c",
+     "kind": "trans",
+     "effect": "twinkle_burst",
+     "t0": 749.545,
+     "t1": 750.645,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_47155807",
+     "kind": "trans",
+     "effect": "crossfade",
+     "t0": 759.31,
+     "t1": 760.11,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_12871a31",
+     "kind": "trans",
+     "effect": "crossfade",
+     "t0": 769.441,
+     "t1": 769.6615882352942,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_2e211c91",
+     "kind": "trans",
+     "effect": "crossfade",
+     "t0": 769.882,
+     "t1": 770.1025882352941,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_fcb4ea51",
+     "kind": "trans",
+     "effect": "curtain",
+     "t0": 770.499780962124,
+     "t1": 772.2839832340992,
+     "params": {
+      "edge_glow": 0
+     },
+     "palette": "classic"
+    },
+    {
+     "id": "c_51826dd9",
+     "kind": "trans",
+     "effect": "crossfade",
+     "t0": 792.4028071978081,
+     "t1": 792.6233954331022,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_fa35dc4a",
+     "kind": "trans",
+     "effect": "crossfade",
+     "t0": 792.843807197808,
+     "t1": 793.0643954331022,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_3cab8240",
+     "kind": "trans",
+     "effect": "spiral",
+     "t0": 793.1794117647058,
+     "t1": 795.265861,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_27f47438",
+     "kind": "trans",
+     "effect": "crossfade",
+     "t0": 798.1425263106804,
+     "t1": 800.519514909601,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_c29483fb",
+     "kind": "trans",
+     "effect": "crossfade",
+     "t0": 800.519514909601,
+     "t1": 802.8965035085215,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_c05f7e08",
+     "kind": "trans",
+     "effect": "crossfade",
+     "t0": 815.2298126788678,
+     "t1": 815.450400914162,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_4ba7bd8b",
+     "kind": "trans",
+     "effect": "crossfade",
+     "t0": 815.6708126788677,
+     "t1": 815.8914009141619,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_f06e25f2",
+     "kind": "trans",
+     "effect": "spiral",
+     "t0": 815.8914009141619,
+     "t1": 817.4455100324619,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_5aac5c14",
+     "kind": "trans",
+     "effect": "flash_in",
+     "t0": 823.4919385451275,
+     "t1": 825.121975221454,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_68707730",
+     "kind": "trans",
+     "effect": "crossfade",
+     "t0": 825.300852915054,
+     "t1": 826.9018708179419,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_1e31cc3a",
+     "kind": "trans",
+     "effect": "crossfade",
+     "t0": 827.7532020011338,
+     "t1": 829.3542199040218,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_3e6ecc8e",
+     "kind": "trans",
+     "effect": "crossfade",
+     "t0": 838.376030841753,
+     "t1": 838.5966190770472,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_72b778a8",
+     "kind": "trans",
+     "effect": "crossfade",
+     "t0": 839.0720707495614,
+     "t1": 839.2926589848555,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_deb86bf8",
+     "kind": "trans",
+     "effect": "twinkle_burst",
+     "t0": 846.2927983859396,
+     "t1": 846.7339748565279,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_62a75a8b",
+     "kind": "trans",
+     "effect": "crossfade",
+     "t0": 879.5636112052821,
+     "t1": 879.7841994405762,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_aabd39a3",
+     "kind": "trans",
+     "effect": "crossfade",
+     "t0": 879.902861,
+     "t1": 880.1234492352942,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_0f1a2221",
+     "kind": "mod",
+     "effect": "mod_ripple",
+     "t0": 8.985910573305159,
+     "t1": 11.855417785912696,
+     "params": {
+      "trigger": "every beat",
+      "source": "centre prop",
+      "boost": 0.75,
+      "depth": 0.25
+     },
+     "palette": "classic"
+    },
+    {
+     "id": "c_0463f46a",
+     "kind": "mod",
+     "effect": "mod_twinkle",
+     "t0": 11.855417785912696,
+     "t1": 16.462095941798434,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_c1aaa836",
+     "kind": "mod",
+     "effect": "mod_twinkle",
+     "t0": 25.21147031848419,
+     "t1": 33.78289888991276,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_41c08dfd",
+     "kind": "mod",
+     "effect": "mod_glitch",
+     "t0": 30.042631,
+     "t1": 38.61405957142857,
+     "params": {
+      "invert": false
+     },
+     "palette": "classic"
+    },
+    {
+     "id": "c_8024c90d",
+     "kind": "mod",
+     "effect": "mod_twinkle",
+     "t0": 48.425788,
+     "t1": 51.781561,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_8746d48a",
+     "kind": "mod",
+     "effect": "mod_glitch",
+     "t0": 62.349092680288436,
+     "t1": 71.19466763931341,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_9391221d",
+     "kind": "mod",
+     "effect": "mod_twinkle",
+     "t0": 205.50525055094408,
+     "t1": 212.504274,
+     "params": {
+      "amount": 0.1
+     },
+     "palette": "classic"
+    },
+    {
+     "id": "c_6ebd6626",
+     "kind": "mod",
+     "effect": "mod_glitch",
+     "t0": 207.67,
+     "t1": 212.504274,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_35346024",
+     "kind": "mod",
+     "effect": "mod_glitch",
+     "t0": 236.2565964857333,
+     "t1": 241.828825,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_4d89d154",
+     "kind": "mod",
+     "effect": "mod_glitch",
+     "t0": 241.828825,
+     "t1": 247.4010535142667,
+     "params": {
+      "invert": false,
+      "blackout": true
+     },
+     "palette": "classic"
+    },
+    {
+     "id": "c_8f3f8ad8",
+     "kind": "mod",
+     "effect": "mod_twinkle",
+     "t0": 290.53249446303204,
+     "t1": 295.957,
+     "params": {
+      "rate": 3,
+      "amount": 0.1
+     },
+     "palette": "classic"
+    },
+    {
+     "id": "c_918012f7",
+     "kind": "mod",
+     "effect": "mod_twinkle",
+     "t0": 298.1084381802334,
+     "t1": 299.86,
+     "params": {
+      "rate": 3,
+      "amount": 0.1
+     },
+     "palette": "classic"
+    },
+    {
+     "id": "c_2636129e",
+     "kind": "mod",
+     "effect": "mod_twinkle",
+     "t0": 327.4557868803793,
+     "t1": 332.543,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_4baed5ba",
+     "kind": "mod",
+     "effect": "mod_ripple",
+     "t0": 366.201,
+     "t1": 374.006,
+     "params": {
+      "depth": 0.2,
+      "width_in": 38,
+      "boost": 0.6
+     },
+     "palette": "classic"
+    },
+    {
+     "id": "c_17952acf",
+     "kind": "mod",
+     "effect": "mod_twinkle",
+     "t0": 379.86,
+     "t1": 401.323,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_38ee710a",
+     "kind": "mod",
+     "effect": "mod_snowcap",
+     "t0": 425.74787243315524,
+     "t1": 432.5084358134369,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_a6043d36",
+     "kind": "mod",
+     "effect": "mod_twinkle",
+     "t0": 443.24,
+     "t1": 446.64775,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_7e5cf733",
+     "kind": "mod",
+     "effect": "mod_sparkle",
+     "t0": 476.933,
+     "t1": 487.76,
+     "params": {
+      "density": 1,
+      "life_s": 0.65
+     },
+     "palette": "classic"
+    },
+    {
+     "id": "c_89381856",
+     "kind": "mod",
+     "effect": "mod_sparkle",
+     "t0": 636.4402481477698,
+     "t1": 644.0195638522302,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_e024be12",
+     "kind": "mod",
+     "effect": "mod_ripple",
+     "t0": 637.091,
+     "t1": 639.377,
+     "params": {
+      "depth": 0,
+      "trigger": "on hits",
+      "source": "random prop"
+     },
+     "palette": "classic"
+    },
+    {
+     "id": "c_6347c984",
+     "kind": "mod",
+     "effect": "mod_glitch",
+     "t0": 643.384415,
+     "t1": 649.2940940940839,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_f4ada167",
+     "kind": "mod",
+     "effect": "mod_twinkle",
+     "t0": 679.173,
+     "t1": 685.616,
+     "params": {
+      "amount": 0.1
+     },
+     "palette": "classic"
+    },
+    {
+     "id": "c_7993bcbe",
+     "kind": "mod",
+     "effect": "mod_sparkle",
+     "t0": 711.388,
+     "t1": 721.052,
+     "params": {
+      "density": 4,
+      "life_s": 0.4
+     },
+     "palette": "classic"
+    },
+    {
+     "id": "c_c7db9f16",
+     "kind": "mod",
+     "effect": "mod_twinkle",
+     "t0": 730.717,
+     "t1": 737.16,
+     "params": {
+      "amount": 0.1
+     },
+     "palette": "classic"
+    },
+    {
+     "id": "c_a816aee3",
+     "kind": "mod",
+     "effect": "mod_glitch",
+     "t0": 770.499780962124,
+     "t1": 778.0235247635508,
+     "params": {
+      "invert": true
+     },
+     "palette": "classic"
+    },
+    {
+     "id": "c_aa39c926",
+     "kind": "mod",
+     "effect": "mod_hue",
+     "t0": 773.902922,
+     "t1": 786.81,
+     "params": {
+      "drive": "slow drift",
+      "shift": -0.2,
+      "saturation": 1,
+      "range": 1
+     },
+     "palette": "classic"
+    },
+    {
+     "id": "c_70a63a7f",
+     "kind": "mod",
+     "effect": "mod_glitch",
+     "t0": 815.978123,
+     "t1": 823.0369465294117,
+     "params": {},
+     "palette": "classic"
+    },
+    {
+     "id": "c_bfbe5fcf",
+     "kind": "anim",
+     "effect": "ribbon",
+     "t0": 770.499780962124,
+     "t1": 773.902922,
+     "params": {
+      "ribbon_in": 4.5,
+      "bow": 0,
+      "bars": 7,
+      "colours": "red on green"
+     },
+     "palette": "classic"
+    },
+    {
+     "id": "c_88bd9fc4",
+     "kind": "anim",
+     "effect": "ribbon",
+     "t0": 773.902922,
+     "t1": 786.647,
+     "params": {
+      "ribbon_in": 4.5,
+      "bow": 0,
+      "bars": 7,
+      "colours": "gold on red"
+     },
+     "palette": "classic"
+    },
+    {
+     "id": "c_c64f845d",
+     "kind": "mod",
+     "effect": "mod_glitch",
+     "t0": 778.0235247635508,
+     "t1": 785.5472685649776,
+     "params": {
+      "invert": false
+     },
+     "palette": "classic"
+    }
+   ]
+  },
+  {
+   "id": "t_8bcc24fe",
+   "group": "example",
+   "clips": []
+  }
+ ],
+ "palettes": {
+  "pal_02a7f75a": {
+   "name": "analogous 290°",
+   "colors": [
+    "#5c00ff",
+    "#d700ff",
+    "#ff19b5",
+    "#ffffff"
+   ]
+  },
+  "pal_a207b2da": {
+   "name": "analogous 193°",
+   "colors": [
+    "#00ffbe",
+    "#00c6ff",
+    "#195dff",
+    "#ffffff"
+   ]
+  },
+  "pal_3660d798": {
+   "name": "analogous 239°",
+   "colors": [
+    "#007cff",
+    "#0002ff",
+    "#8619ff",
+    "#ffffff"
+   ]
+  },
+  "pal_36fca884": {
+   "name": "mono-warm 116°",
+   "colors": [
+    "#ff1f00",
+    "#ff7a00",
+    "#ffcd19",
+    "#ffffff"
+   ]
+  },
+  "pal_568cfdfa": {
+   "name": "analogous 267°",
+   "colors": [
+    "#0005ff",
+    "#7600ff",
+    "#f119ff",
+    "#ffffff"
+   ]
+  },
+  "pal_b916f267": {
+   "name": "split 175°",
+   "colors": [
+    "#00ffea",
+    "#ff0090",
+    "#ff7519",
+    "#ffffff"
+   ]
+  },
+  "pal_6b6cb318": {
+   "name": "custom 7",
+   "colors": [
+    "#51fd44",
+    "#ff1f1f",
+    "#ffb01e",
+    "#ffffff"
+   ]
+  },
+  "pal_fcd414dc": {
+   "name": "complementary 343°",
+   "colors": [
+    "#ff0045",
+    "#00ffba",
+    "#ff1921",
+    "#ffffff"
+   ]
+  },
+  "pal_a22c92a0": {
+   "name": "analogous 185°",
+   "colors": [
+    "#620a7b",
+    "#0f0174",
+    "#b54586",
+    "#ffffff"
+   ]
+  },
+  "pal_7605fc42": {
+   "name": "custom 10",
+   "colors": [
+    "#fa0000",
+    "#ff961f",
+    "#ff007b",
+    "#ffffff"
+   ]
+  },
+  "pal_e43acc6f": {
+   "name": "analogous 22°",
+   "colors": [
+    "#0091ff",
+    "#ff0000",
+    "#ffffff"
+   ]
+  },
+  "pal_179248f7": {
+   "name": "custom 12",
+   "colors": [
+    "#ff0000",
+    "#fff0b8"
+   ]
+  },
+  "pal_b7d55f85": {
+   "name": "custom 13",
+   "colors": [
+    "#1f2eff",
+    "#5b87a9",
+    "#63a32e",
+    "#fdff75"
+   ]
+  }
+ },
+ "cards": {
+  "A": {
+   "sd_label": "A",
+   "formatted": null,
+   "written": "2026-10-12 17:42",
+   "notes": ""
+  },
+  "B": {
+   "sd_label": "B",
+   "formatted": null,
+   "written": "2026-10-12 17:42",
+   "notes": ""
+  }
+ }
+}

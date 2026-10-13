@@ -100,7 +100,7 @@ class LampBank:
         mx = d.max(1); mn = d.min(1); sat = np.where(mx > 0, (mx - mn) / np.maximum(mx, 1e-6), 0)
         whiteness = 1 - sat
         dim = np.clip(1 - L / 0.45, 0, 1)                              # below ~45 % linear the filament is visibly orange
-        w = (amber * dim * (0.25 + 0.75 * whiteness))[:, None]
+        w = (amber * dim * (0.08 + 0.92 * whiteness ** 1.5))[:, None]    # saturated dyed glass barely shifts (a red bell stays red)
         chroma = d * (1 - w) + AMBER[None, :] * w
         per = _per(L)
         return chroma * per[:, None]

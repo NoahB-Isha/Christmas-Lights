@@ -1,4 +1,4 @@
-> **New session? Read `docs/10-HANDOFF.md` first** — state, measured hardware facts, design verdicts, and the next project (linear timeline editor).
+> **New session? Read `docs/10-HANDOFF.md` first** — state, measured hardware facts, design verdicts. The show is now authored in **Lightshow Studio** (`make studio`, `docs/11-STUDIO.md`); the yaml/looks pipeline below still works but is legacy.
 
 # CLAUDE.md
 
@@ -54,11 +54,14 @@ src/lightshow/
   music.py              audio analysis (numpy + scipy + ffmpeg, no librosa)
   effects.py            effect registry, pure functions
   preview.py            standalone HTML geometry viewer
+  studio/               THE TIMELINE EDITOR: server.py (FastAPI), engine.py (effect contract,
+                        compositor), audio.py (tempo map, sections), fx/ (effects), static/ (UI)
 tools/                  generators and hardware diagnostics
   make_layout_editor.py standalone HTML yard editor (2D drag + 3D, controllers)
   build_cards.py        one .rgb per controller from layout.json + manifest
   make_marker_tool.py   standalone HTML music marker tool (song/section cues)
 assets/layout.json      THE yard layout: groups, placements, controller ports
+assets/studio/          studio project files (timeline, tempo map, palettes, SD labels)
 assets/props            all 68 .mod prop models + .moc rig
 assets/audio            the show track (show16.mp3, 14:42)
 assets/projects         Colorloong .xml projects
@@ -91,9 +94,12 @@ out/                    generated, gitignored
 **Documented by the vendor, untested on our GC-6004** (see
 `docs/08-CONTROL-PROTOCOL.md`):
 
-- **DMX512 trigger protocol.** 13 channels from a settable base address.
-  `Add+6` selects the scene, four DMX values per scene, 64 scenes max. The
-  audio box on the DMX in port was only ever a scene selector.
+- **DMX512 trigger protocol — now bench-confirmed (2026-10).** 13 channels from
+  a settable base address; **the base address itself is brightness** (`Add+0`),
+  `Add+5` selects the scene (value = (n−1)·4+1), `Add+6` speed (255 = native).
+  The datasheet's "Add+1 = brightness" wording is one too high. Wiring, adapter
+  pitfalls and the verification table are in `docs/08-CONTROL-PROTOCOL.md`.
+  Playback under DMX is capped at **30.3 fps** — render everything at 30.3.
   **Selecting a scene is a synchronised start trigger.** `tools/dmx_scene.py`.
 - **No sync modes on the GC-6004** — confirmed on the unit's panel. Those
   are GC-6612Pro features. Sync comes only from a simultaneous DMX
@@ -157,7 +163,8 @@ unpainted props have only `rest`, so region looks must degrade gracefully
 
 ```bash
 pip install -e ".[dev]"        # or: pip install -r requirements.txt
-make test                      # 43 tests, ~0.4 s
+make test                      # 59 tests, ~1 s
+make studio                    # timeline editor -> http://127.0.0.1:8765
 make props                     # contact sheet of every prop
 make show SONG=path/to.mp3     # build the music-driven show
 make player SONG=path/to.mp3   # audio-synced HTML preview

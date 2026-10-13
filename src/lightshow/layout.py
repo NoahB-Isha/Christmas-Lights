@@ -187,6 +187,10 @@ class Layout:
         d["version"] = VERSION
         d["units"] = "in"
         d["notes"] = self.meta.get("notes", "")
+        if self.meta.get("map"):                       # site-plan backdrop for the grid: file, in/px, placement, opacity
+            d["map"] = self.meta["map"]
+        if self.meta.get("route"):                     # the cars' path through the show: {points: [[x, y], ...] inches, speed_mph, eye_in}
+            d["route"] = self.meta["route"]
         d["groups"] = self.groups
         d["controllers"] = self.controllers
         d["props"] = [p.to_json() for p in self.props]

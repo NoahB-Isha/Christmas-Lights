@@ -2,6 +2,12 @@ numpy>=1.24
 scipy>=1.10
 pillow>=10.0
 pytest>=7.4
+pyyaml>=6.0
+# Studio (the timeline editor): python -m lightshow.studio
+fastapi>=0.110
+uvicorn[standard]>=0.29
+python-multipart>=0.0.9
+matplotlib>=3.7      # placement PDF sheets
 # ffmpeg is also required for audio decoding (not a pip package):
 #   macOS   brew install ffmpeg
 #   Ubuntu  apt install ffmpeg

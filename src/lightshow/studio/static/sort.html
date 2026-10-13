@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Group props — Lightshow Studio</title>
+<style>
+  :root { --bg:#14161b; --panel:#1d2027; --line:#2c303a; --fg:#e7e9ee; --dim:#8a93a6; --acc:#5fb8ff; --sel:#ffd166; }
+  * { box-sizing:border-box; }
+  html, body { height:100%; }
+  body { margin:0; background:var(--bg); color:var(--fg); font:13px/1.4 system-ui, -apple-system, sans-serif; display:flex; flex-direction:column; }
+  header { display:flex; gap:10px; align-items:center; padding:8px 14px; border-bottom:1px solid var(--line); flex-wrap:wrap; }
+  header h1 { font-size:15px; margin:0 8px 0 0; }
+  button { background:#2a2f3a; color:var(--fg); border:1px solid var(--line); border-radius:6px; padding:5px 10px; cursor:pointer; font:inherit; }
+  button:hover { border-color:var(--acc); }
+  button.primary { background:var(--acc); color:#08131c; border-color:var(--acc); font-weight:600; }
+  button.danger { color:#ff8a80; }
+  button.tiny { padding:1px 6px; font-size:11px; }
+  input[type=text], input[type=search], select { background:#0f1115; color:var(--fg); border:1px solid var(--line); border-radius:6px; padding:5px 8px; font:inherit; }
+  .dim { color:var(--dim); } .small { font-size:12px; } .mono { font-family: ui-monospace, Menlo, monospace; }
+  #status { margin-left:auto; }
+  #main { display:flex; flex:1; min-height:0; }
+  /* ---------- pool (left) */
+  #pool { width:300px; flex:0 0 auto; border-right:1px solid var(--line); display:flex; flex-direction:column; background:var(--panel); }
+  #pool .head { padding:8px 10px; border-bottom:1px solid var(--line); display:flex; gap:6px; align-items:center; }
+  #pool .head input { flex:1; min-width:0; }
+  #poolList { overflow-y:auto; flex:1; padding:6px; }
+  #pool.over { box-shadow: inset 0 0 0 2px var(--sel); }
+  .theme { margin-bottom:6px; border:1px solid var(--line); border-radius:8px; background:#171a20; }
+  .theme > .th { display:flex; align-items:center; gap:6px; padding:5px 8px; cursor:pointer; user-select:none; }
+  .theme > .th .sw { width:10px; height:10px; border-radius:3px; flex:0 0 auto; }
+  .theme > .th b { flex:1; }
+  .theme > .th .n { color:var(--dim); font-size:11px; }
+  .theme > .th .caret { color:var(--dim); font-size:11px; width:12px; }
+  .theme.folded .cards { display:none; }
+  .theme .cards { padding:0 6px 6px; display:flex; flex-direction:column; gap:4px; }
+  .theme .th button { margin-left:4px; }
+  /* ---------- cards */
+  .card { display:flex; gap:8px; align-items:center; background:#0f1115; border:1px solid var(--line); border-radius:8px; padding:4px 6px; cursor:grab; user-select:none; }
+  .card:hover { border-color:#4a5061; }
+  .card.sel { border-color:var(--sel); background:#1f1d14; }
+  .card.hidden { display:none; }
+  .card canvas { width:44px; height:44px; flex:0 0 auto; background:#0a0b0e; border-radius:6px; }
+  .card .nm { flex:1; min-width:0; }
+  .card .nm b { display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; font-weight:500; }
+  .card .nm span { font-size:11px; color:var(--dim); }
+  .card.dragging { opacity:.4; }
+  /* ---------- board (right) */
+  #board { flex:1; min-width:0; overflow:auto; padding:14px; display:flex; flex-wrap:wrap; gap:12px; align-content:flex-start; position:relative; }
+  #board.over { background: #171a20; box-shadow: inset 0 0 0 2px var(--sel); }
+  #boardEmpty { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; color:var(--dim); font-size:15px; pointer-events:none; text-align:center; line-height:1.6; }
+  .grp { background:var(--panel); border:1px solid var(--line); border-top-width:3px; border-radius:10px; width:270px; display:flex; flex-direction:column; max-height:calc(100vh - 130px); }
+  .grp.over { border-color:var(--sel); box-shadow:0 0 0 2px rgba(255,209,102,.25) inset; }
+  .grp .gh { padding:8px 10px; border-bottom:1px solid var(--line); display:flex; flex-direction:column; gap:5px; }
+  .grp .title { display:flex; align-items:center; gap:6px; }
+  .grp .title input[type=text] { flex:1; min-width:0; font-weight:600; background:transparent; border-color:transparent; padding:2px 4px; }
+  .grp .title input[type=text]:hover, .grp .title input[type=text]:focus { border-color:var(--line); background:#0f1115; }
+  .grp .title input[type=color] { width:22px; height:22px; border:0; padding:0; background:none; cursor:pointer; }
+  .grp .meta { display:flex; justify-content:space-between; align-items:center; gap:6px; }
+  .grp .meta select { padding:2px 4px; font-size:11px; }
+  .grp .cards { padding:8px; overflow-y:auto; display:flex; flex-direction:column; gap:5px; min-height:70px; flex:1; }
+  .grp .cards:empty::after { content:'drop props here'; color:var(--dim); font-size:12px; text-align:center; padding:20px 0; display:block; }
+  .grp .foot { padding:6px 10px; border-top:1px solid var(--line); font-size:11px; color:var(--dim); display:flex; justify-content:space-between; align-items:center; }
+  .pill { display:inline-block; padding:1px 7px; border-radius:10px; background:#2a2f3a; font-size:11px; }
+  .hint { padding:6px 14px; color:var(--dim); font-size:12px; border-bottom:1px solid var(--line); }
+  dialog { background:var(--panel); color:var(--fg); border:1px solid var(--line); border-radius:10px; max-width:560px; }
+  dialog::backdrop { background:rgba(0,0,0,.6); }
+  dialog pre { max-height:50vh; overflow:auto; background:#0f1115; padding:10px; border-radius:6px; font-size:11px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Group props</h1>
+  <button id="btnThemes" title="one group per theme, every pool prop placed">✨ groups from themes</button>
+  <button id="btnClear" title="empty every group back into the pool (groups stay)">↩ all to pool</button>
+  <button id="btnUndo" title="⌘Z">↶ undo</button>
+  <button id="btnExport">export JSON</button>
+  <button id="btnSave" class="primary" title="writes assets/layout.json and refreshes the Studio">Save to layout</button>
+  <span id="status" class="small dim"></span>
+</header>
+<div class="hint">The pool on the left holds every prop not yet in a group, sorted by theme. <b>Drag a prop onto the empty board to spawn a group</b>, then drag more props into it (shift-click / ⌘A picks several at once, or drag a whole theme by its ⇥ button). Drag a prop back to the pool to remove it from its group. Moving a prop clears its controller/port — re-run auto-assign in <a href="/" style="color:var(--acc)">Studio → Props &amp; groups</a>. Double-click a card to see it big.</div>
+<div id="main">
+  <aside id="pool">
+    <div class="head"><input id="search" type="search" placeholder="filter props…"><span id="poolCount" class="dim small"></span></div>
+    <div id="poolList"></div>
+  </aside>
+  <div id="board"><div id="boardEmpty">Drag a prop here to start a group<br><span class="small">or use ✨ groups from themes</span></div></div>
+</div>
+<dialog id="dlg"><div id="dlgBody"></div><div style="text-align:right;margin-top:10px"><button onclick="document.getElementById('dlg').close()">close</button></div></dialog>
+
+<script>
+const $ = s => document.querySelector(s);
+let ST = null, L = null;
+let sel = new Set();
+let undo = [];
+let folded = new Set();
+const POOL = 'pool';           // props in the pool are saved in a hidden "pool" group so the layout stays valid
+
+// ------------------------------------------------------------ themes (Claude's first pass)
+const THEMES = [
+  { id: 'characters',   label: 'Characters',         color: '#e8b04b', palette: 'classic', prefix: 'CH', ids: ['12R', '12L', '14', '61', '13R', '13L', '63', '64', '65', '62', '9R', '9L'] },
+  { id: 'sweets',       label: 'Sweets & bells',     color: '#ff5f8f', palette: 'classic', prefix: 'SW', ids: ['1', '6', '7', '8', '2R', '2L', '4', '15'] },
+  { id: 'trees',        label: 'Trees & wreath',     color: '#4ccf6a', palette: 'classic', prefix: 'TR', ids: ['10', '11', '41', 'spiral', '55'] },
+  { id: 'flakes_large', label: 'Snowflakes — large', color: '#5fb8ff', palette: 'frost',   prefix: 'SL', ids: ['24', '25', '26', '27', '28', '29', '30', '31', '32', '33', '51', '52', '56'] },
+  { id: 'flakes_small', label: 'Snowflakes — small', color: '#9fd8ff', palette: 'frost',   prefix: 'SS', ids: ['16', '17', '18', '19', '20', '21', '22', '23', '47'] },
+  { id: 'stars',        label: 'Stars',              color: '#ffd166', palette: 'gold',    prefix: 'ST', ids: ['37', '38', '39', '40', '48', '49', '50', '53', '54', '57', '58'] },
+  { id: 'bursts',       label: 'Bursts & crosses',   color: '#c77dff', palette: 'jewel',   prefix: 'BC', ids: ['34', '35', '36', '42', '43', '44', '59', '60', '45', '46'] },
+  { id: 'other',        label: 'Other',              color: '#8a93a6', palette: 'classic', prefix: 'OT', ids: [] },
+];
+function themeOf(p) { return THEMES.find(t => t.ids.includes(p.id)) || THEMES[THEMES.length - 1]; }
+
+// ------------------------------------------------------------ data
+async function load() {
+  ST = await (await fetch('/api/state')).json();
+  L = JSON.parse(JSON.stringify(ST.layout));
+  for (const p of L.props) if (!(p.group in L.groups) || p.group === POOL) p.group = POOL;
+  delete L.groups[POOL];
+  render(); status(`loaded ${L.props.length} props, ${Object.keys(L.groups).length} groups from ${ST.layout_path}`);
+}
+function status(msg, warn) { const s = $('#status'); s.textContent = msg; s.style.color = warn ? '#ff8a80' : ''; clearTimeout(status.t); status.t = setTimeout(() => s.textContent = '', 5000); }
+function commit() { undo.push(JSON.stringify(L)); if (undo.length > 60) undo.shift(); }
+function doUndo() { if (!undo.length) return status('nothing to undo'); L = JSON.parse(undo.pop()); sel.clear(); render(); status('undone'); }
+function shape(p) { return ST.shapes[p.mod] || { n: 0, w: 0, h: 0, lx: [], ly: [] }; }
+function byId(id) { return L.props.find(p => p.id === id); }
+function moveProps(ids, gid) {
+  for (const p of L.props) if (ids.includes(p.id) && p.group !== gid) { p.group = gid; p.controller = null; p.port = null; }
+}
+function slug(label) { let s = label.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_|_$/g, '') || 'group'; if (s === POOL) s = 'group'; let k = s, i = 2; while (k in L.groups) k = `${s}_${i++}`; return k; }
+function prefixFor(label) { const w = label.replace(/[^A-Za-z ]/g, '').trim().split(/\s+/).filter(Boolean); let pf = (w.length > 1 ? w[0][0] + w[1][0] : (w[0] || 'GR').slice(0, 2)).toUpperCase(); const used = new Set(Object.values(L.groups).map(g => g.prefix)); let k = pf, i = 2; while (used.has(k)) k = pf[0] + i++; return k; }
+function newGroup(ids) {
+  // a group spawned from props takes its name, colour and palette from the props' dominant theme
+  const counts = {}; for (const id of ids) { const t = themeOf(byId(id)); counts[t.id] = (counts[t.id] || 0) + 1; }
+  const t = THEMES.find(t => t.id === Object.keys(counts).sort((a, b) => counts[b] - counts[a])[0]) || THEMES[0];
+  const base = t.id === 'other' ? 'Group' : t.label;
+  const taken = Object.values(L.groups).map(g => g.label);
+  let label = base, i = 2; while (taken.includes(label)) label = `${base} ${i++}`;
+  const gid = slug(label);
+  L.groups[gid] = { label, prefix: prefixFor(label), palette: t.palette, color: t.color };
+  return gid;
+}
+function dropIds(e) { try { return JSON.parse(e.dataTransfer.getData('text/props') || '[]'); } catch { return []; } }
+
+// ------------------------------------------------------------ render
+function render() {
+  renderPool(); renderBoard();
+}
+function renderPool() {
+  const list = $('#poolList'); list.innerHTML = '';
+  const q = $('#search').value.trim().toLowerCase();
+  const pool = L.props.filter(p => p.group === POOL);
+  $('#poolCount').textContent = `${pool.length} in pool`;
+  for (const t of THEMES) {
+    const props = pool.filter(p => themeOf(p) === t).sort((a, b) => a.label.localeCompare(b.label));
+    if (!props.length) continue;
+    const box = document.createElement('div'); box.className = 'theme' + (folded.has(t.id) ? ' folded' : ''); box.style.borderLeft = `3px solid ${t.color}`;
+    const th = document.createElement('div'); th.className = 'th';
+    th.innerHTML = `<span class="caret">${folded.has(t.id) ? '▸' : '▾'}</span><b>${t.label}</b><span class="n">${props.length}</span>`;
+    const grab = document.createElement('button'); grab.className = 'tiny'; grab.textContent = '⇥'; grab.title = 'drag all of these at once'; grab.draggable = true;
+    grab.addEventListener('dragstart', e => { e.stopPropagation(); e.dataTransfer.setData('text/props', JSON.stringify(props.map(p => p.id))); e.dataTransfer.effectAllowed = 'move'; });
+    grab.onclick = e => { e.stopPropagation(); sel = new Set(props.map(p => p.id)); render(); };
+    th.append(grab);
+    th.onclick = () => { folded.has(t.id) ? folded.delete(t.id) : folded.add(t.id); renderPool(); };
+    const cards = document.createElement('div'); cards.className = 'cards';
+    for (const p of props) cards.append(card(p, q, t.color));
+    box.append(th, cards); list.append(box);
+  }
+  const pl = $('#pool');
+  pl.ondragover = e => { e.preventDefault(); pl.classList.add('over'); };
+  pl.ondragleave = () => pl.classList.remove('over');
+  pl.ondrop = e => { e.preventDefault(); pl.classList.remove('over'); const ids = dropIds(e).filter(id => byId(id) && byId(id).group !== POOL); if (!ids.length) return; commit(); moveProps(ids, POOL); sel.clear(); render(); status(`${ids.length} back to the pool`); };
+}
+function renderBoard() {
+  const board = $('#board');
+  board.querySelectorAll('.grp').forEach(n => n.remove());
+  const gids = Object.keys(L.groups);
+  $('#boardEmpty').style.display = gids.length ? 'none' : 'flex';
+  for (const gid of gids) {
+    const g = L.groups[gid];
+    const props = L.props.filter(p => p.group === gid).sort((a, b) => a.label.localeCompare(b.label));
+    const col = document.createElement('div'); col.className = 'grp'; col.dataset.gid = gid; col.style.borderTopColor = g.color || '#8a93a6';
+    const gh = document.createElement('div'); gh.className = 'gh';
+    const title = document.createElement('div'); title.className = 'title';
+    const colour = Object.assign(document.createElement('input'), { type: 'color', value: g.color || '#8a93a6', title: 'group colour' });
+    colour.oninput = () => { g.color = colour.value; col.style.borderTopColor = g.color; col.querySelectorAll('.card canvas').forEach(cv => cv._redraw && cv._redraw(g.color)); };
+    const name = Object.assign(document.createElement('input'), { type: 'text', value: g.label || gid, title: 'rename' });
+    name.onchange = () => { commit(); g.label = name.value; };
+    const del = document.createElement('button'); del.className = 'danger tiny'; del.textContent = '✕'; del.title = 'dissolve group (props go back to the pool)';
+    del.onclick = () => { commit(); moveProps(props.map(p => p.id), POOL); for (const [cid, c] of Object.entries(L.controllers || {})) if (c.group === gid) delete L.controllers[cid]; delete L.groups[gid]; render(); status(`dissolved “${g.label}”`); };
+    title.append(colour, name, del);
+    const meta = document.createElement('div'); meta.className = 'meta';
+    const pal = document.createElement('select'); pal.title = 'default palette';
+    for (const [k, v] of Object.entries(ST.default_palettes)) pal.append(Object.assign(document.createElement('option'), { value: k, textContent: v.name, selected: k === g.palette }));
+    pal.onchange = () => { g.palette = pal.value; };
+    const pf = Object.assign(document.createElement('input'), { type: 'text', value: g.prefix || '', title: 'controller prefix (SF → SF01, SF02…)', style: 'width:46px;padding:2px 4px;font-size:11px' });
+    pf.onchange = () => { g.prefix = pf.value.toUpperCase(); };
+    meta.append(pal, pf); gh.append(title, meta); col.append(gh);
+    const cards = document.createElement('div'); cards.className = 'cards';
+    for (const p of props) cards.append(card(p, '', g.color));
+    col.append(cards);
+    const n = props.length, pxs = props.reduce((s, p) => s + shape(p).n, 0);
+    const ctrls = Math.max(Math.ceil(n / 4), Math.ceil(pxs / 4096));
+    const foot = document.createElement('div'); foot.className = 'foot';
+    foot.innerHTML = `<span><span class="pill">${n} props</span> <span class="pill">${pxs.toLocaleString()} px</span></span><span title="GC-6004: 4 ports, 4096 px per unit">${n ? ctrls + ' controller' + (ctrls === 1 ? '' : 's') : ''}</span>`;
+    col.append(foot);
+    col.addEventListener('dragover', e => { e.preventDefault(); e.stopPropagation(); col.classList.add('over'); board.classList.remove('over'); });
+    col.addEventListener('dragleave', () => col.classList.remove('over'));
+    col.addEventListener('drop', e => { e.preventDefault(); e.stopPropagation(); col.classList.remove('over'); const ids = dropIds(e).filter(id => byId(id) && byId(id).group !== gid); if (!ids.length) return; commit(); moveProps(ids, gid); sel.clear(); render(); status(`${ids.length} → ${g.label}`); });
+    board.append(col);
+  }
+  board.ondragover = e => { e.preventDefault(); if (e.target === board || e.target.id === 'boardEmpty') board.classList.add('over'); };
+  board.ondragleave = e => { if (e.target === board) board.classList.remove('over'); };
+  board.ondrop = e => {                                  // drop on empty board: spawn a group
+    e.preventDefault(); board.classList.remove('over');
+    if (e.target !== board && e.target.id !== 'boardEmpty') return;
+    const ids = dropIds(e).filter(id => byId(id)); if (!ids.length) return;
+    commit(); const gid = newGroup(ids); moveProps(ids, gid); sel.clear(); render();
+    const inp = board.querySelector(`.grp[data-gid="${gid}"] .title input[type=text]`); if (inp) { inp.focus(); inp.select(); }
+    status(`new group “${L.groups[gid].label}” — rename it if you like`);
+  };
+}
+function card(p, q, color) {
+  const s = shape(p);
+  const el = document.createElement('div'); el.className = 'card' + (sel.has(p.id) ? ' sel' : ''); el.draggable = true; el.dataset.id = p.id;
+  const hay = `${p.id} ${p.label} ${p.mod} ${Math.round(s.w)}x${Math.round(s.h)} ${s.n}px`.toLowerCase();
+  if (q && !hay.includes(q)) el.classList.add('hidden');
+  const cv = document.createElement('canvas'); cv.width = 88; cv.height = 88; cv._redraw = c => silhouette(cv, s, c || '#8fd'); cv._redraw(color);
+  const nm = document.createElement('div'); nm.className = 'nm';
+  nm.innerHTML = `<b title="${p.mod}">${p.label}</b><span class="mono">${p.id}</span> <span>· ${Math.round(s.w)}×${Math.round(s.h)} in · ${s.n} px${p.controller ? ' · ' + p.controller + ':' + p.port : ''}</span>`;
+  el.append(cv, nm);
+  el.onclick = e => { if (e.shiftKey || e.metaKey || e.ctrlKey) { sel.has(p.id) ? sel.delete(p.id) : sel.add(p.id); } else { sel.clear(); sel.add(p.id); } render(); };
+  el.ondblclick = () => { const body = $('#dlgBody'); body.innerHTML = `<h3 style="margin:0 0 6px">${p.label} <span class="dim mono small">${p.id} · ${p.mod}</span></h3><div class="dim small">${s.w.toFixed(1)} × ${s.h.toFixed(1)} in · ${s.n} px · pitch ${s.pitch_in} in</div>`; const big = document.createElement('canvas'); big.width = 480; big.height = 480; big.style.background = '#0a0b0e'; silhouette(big, s, '#8fd', 3); body.append(big); $('#dlg').showModal(); };
+  el.addEventListener('dragstart', e => { const ids = sel.has(p.id) ? [...sel] : [p.id]; e.dataTransfer.setData('text/props', JSON.stringify(ids)); e.dataTransfer.effectAllowed = 'move'; document.querySelectorAll('.card').forEach(c => { if (ids.includes(c.dataset.id)) c.classList.add('dragging'); }); });
+  el.addEventListener('dragend', () => document.querySelectorAll('.card.dragging').forEach(c => c.classList.remove('dragging')));
+  return el;
+}
+function silhouette(cv, s, color, r = 1.5) {
+  const g = cv.getContext('2d'); g.clearRect(0, 0, cv.width, cv.height);
+  if (!s.lx.length) return;
+  const pad = 7, k = Math.min((cv.width - 2 * pad) / Math.max(1, s.w), (cv.height - 2 * pad) / Math.max(1, s.h));
+  const minx = Math.min(...s.lx), miny = Math.min(...s.ly);
+  g.fillStyle = color;
+  for (let i = 0; i < s.lx.length; i++) { const x = pad + (s.lx[i] - minx) * k + (cv.width - 2 * pad - s.w * k) / 2, y = cv.height - pad - (s.ly[i] - miny) * k - (cv.height - 2 * pad - s.h * k) / 2; g.beginPath(); g.arc(x, y, r, 0, 6.283); g.fill(); }
+}
+
+// ------------------------------------------------------------ actions
+$('#btnThemes').onclick = () => {
+  const pool = L.props.filter(p => p.group === POOL);
+  if (!pool.length) return status('the pool is empty — nothing to place');
+  commit();
+  for (const t of THEMES) {
+    const mine = pool.filter(p => themeOf(p) === t); if (!mine.length) continue;
+    let gid = Object.keys(L.groups).find(k => L.groups[k].label === t.label);
+    if (!gid) { gid = slug(t.label); L.groups[gid] = { label: t.label, prefix: prefixFor(t.label), palette: t.palette, color: t.color }; }
+    moveProps(mine.map(p => p.id), gid);
+  }
+  sel.clear(); render(); status(`placed ${pool.length} props into theme groups`);
+};
+$('#btnClear').onclick = () => { if (!confirm('Move every prop back into the pool? Groups stay (empty); controllers are cleared.')) return; commit(); moveProps(L.props.map(p => p.id), POOL); sel.clear(); render(); };
+$('#btnUndo').onclick = doUndo;
+function exportLayout() {
+  const out = JSON.parse(JSON.stringify(L));
+  if (out.props.some(p => p.group === POOL)) out.groups[POOL] = { label: 'Pool (unassigned)', prefix: 'PL', palette: 'classic', color: '#555555' };
+  return out;
+}
+$('#btnExport').onclick = () => { const body = $('#dlgBody'); body.innerHTML = '<h3 style="margin:0 0 6px">layout.json (groups + props)</h3>'; const pre = document.createElement('pre'); pre.textContent = JSON.stringify(exportLayout(), null, 1); body.append(pre); const dl = document.createElement('a'); dl.href = URL.createObjectURL(new Blob([JSON.stringify(exportLayout(), null, 2)], { type: 'application/json' })); dl.download = 'layout.json'; dl.textContent = '⬇ download layout.json'; dl.style.color = 'var(--acc)'; body.append(dl); $('#dlg').showModal(); };
+$('#btnSave').onclick = async () => {
+  const n = L.props.filter(p => p.group === POOL).length;
+  if (n && !confirm(`${n} props are still in the pool — they will be saved in a “Pool (unassigned)” group so nothing is lost. Continue?`)) return;
+  try {
+    const r = await fetch('/api/layout', { method: 'PUT', headers: { 'content-type': 'application/json' }, body: JSON.stringify(exportLayout()) });
+    if (!r.ok) throw new Error(await r.text());
+    const res = await r.json();
+    status(`saved to ${ST.layout_path}` + (res.issues && res.issues.length ? ` · ${res.issues.length} layout notes (see Studio)` : ''));
+    await load();
+  } catch (e) { status('save failed: ' + e.message, true); }
+};
+$('#search').oninput = renderPool;
+window.addEventListener('keydown', e => {
+  if (e.target.tagName === 'INPUT' && e.target.type !== 'color') return;
+  if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'z') { e.preventDefault(); doUndo(); }
+  if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'a') { e.preventDefault(); sel = new Set([...document.querySelectorAll('#poolList .card:not(.hidden)')].map(c => c.dataset.id)); render(); }
+  if (e.key === 'Escape') { sel.clear(); render(); }
+});
+load();
+</script>
+</body>
+</html>
